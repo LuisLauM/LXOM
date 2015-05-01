@@ -1,0 +1,3 @@
+useDynLib(LXOM)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
