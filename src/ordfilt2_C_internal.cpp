@@ -3,7 +3,7 @@
 #include <algorithm>
 
 // [[Rcpp::export]]
-Rcpp::NumericMatrix ordfilt2_C_internal(Rcpp::NumericMatrix data, int x, Rcpp::NumericVector weightedMatrix) {
+RcppExport SEXP ordfilt2_C_internal(SEXP data, int x, SEXP weightedMatrix) {
   using namespace Rcpp;
   
   int nrows = data.nrow();
