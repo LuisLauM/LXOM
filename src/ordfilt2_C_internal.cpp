@@ -2,14 +2,13 @@
 
 #include <algorithm>
 
-SEXP ordfilt2_C_internal(NumericMatrix data, int x, NumericVector weightedMatrix){
+NumericMatrix ordfilt2_C_internal(NumericMatrix data, int x, NumericVector weightedMatrix){
   using namespace Rcpp;
   
   int nrows = data.nrow();
   int ncols = data.ncol();
   Rcpp::NumericMatrix emptyData(nrows, ncols);
-  Rcpp::NumericVector miniMatrix(9);
-  
+  Rcpp::NumericVector miniMatrix(9);  
   
   for(int j = 0; j < ncols; j++){
     for(int i = 0; i < nrows; i++){

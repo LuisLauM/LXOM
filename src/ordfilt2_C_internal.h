@@ -5,6 +5,6 @@
 
 using namespace Rcpp;
 
-RcppExport SEXP ordfilt2_C_internal(NumericMatrix data, int x, NumericVector weightedMatrix);
+RcppExport NumericMatrix ordfilt2_C_internal(NumericMatrix data, int x, NumericVector weightedMatrix);
 
 #endif
