@@ -77,11 +77,11 @@
   
   # Convert NAs in 999
   data[is.na(data)] <- 999
-  weightedMatrix[weightedMatrix == 0] <- 999
-  lolo
+  # weightedMatrix[weightedMatrix == 0] <- 999
+  # lolo
   # Execute function
-  output <- ordfilt2_C(data = data, x = as.integer(x), 
-                       weightedMatrix = as.numeric(weightedMatrix))
+  output <- ordfilt2_C_internal(data = data, x = as.integer(x), 
+                                weightedMatrix = as.numeric(weightedMatrix))
   
   # Convert 999 in NAs
   output[output > 500 | output < -500] <- NA
