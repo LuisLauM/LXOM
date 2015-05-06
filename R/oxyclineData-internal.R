@@ -80,7 +80,7 @@
   # weightedMatrix[weightedMatrix == 0] <- 999
   # lolo
   # Execute function
-  output <- ordfilt2_C_internal(data = data, x = as.integer(x), 
+  output <- ordfilt2.C.internal(data = data, x = as.integer(x), 
                                 weightedMatrix = as.numeric(weightedMatrix))
   
   # Convert 999 in NAs

@@ -1,9 +1,9 @@
-#include "ordfilt2.C.internal.h"
-#include <Rcpp.h>
-using namespace Rcpp;
+#include "ordfilt2_C_internal.h"
 
-// [[Rcpp::export]]
-RcppExport SEXP ordfilt2_C_internal(SEXP data, SEXP x, SEXP weightedMatrix){
+#include <algorithm>
+
+SEXP ordfilt2_C_internal(NumericMatrix data, int x, NumericVector weightedMatrix){
+  using namespace Rcpp;
   
   int nrows = data.nrow();
   int ncols = data.ncol();
