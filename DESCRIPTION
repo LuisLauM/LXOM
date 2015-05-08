@@ -10,7 +10,7 @@ Author: Wencheng Lau-Medrano [aut, cre], Ricardo Oliveros-Ramos [aut]
 Maintainer: Wencheng Lau-Medrano <luis.laum@gmail.com>
 Description: Package that implements paper of W. Lau-Medrano & R. Oliveros-Ramos to obtaninlimits of oxycline from acoustic datasets.
 License: GPL (>= 2)
-Depends: R.matlab, raster, zoo
+Depends: R.matlab, raster, zoo, Rcpp
 LazyData: TRUE
 Imports: Rcpp (>= 0.11.5)
 LinkingTo: Rcpp

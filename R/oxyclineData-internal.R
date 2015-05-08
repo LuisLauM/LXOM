@@ -77,16 +77,73 @@
   
   # Convert NAs in 999
   data[is.na(data)] <- 999
-  # weightedMatrix[weightedMatrix == 0] <- 999
-  # lolo
-  # Execute function
-  output <- ordfilt2.C.internal(data = data, x = as.integer(x), 
-                                weightedMatrix = as.numeric(weightedMatrix))
+  
+  # Generate output data
+  newData <- data*0
+  
+  # Corner UpLeft
+  i <- 1
+  j <- 1
+  miniData <- data[(i):(i + 2), (j):(j + 2)] * weightedMatrix
+  newData[i, j] <- miniData[order(miniData)[x]]
+  
+  # Corner DownLeft
+  i <- nrow(data)
+  j <- 1
+  miniData <- data[(i):(i - 2), (j):(j + 2)] * weightedMatrix
+  newData[i, j] <- miniData[order(miniData)[x]]
+  
+  # Corner UpRight
+  i <- 1
+  j <- ncol(data)
+  miniData <- data[(i):(i + 2), (j):(j - 2)] * weightedMatrix
+  newData[i, j] <- miniData[order(miniData)[x]]
+  
+  # Corner DownRight
+  i <- nrow(data)
+  j <- ncol(data)
+  miniData <- data[(i):(i - 2), (j):(j - 2)] * weightedMatrix
+  newData[i, j] <- miniData[order(miniData)[x]]
+  
+  
+  # Downside
+  i <- nrow(data):(nrow(data) - 2)
+  for(j in seq(from = 2, to = ncol(data) - 1)){
+    miniData <- data[i, (j - 1):(j + 1)] * weightedMatrix
+    newData[i, (j - 1):(j + 1)] <- miniData[order(miniData)[x]]
+  }  
+  
+  # Leftside
+  j <- 1:3
+  for(i in seq(from = 2, to = nrow(data) - 1)){
+    miniData <- data[(i - 1):(i + 1), j] * weightedMatrix
+    newData[(i - 1):(i + 1), j] <- miniData[order(miniData)[x]]
+  }
+  
+  # Upside
+  i <- 1:3
+  for(j in seq(from = 2, to = ncol(data) - 1)){
+    miniData <- data[i, (j - 1):(j + 1)] * weightedMatrix
+    newData[i, (j - 1):(j + 1)] <- miniData[order(miniData)[x]]
+  }  
+  
+  # Rightside
+  j <- ncol(data):(ncol(data) - 2)
+  for(i in seq(from = 2, to = nrow(data) - 1)){
+    miniData <- data[(i - 1):(i + 1), j] * weightedMatrix
+    newData[(i - 1):(i + 1), j] <- miniData[order(miniData)[x]]
+  }  
+  
+  # No borders
+  miniData <- .ordfilt2_C_int(data = data, x = as.integer(x), 
+                              weightedMatrix = as.numeric(weightedMatrix))
+  newData[seq(2, nrow(data) - 1),] <- miniData[seq(2, nrow(data) - 1),]
+  newData[,seq(2, ncol(data) - 1)] <- miniData[,seq(2, ncol(data) - 1)]
   
   # Convert 999 in NAs
-  output[output > 500 | output < -500] <- NA
+  newData[newData > 500 | newData < -500] <- NA
   
-  return(output)
+  return(newData)
 }
 
 # Filter that removes (converts to NaN) isolated pixels
@@ -135,7 +192,7 @@
 
 # Function that applies a combination of filters (with different parameters) and 
 # get a better matrix to calculate limits of oxycline
-.getLine98 <- function(fluidMatrix, combinations = NULL, stepBYstep = TRUE){
+.getLine98 <- function(fluidMatrix, combinations, stepBYstep){
   
   fluidTime <- fluidMatrix$time
   fluidMatrix <- fluidMatrix$echogram
