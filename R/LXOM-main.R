@@ -30,11 +30,13 @@ readEchograms <- function(directory, validFish38 = c(-100, -21), validBlue38 = c
 #' @param fluidMatrix Matrix or list of matrix of echograms.
 #' @param combinations List with combination of filters.
 #' @param stepBYstep Returns each echogram on a list. 
+#' @param intoOriginal Make the indexation on the original matrix?
 #'   
 #' @examples
 #' getLine98(fluidMatrix)
 
-getLine98 <- function(fluidMatrix, combinations = NULL, stepBYstep = TRUE){
+getLine98 <- function(fluidMatrix, combinations = NULL, stepBYstep = TRUE, 
+                      intoOriginal = FALSE){
   
   # Define 'fluidMatrix' using 
   fluidMatrix <- if(all.equal(class(fluidMatrix), "echoData"))
@@ -43,7 +45,7 @@ getLine98 <- function(fluidMatrix, combinations = NULL, stepBYstep = TRUE){
   
   oxyclineData <- list()
   for(i in seq_along(fluidMatrix)){
-    oxyclineData[[i]] <- .getLine98(fluidMatrix[[i]], combinations, stepBYstep)
+    oxyclineData[[i]] <- .getLine98(fluidMatrix[[i]], combinations, stepBYstep, intoOriginal)
   }
   
   class(oxyclineData) <- "oxyclineData"
@@ -51,36 +53,36 @@ getLine98 <- function(fluidMatrix, combinations = NULL, stepBYstep = TRUE){
   return(oxyclineData)
 }
 
-#' echogramPlot
-#'
 #' @title Takes a list of filtered echograms plot them.
 #' @description This function uses an oxyclineData-class object and plot .
 #' 
-#' @param echogram Object of class \code{oxyclineData} with internal echogram matrix to be plotted.
-#' @param echogramNumber Select the echogram to be plotted. If zero (default) the function will plot
-#' all the echograms on the list.
+#' @param echogramOutput Object of class \code{oxyclineData} with internal echogram matrix to be plotted.
+
 #' @param col Pallete of colours to plot the echograms. If \code{NULL} (default) the system
 #' will use the same combination used on IMARPE.
-#' @param save Do you prefer to save the output plots?
 #'   
 #' @examples
 #' echogramPlot(fluidMatrix)
 
-echogramPlot <- function(echogramOutputs, echogramNumber = 0, col = NULL, save = FALSE, ...){  
-  
-  if(echogramNumber == 0)
-    echogramNumber <- seq_along(echogramOutputs) else
-      echogramNumber <- unique(as.integer(echogramNumber))
-  
+echogramPlot <- function(echogramOutput, col = NULL, ...){
   if(is.null(col))
     col <- colPallete
   
-  cat("\nPlotting, please, wait...\n")
-  for(i in echogramNumber){
+  .echogramPlot(echogramOutput, colPallete = col, ...)
+
+  return(invisible())
+}
+
+echogramPlot.all <- function(echogramOutputs, col = NULL, ...){  
+    
+  if(is.null(col))
+    col <- colPallete
+  
+  cat("\nPlotting, please, wait...\n")  
+  
+  for(i in seq_along(echogramOutputs)){
     for(j in seq_along(echogramOutputs[[i]])){
-      outName <- paste(i, names(echogramOutputs[[i]])[j], sep = "_")
-      
-      .echogramPlot(echogramOutputs[[i]][[j]], colPallete = colPallete, save = save, outName = outName, ...)
+      .echogramPlot(echogramOutputs[[i]][[j]], colPallete = col, ...)
     }      
   } 
   cat("\nFinished!\n")

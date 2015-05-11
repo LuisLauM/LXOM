@@ -148,6 +148,10 @@
 
 # Filter that removes (converts to NaN) isolated pixels
 .noiselessFilter <- function(data, radius, times, tolerance){
+  radius <- as.numeric(radius)
+  times <- as.numeric(times)
+  tolerance <- as.numeric(tolerance)
+  
   minValue <- min(data, na.rm = TRUE)
   
   data[is.na(data)] <- -999
@@ -170,6 +174,9 @@
 
 # Filter that takes isolated pixels and reforce its closest environment
 .definerFilter <- function(data, radius, times){
+  radius <- as.numeric(radius)
+  times <- as.numeric(times)
+  
   maxValue <- max(data, na.rm = TRUE)
   
   data[is.na(data)] <- 999
@@ -192,45 +199,52 @@
 
 # Function that applies a combination of filters (with different parameters) and 
 # get a better matrix to calculate limits of oxycline
-.getLine98 <- function(fluidMatrix, combinations, stepBYstep){
+.getLine98 <- function(fluidMatrix, combinations, stepBYstep, intoOriginal){
   
   fluidTime <- fluidMatrix$time
   fluidMatrix <- fluidMatrix$echogram
   
   # Set combination of filters that wil be applied 
   if(is.null(combinations))
-    combinations <- list(list(type = ".noiselessFilter",
-                              radius = 3,
-                              times = 2,
-                              tolerance = 0.2),
-                         list(type = ".definerFilter",
-                              radius = 3,
-                              times = 1))
+    combinations <- data.frame(type = c(".noiselessFilter", ".definerFilter"),
+                               radius = c(3, 3),
+                               times = c(2, 1),
+                               tolerance = c(0.2, NA), 
+                               stringsAsFactors = FALSE)  
   
   # Get filtered matrix
   tempOutput <- fluidMatrix
   outputList <- list(original = fluidMatrix)
-  for(i in seq_along(combinations)){
-    tempFunction <- get(combinations[[i]]$type)
+  for(i in 1:nrow(combinations)){
+    tempFunction <- get(combinations[i, "type"])
     
-    tempOutput <- switch(combinations[[i]]$type,
+    if(intoOriginal)
+      tempOutput2 <- tempOutput
+    
+    tempOutput <- switch(combinations[i, "type"],
                          .noiselessFilter = tempFunction(tempOutput, 
-                                                         radius = combinations[[i]]$radius,
-                                                         times = combinations[[i]]$times,
-                                                         tolerance = combinations[[i]]$tolerance),
+                                                         radius = combinations[i, "radius"],
+                                                         times = combinations[i, "times"],
+                                                         tolerance = combinations[i, "tolerance"]),
                          .definerFilter = tempFunction(tempOutput, 
-                                                       radius = combinations[[i]]$radius,
-                                                       times = combinations[[i]]$times),
+                                                       radius = combinations[i, "radius"],
+                                                       times = combinations[i, "times"]),
                          "Incorrect type of filter.")
+    
+    if(intoOriginal){
+      tempOutput2[is.na(tempOutput)] <- NA
+      tempOutput <- tempOutput2
+    }
+      
     
     if(stepBYstep) 
       outputList[[i + 1]] <- tempOutput else 
-        if(i == length(combinations))
+        if(i == nrow(combinations))
           outputList[[2]] <- tempOutput
   }
   
   names(outputList) <- if(length(outputList) > 2)
-    c("original", paste0("echogram_", seq(length(combinations) - 1)), "finalEchogram") else
+    c("original", paste0("echogram_", seq(nrow(combinations) - 1)), "finalEchogram") else
       c("original", "finalEchogram")
   
   return(outputList)
@@ -316,24 +330,14 @@
   return(output)
 }
 
-.echogramPlot <- function(echogram_1, colPallete, save, outName, ...){
+.echogramPlot <- function(echogram, colPallete, ...){
   
-  if(save)
-    png(filename = paste0(outName, ".png"), 
-        width = ncol(echogram_1)*2, height = nrow(echogram_1)*2, res = 150)
-  
-  par(mar = c(0, 0, 0, 0))
-  image(raster(x = echogram_1, xmn = 0, xmx = dim(echogram_1)[2], ymn = 0, ymx = dim(echogram_1)[1]), 
-        col = colPallete, axes = FALSE, xlab = NA, ylab = NA, ...)
-  axis(2, at = pretty(1:dim(echogram_1)[2]), labels = rev(pretty(dim(echogram_1)[2]:0)), las = 2)
-  axis(1, at = ceiling(seq(from = 0, to = dim(echogram_1)[2], length.out = 9)))
+  image(raster(x = echogram, xmn = 0, xmx = dim(echogram)[2], ymn = 0, ymx = dim(echogram)[1]), 
+        col = colPallete, axes = FALSE, ...)
+  axis(2, at = pretty(1:dim(echogram)[2]), labels = rev(pretty(dim(echogram)[2]:0)), las = 2)
+  axis(1, at = ceiling(seq(from = 0, to = dim(echogram)[2], length.out = 9)))
   # grid()
   box()
-  
-  if(save)
-    dev.off()
-  
-  
   
   return(invisible())
 }
