@@ -152,7 +152,7 @@
   times <- as.numeric(times)
   tolerance <- as.numeric(tolerance)
   
-  minValue <- min(data, na.rm = TRUE)
+  rangeValues <- range(data, na.rm = TRUE)
   
   data[is.na(data)] <- -999
   weightedMatrix <- diag(radius) + diag(radius)[,radius:1]
@@ -167,7 +167,7 @@
                              x = constant2, 
                              weightedMatrix = weightedMatrix)
   
-  finalData[finalData < minValue | finalData == 0] <- NA
+  finalData[finalData == 0 || finalData < rangeValues[1] || finalData > rangeValues[2]] <- NA
   
   return(finalData)
 }
@@ -177,7 +177,7 @@
   radius <- as.numeric(radius)
   times <- as.numeric(times)
   
-  maxValue <- max(data, na.rm = TRUE)
+  rangeValues <- range(data, na.rm = TRUE)
   
   data[is.na(data)] <- 999
   weightedMatrix <- diag(radius) + diag(radius)[,radius:1]
@@ -192,7 +192,7 @@
                              x = constant2, 
                              weightedMatrix = weightedMatrix)
   
-  finalData[finalData > maxValue] <- NA
+  finalData[finalData == 0 || finalData < rangeValues[1] || finalData > rangeValues[2]] <- NA
   
   return(finalData)
 }
