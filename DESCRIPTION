@@ -12,5 +12,5 @@ Description: Package that implements paper of W. Lau-Medrano & R. Oliveros-Ramos
 License: GPL (>= 2)
 Depends: R.matlab, raster, zoo, Rcpp
 LazyData: TRUE
-Imports: Rcpp (>= 0.11.5)
+Imports: Rcpp (>= 0.11.1)
 LinkingTo: Rcpp

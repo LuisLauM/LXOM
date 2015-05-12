@@ -135,13 +135,13 @@
   }  
   
   # No borders
-  miniData <- .ordfilt2_C_int(data = data, x = as.integer(x), 
+  miniData <- ordfilt2_C_internal(data = data, x = as.integer(x), 
                               weightedMatrix = as.numeric(weightedMatrix))
   newData[seq(2, nrow(data) - 1),] <- miniData[seq(2, nrow(data) - 1),]
   newData[,seq(2, ncol(data) - 1)] <- miniData[,seq(2, ncol(data) - 1)]
   
   # Convert 999 in NAs
-  newData[newData > 500 | newData < -500] <- NA
+  newData[newData > 900 | newData < -900] <- NA
   
   return(newData)
 }
@@ -154,7 +154,6 @@
   
   rangeValues <- range(data, na.rm = TRUE)
   
-  data[is.na(data)] <- -999
   weightedMatrix <- diag(radius) + diag(radius)[,radius:1]
   constant1 <- ceiling(radius/2)
   weightedMatrix[constant1,] <- 1
@@ -167,7 +166,7 @@
                              x = constant2, 
                              weightedMatrix = weightedMatrix)
   
-  finalData[finalData == 0 || finalData < rangeValues[1] || finalData > rangeValues[2]] <- NA
+  finalData[finalData == 0 | finalData < rangeValues[1] | finalData > rangeValues[2]] <- NA
   
   return(finalData)
 }
@@ -179,7 +178,6 @@
   
   rangeValues <- range(data, na.rm = TRUE)
   
-  data[is.na(data)] <- 999
   weightedMatrix <- diag(radius) + diag(radius)[,radius:1]
   constant1 <- ceiling(radius/2)
   weightedMatrix[constant1,] <- 1
@@ -192,7 +190,7 @@
                              x = constant2, 
                              weightedMatrix = weightedMatrix)
   
-  finalData[finalData == 0 || finalData < rangeValues[1] || finalData > rangeValues[2]] <- NA
+  finalData[finalData == 0 | finalData < rangeValues[1] | finalData > rangeValues[2]] <- NA
   
   return(finalData)
 }

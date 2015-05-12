@@ -1,5 +1,5 @@
 # Set directory where are outputs of Echopen
-directory <- "D:/NvTomus InDemonic/Trabajos/DGrados/Cr 1110-12/Data ecosonda/"
+directory <- "../../Cr 1110-12/Data ecosonda/"
 
 # Read echograms
 echoData <- readEchograms(directory = directory)

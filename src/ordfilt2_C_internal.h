@@ -4,7 +4,7 @@
 #include <Rcpp.h>
 
 using namespace Rcpp;
-
+// [[Rcpp::export]]
 RcppExport NumericMatrix ordfilt2_C_internal(NumericMatrix data, int x, NumericVector weightedMatrix);
 
 #endif

@@ -1,5 +1,4 @@
 #include "ordfilt2_C_internal.h"
-
 #include <algorithm>
 
 NumericMatrix ordfilt2_C_internal(NumericMatrix data, int x, NumericVector weightedMatrix){
