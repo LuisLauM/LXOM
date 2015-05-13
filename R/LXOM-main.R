@@ -35,8 +35,7 @@ readEchograms <- function(directory, validFish38 = c(-100, -21), validBlue38 = c
 #' @examples
 #' getLine98(fluidMatrix)
 
-getLine98 <- function(fluidMatrix, combinations = NULL, stepBYstep = TRUE, 
-                      intoOriginal = FALSE){
+getLine98 <- function(fluidMatrix, combinations = NULL, stepBYstep = TRUE){
   
   # Define 'fluidMatrix' using 
   fluidMatrix <- if(all.equal(class(fluidMatrix), "echoData"))
@@ -45,7 +44,7 @@ getLine98 <- function(fluidMatrix, combinations = NULL, stepBYstep = TRUE,
   
   oxyclineData <- list()
   for(i in seq_along(fluidMatrix)){
-    oxyclineData[[i]] <- .getLine98(fluidMatrix[[i]], combinations, stepBYstep, intoOriginal)
+    oxyclineData[[i]] <- .getLine98(fluidMatrix[[i]], combinations, stepBYstep)
   }
   
   class(oxyclineData) <- "oxyclineData"

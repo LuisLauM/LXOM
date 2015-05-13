@@ -1,4 +1,4 @@
-.ordfilt2 <- function(data, x, weightedMatrix){
+.ordfilt2_R <- function(data, x, weightedMatrix){
   newData <- data
   
   # Corner UpLeft
@@ -75,9 +75,6 @@
   if(mode(data) != "numeric" | mode(weightedMatrix) != "numeric")
     stop("Incorrect mode of data or weightedMatrix (both must be 'numeric').")
   
-  # Convert NAs in 999
-  data[is.na(data)] <- 999
-  
   # Generate output data
   newData <- data*0
   
@@ -136,12 +133,9 @@
   
   # No borders
   miniData <- ordfilt2_C_internal(data = data, x = as.integer(x), 
-                              weightedMatrix = as.numeric(weightedMatrix))
+                                  weightedMatrix = as.numeric(weightedMatrix))
   newData[seq(2, nrow(data) - 1),] <- miniData[seq(2, nrow(data) - 1),]
   newData[,seq(2, ncol(data) - 1)] <- miniData[,seq(2, ncol(data) - 1)]
-  
-  # Convert 999 in NAs
-  newData[newData > 900 | newData < -900] <- NA
   
   return(newData)
 }
@@ -152,8 +146,13 @@
   times <- as.numeric(times)
   tolerance <- as.numeric(tolerance)
   
+  # Get range of values
   rangeValues <- range(data, na.rm = TRUE)
   
+  # Convert NA to -999
+  data[is.na(data)] <- -999
+  
+  # Get weighted Matrix
   weightedMatrix <- diag(radius) + diag(radius)[,radius:1]
   constant1 <- ceiling(radius/2)
   weightedMatrix[constant1,] <- 1
@@ -166,7 +165,7 @@
                              x = constant2, 
                              weightedMatrix = weightedMatrix)
   
-  finalData[finalData == 0 | finalData < rangeValues[1] | finalData > rangeValues[2]] <- NA
+  finalData[finalData < rangeValues[1] | finalData == 0] <- NA
   
   return(finalData)
 }
@@ -176,8 +175,13 @@
   radius <- as.numeric(radius)
   times <- as.numeric(times)
   
+  # Get range of values
   rangeValues <- range(data, na.rm = TRUE)
   
+  # Convert NA to 999
+  data[is.na(data)] <- 999
+  
+  # Get weighted Matrix
   weightedMatrix <- diag(radius) + diag(radius)[,radius:1]
   constant1 <- ceiling(radius/2)
   weightedMatrix[constant1,] <- 1
@@ -190,14 +194,14 @@
                              x = constant2, 
                              weightedMatrix = weightedMatrix)
   
-  finalData[finalData == 0 | finalData < rangeValues[1] | finalData > rangeValues[2]] <- NA
+  finalData[finalData > rangeValues[2]] <- NA
   
   return(finalData)
 }
 
 # Function that applies a combination of filters (with different parameters) and 
 # get a better matrix to calculate limits of oxycline
-.getLine98 <- function(fluidMatrix, combinations, stepBYstep, intoOriginal){
+.getLine98 <- function(fluidMatrix, combinations, stepBYstep){
   
   fluidTime <- fluidMatrix$time
   fluidMatrix <- fluidMatrix$echogram
@@ -216,9 +220,6 @@
   for(i in 1:nrow(combinations)){
     tempFunction <- get(combinations[i, "type"])
     
-    if(intoOriginal)
-      tempOutput2 <- tempOutput
-    
     tempOutput <- switch(combinations[i, "type"],
                          .noiselessFilter = tempFunction(tempOutput, 
                                                          radius = combinations[i, "radius"],
@@ -227,13 +228,7 @@
                          .definerFilter = tempFunction(tempOutput, 
                                                        radius = combinations[i, "radius"],
                                                        times = combinations[i, "times"]),
-                         "Incorrect type of filter.")
-    
-    if(intoOriginal){
-      tempOutput2[is.na(tempOutput)] <- NA
-      tempOutput <- tempOutput2
-    }
-      
+                         "Incorrect type of filter.")      
     
     if(stepBYstep) 
       outputList[[i + 1]] <- tempOutput else 
