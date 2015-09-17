@@ -47,6 +47,11 @@ getLine98 <- function(fluidMatrix, combinations = NULL, stepBYstep = TRUE){
     oxyclineData[[i]] <- .getLine98(fluidMatrix[[i]], combinations, stepBYstep)
   }
   
+  names(oxyclineData) <- paste0("matrix_", seq_along(fluidMatrix))
+  
+  oxyclineData <- list(info = list(),
+                       outputs = oxyclineData)
+  
   class(oxyclineData) <- "oxyclineData"
   
   return(oxyclineData)

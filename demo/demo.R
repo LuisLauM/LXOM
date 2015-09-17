@@ -1,5 +1,5 @@
 # Set directory where are outputs of Echopen
-directory <- "../../Cr 1110-12/Data ecosonda/"
+directory <- "D:/NvTomus InDemonic/IMARPE/Trabajos/DGrados/Cr 1110-12"
 
 # Read echograms
 echoData <- readEchograms(directory = directory)
@@ -8,4 +8,4 @@ echoData <- readEchograms(directory = directory)
 echoOutputs <- getLine98(fluidMatrix = echoData)
 
 # Plot filtered echograms
-echogramPlot(echoOutputs)
+echogramPlot(echoOutputs$outputs)
