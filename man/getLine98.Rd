@@ -4,8 +4,7 @@
 \alias{getLine98}
 \title{Takes a matrix of echogram and calculate Oxycline.}
 \usage{
-getLine98(fluidMatrix, combinations = NULL, stepBYstep = TRUE,
-  intoOriginal = FALSE)
+getLine98(fluidMatrix, combinations = NULL, stepBYstep = TRUE)
 }
 \arguments{
 \item{fluidMatrix}{Matrix or list of matrix of echograms.}
@@ -22,6 +21,9 @@ especified in paper of Lau-Medrano W. and Oliveros-Ramos R..
 }
 \details{
 getLine98
+
+If \code{combinations} parameter is \code{NULL}, LXOM will use as default
+\code{data.frame(type = c(".noiselessFilter", ".definerFilter"), radius = c(3, 3), times = c(2, 1), tolerance = c(0.2, NA),  stringsAsFactors = FALSE)}
 }
 \examples{
 getLine98(fluidMatrix)

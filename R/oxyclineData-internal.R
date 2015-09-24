@@ -75,69 +75,11 @@
   if(mode(data) != "numeric" | mode(weightedMatrix) != "numeric")
     stop("Incorrect mode of data or weightedMatrix (both must be 'numeric').")
   
-  # Generate output data
-  newData <- data*0
-  
-  # Corner UpLeft
-  i <- 1
-  j <- 1
-  miniData <- data[(i):(i + 2), (j):(j + 2)] * weightedMatrix
-  newData[i, j] <- miniData[order(miniData)[x]]
-  
-  # Corner DownLeft
-  i <- nrow(data)
-  j <- 1
-  miniData <- data[(i):(i - 2), (j):(j + 2)] * weightedMatrix
-  newData[i, j] <- miniData[order(miniData)[x]]
-  
-  # Corner UpRight
-  i <- 1
-  j <- ncol(data)
-  miniData <- data[(i):(i + 2), (j):(j - 2)] * weightedMatrix
-  newData[i, j] <- miniData[order(miniData)[x]]
-  
-  # Corner DownRight
-  i <- nrow(data)
-  j <- ncol(data)
-  miniData <- data[(i):(i - 2), (j):(j - 2)] * weightedMatrix
-  newData[i, j] <- miniData[order(miniData)[x]]
-  
-  
-  # Downside
-  i <- nrow(data):(nrow(data) - 2)
-  for(j in seq(from = 2, to = ncol(data) - 1)){
-    miniData <- data[i, (j - 1):(j + 1)] * weightedMatrix
-    newData[i, (j - 1):(j + 1)] <- miniData[order(miniData)[x]]
-  }  
-  
-  # Leftside
-  j <- 1:3
-  for(i in seq(from = 2, to = nrow(data) - 1)){
-    miniData <- data[(i - 1):(i + 1), j] * weightedMatrix
-    newData[(i - 1):(i + 1), j] <- miniData[order(miniData)[x]]
-  }
-  
-  # Upside
-  i <- 1:3
-  for(j in seq(from = 2, to = ncol(data) - 1)){
-    miniData <- data[i, (j - 1):(j + 1)] * weightedMatrix
-    newData[i, (j - 1):(j + 1)] <- miniData[order(miniData)[x]]
-  }  
-  
-  # Rightside
-  j <- ncol(data):(ncol(data) - 2)
-  for(i in seq(from = 2, to = nrow(data) - 1)){
-    miniData <- data[(i - 1):(i + 1), j] * weightedMatrix
-    newData[(i - 1):(i + 1), j] <- miniData[order(miniData)[x]]
-  }  
-  
   # No borders
   miniData <- ordfilt2_C_internal(data = data, x = as.integer(x), 
                                   weightedMatrix = as.numeric(weightedMatrix))
-  newData[seq(2, nrow(data) - 1),] <- miniData[seq(2, nrow(data) - 1),]
-  newData[,seq(2, ncol(data) - 1)] <- miniData[,seq(2, ncol(data) - 1)]
-  
-  return(newData)
+
+  return(miniData)
 }
 
 # Filter that removes (converts to NaN) isolated pixels

@@ -31,6 +31,8 @@ readEchograms <- function(directory, validFish38 = c(-100, -21), validBlue38 = c
 #' @param combinations List with combination of filters.
 #' @param stepBYstep Returns each echogram on a list. 
 #' @param intoOriginal Make the indexation on the original matrix?
+#' @details If \code{combinations} parameter is \code{NULL}, LXOM will use as default 
+#' \code{data.frame(type = c(".noiselessFilter", ".definerFilter"), radius = c(3, 3), times = c(2, 1), tolerance = c(0.2, NA),  stringsAsFactors = FALSE)}
 #'   
 #' @examples
 #' getLine98(fluidMatrix)
