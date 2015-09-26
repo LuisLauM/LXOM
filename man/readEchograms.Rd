@@ -11,7 +11,11 @@ readEchograms(directory, validFish38 = c(-100, -21), validBlue38 = c(-100,
 \item{directory}{Directory where are outputs of Echoopen for Fluid-like, Blue noise
 and Fish.}
 
-\item{...}{Extra arguments.}
+\item{validFish38}{Range of valid values for Fish-38kHz}
+
+\item{validBlue38}{Range of valid values for Blue-38kHz}
+
+\item{upLimitFluid120}{Upper limit for Fluidlike-120kHz}
 }
 \description{
 This function search outputs of Echoopen for Fluid-like, Blue noise

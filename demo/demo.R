@@ -13,14 +13,21 @@ combinations <- data.frame(type = c(".noiselessFilter", ".definerFilter"),
                            stringsAsFactors = FALSE)
 
 # New combination
-combinations <- data.frame(type = c(".noiselessFilter", ".definerFilter"),
-                           radius = c(5, 3),
-                           times = c(3, 1),
-                           tolerance = c(0.2, NA), 
+combinations <- data.frame(type = c(".noiselessFilter", ".noiselessFilter", ".noiselessFilter", ".definerFilter"),
+                           radius = c(7, 5, 3, 3),
+                           times = c(3, 1, 1, 3),
+                           tolerance = c(0.3, 0.2, 0.2, NA), 
                            stringsAsFactors = FALSE)
 
 echoOutputs <- getLine98(fluidMatrix = echoData, stepBYstep = FALSE, combinations = combinations)
 
+# Remove active (previous) plots
+activePlots <- dev.list()
+while(!is.null(activePlots))
+{
+  dev.off()
+  activePlots <- dev.list()
+}
+
 # Plot filtered echograms
-# echogramPlot(echoOutputs$outputs$matrix_1$finalEchogram)
 plot(echoOutputs)

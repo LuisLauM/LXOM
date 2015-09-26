@@ -12,8 +12,6 @@ getLine98(fluidMatrix, combinations = NULL, stepBYstep = TRUE)
 \item{combinations}{List with combination of filters.}
 
 \item{stepBYstep}{Returns each echogram on a list.}
-
-\item{intoOriginal}{Make the indexation on the original matrix?}
 }
 \description{
 This function search othe Oxycline limits using filters and the procedure

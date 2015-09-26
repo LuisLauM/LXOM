@@ -10,7 +10,7 @@ print.summary.oxyclineData <- function(x, ...){
   return(NULL)
 }
 
-plot.oxyclineData <- function(x, what = seq_along(x$outputs), 
+plot.oxyclineData <- function(x, what = seq_along(x$outputs), plot.line98 = TRUE, 
                               col = NULL, save = FALSE, ...){
   
   what <- suppressWarnings(as.integer(what))
@@ -19,18 +19,15 @@ plot.oxyclineData <- function(x, what = seq_along(x$outputs),
     stop("Invalid value for 'what' parameter.")
 
   for(i in what){
-    
     matrix2plot <- c("original", "finalEchogram")
     names(matrix2plot) <- c("Original", "Final echogram")
     for(j in seq_along(matrix2plot)){
-      echogramPlot(x$outputs[[i]][[matrix2plot[j]]], col = col, 
+      echogramPlot(x$outputs[[i]][[matrix2plot[j]]], colPallete = col, 
                    main = paste(names(matrix2plot)[j], i, sep = "_"), ...)
+      
+      if(isTRUE(plot.line98))
+        .line98Plot(x$line98[[i]], lwd = 2)
     }
-    
-#     echogramPlot(x$outputs[[i]]$original, col = col, main = paste0("Original_", i), axes = FALSE
-#                  xlab = "Time", ylab = "Depth (m)", ...)
-#     echogramPlot(x$outputs[[i]]$finalEchogram, col = col, main = paste0("Final echogram_", i), axes = FALSE
-#                  xlab = "Time", ylab = "Depth (m)", ...)
   }
   
   return(invisible())

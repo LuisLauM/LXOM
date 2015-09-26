@@ -1,73 +1,73 @@
-.ordfilt2_R <- function(data, x, weightedMatrix){
-  newData <- data
-  
-  # Corner UpLeft
-  i <- 1
-  j <- 1
-  miniData <- data[(i):(i + 2), (j):(j + 2)] * weightedMatrix
-  newData[i, j] <- miniData[order(miniData)[x]]
-  
-  # Corner DownLeft
-  i <- nrow(data)
-  j <- 1
-  miniData <- data[(i):(i - 2), (j):(j + 2)] * weightedMatrix
-  newData[i, j] <- miniData[order(miniData)[x]]
-  
-  # Corner UpRight
-  i <- 1
-  j <- ncol(data)
-  miniData <- data[(i):(i + 2), (j):(j - 2)] * weightedMatrix
-  newData[i, j] <- miniData[order(miniData)[x]]
-  
-  # Corner DownRight
-  i <- nrow(data)
-  j <- ncol(data)
-  miniData <- data[(i):(i - 2), (j):(j - 2)] * weightedMatrix
-  newData[i, j] <- miniData[order(miniData)[x]]
-  
-  
-  # Downside
-  i <- nrow(data):(nrow(data) - 2)
-  for(j in seq(from = 2, to = ncol(data) - 1)){
-    miniData <- data[i, (j - 1):(j + 1)] * weightedMatrix
-    newData[i, (j - 1):(j + 1)] <- miniData[order(miniData)[x]]
-  }  
-  
-  # Leftside
-  j <- 1:3
-  for(i in seq(from = 2, to = nrow(data) - 1)){
-    miniData <- data[(i - 1):(i + 1), j] * weightedMatrix
-    newData[(i - 1):(i + 1), j] <- miniData[order(miniData)[x]]
-  }
-  
-  # Upside
-  i <- 1:3
-  for(j in seq(from = 2, to = ncol(data) - 1)){
-    miniData <- data[i, (j - 1):(j + 1)] * weightedMatrix
-    newData[i, (j - 1):(j + 1)] <- miniData[order(miniData)[x]]
-  }  
-  
-  # Rightside
-  j <- ncol(data):(ncol(data) - 2)
-  for(i in seq(from = 2, to = nrow(data) - 1)){
-    miniData <- data[(i - 1):(i + 1), j] * weightedMatrix
-    newData[(i - 1):(i + 1), j] <- miniData[order(miniData)[x]]
-  }  
-  
-  # No borders
-  for(j in seq(from = 2, to = ncol(data) - 1)){
-    for(i in seq(from = 2, to = nrow(data) - 1)){
-      miniData <- data[(i - 1):(i + 1), (j - 1):(j + 1)] 
-      
-      if(sum(!is.na(miniData), na.rm = TRUE) == 0)
-        next
-      
-      newData[i, j] <- miniData[order(miniData * weightedMatrix)[x]]
-    }
-  }
-  
-  return(newData)
-}
+# .ordfilt2_R <- function(data, x, weightedMatrix){
+#   newData <- data
+#   
+#   # Corner UpLeft
+#   i <- 1
+#   j <- 1
+#   miniData <- data[(i):(i + 2), (j):(j + 2)] * weightedMatrix
+#   newData[i, j] <- miniData[order(miniData)[x]]
+#   
+#   # Corner DownLeft
+#   i <- nrow(data)
+#   j <- 1
+#   miniData <- data[(i):(i - 2), (j):(j + 2)] * weightedMatrix
+#   newData[i, j] <- miniData[order(miniData)[x]]
+#   
+#   # Corner UpRight
+#   i <- 1
+#   j <- ncol(data)
+#   miniData <- data[(i):(i + 2), (j):(j - 2)] * weightedMatrix
+#   newData[i, j] <- miniData[order(miniData)[x]]
+#   
+#   # Corner DownRight
+#   i <- nrow(data)
+#   j <- ncol(data)
+#   miniData <- data[(i):(i - 2), (j):(j - 2)] * weightedMatrix
+#   newData[i, j] <- miniData[order(miniData)[x]]
+#   
+#   
+#   # Downside
+#   i <- nrow(data):(nrow(data) - 2)
+#   for(j in seq(from = 2, to = ncol(data) - 1)){
+#     miniData <- data[i, (j - 1):(j + 1)] * weightedMatrix
+#     newData[i, (j - 1):(j + 1)] <- miniData[order(miniData)[x]]
+#   }  
+#   
+#   # Leftside
+#   j <- 1:3
+#   for(i in seq(from = 2, to = nrow(data) - 1)){
+#     miniData <- data[(i - 1):(i + 1), j] * weightedMatrix
+#     newData[(i - 1):(i + 1), j] <- miniData[order(miniData)[x]]
+#   }
+#   
+#   # Upside
+#   i <- 1:3
+#   for(j in seq(from = 2, to = ncol(data) - 1)){
+#     miniData <- data[i, (j - 1):(j + 1)] * weightedMatrix
+#     newData[i, (j - 1):(j + 1)] <- miniData[order(miniData)[x]]
+#   }  
+#   
+#   # Rightside
+#   j <- ncol(data):(ncol(data) - 2)
+#   for(i in seq(from = 2, to = nrow(data) - 1)){
+#     miniData <- data[(i - 1):(i + 1), j] * weightedMatrix
+#     newData[(i - 1):(i + 1), j] <- miniData[order(miniData)[x]]
+#   }  
+#   
+#   # No borders
+#   for(j in seq(from = 2, to = ncol(data) - 1)){
+#     for(i in seq(from = 2, to = nrow(data) - 1)){
+#       miniData <- data[(i - 1):(i + 1), (j - 1):(j + 1)] 
+#       
+#       if(sum(!is.na(miniData), na.rm = TRUE) == 0)
+#         next
+#       
+#       newData[i, j] <- miniData[order(miniData * weightedMatrix)[x]]
+#     }
+#   }
+#   
+#   return(newData)
+# }
 
 .ordfilt2_C <- function(data, x, weightedMatrix){
   
@@ -143,18 +143,18 @@
 
 # Function that applies a combination of filters (with different parameters) and 
 # get a better matrix to calculate limits of oxycline
-.getLine98 <- function(fluidMatrix, combinations, stepBYstep){
+.getFilteredEchogram <- function(fluidMatrix, combinations, stepBYstep){
   
   fluidNames <- dimnames(fluidMatrix$echogram)
   fluidMatrix <- fluidMatrix$echogram
   
   # Set combination of filters that wil be applied 
   if(is.null(combinations))
-    combinations <- data.frame(type = c(".noiselessFilter", ".definerFilter"),
-                               radius = c(3, 3),
-                               times = c(2, 1),
-                               tolerance = c(0.2, NA), 
-                               stringsAsFactors = FALSE)  
+    combinations <- data.frame(type = c(".noiselessFilter", ".noiselessFilter", ".noiselessFilter", ".definerFilter"),
+                               radius = c(7, 5, 3, 3),
+                               times = c(3, 1, 1, 3),
+                               tolerance = c(0.3, 0.2, 0.2, NA), 
+                               stringsAsFactors = FALSE)
   
   # Get filtered matrix
   tempOutput <- fluidMatrix
@@ -185,6 +185,55 @@
       c("original", "finalEchogram")
   
   return(outputList)
+}
+
+.getLine98 <- function(oxyclineData){
+  
+  allLimits <- list()
+  for(i in seq_along(oxyclineData)){
+    # Select the final matrix of each echogram
+    tempEchogram <- oxyclineData[[i]]$finalEchogram
+    
+    # Define lower and upper limits
+    lineLimits <- c(0.10, 0.80)
+    
+    # Get matrix where values of tempEchogram are lower than zero
+    dataEchogram <- drop(outer(tempEchogram, 0, "<"))
+    dataEchogram[is.na(dataEchogram)] <- 0
+    
+    # What columns has, at least, one value for getting oxycline range
+    index <- which(as.numeric(colSums(dataEchogram)) > 0)
+    
+    # Get sums by column
+    sumByCol <- apply(dataEchogram, 2, sum)
+    
+    lineLimits <- ceiling(sapply(lineLimits, "*", sumByCol))
+    
+    dataEchogram <- apply(dataEchogram, 2, cumsum)
+
+    # Set empty matrix for recording range values 
+    limitsData <- mat.or.vec(nr = ncol(tempEchogram), nc = 2)
+    dimnames(limitsData) <- list(colnames(tempEchogram),
+                                 c("lower_limit", "upper_limit"))
+    for(j in index){
+      # Get vector with cumsum values by depth
+      limitVector <- dataEchogram[!duplicated(dataEchogram[,j]), j]
+      
+      # Select and save limit values
+      limitsData[j,] <- as.numeric(names(limitVector)[match(as.numeric(lineLimits[j,]), 
+                                                            limitVector)])
+    }
+    
+    # Convert zeros to NA
+    limitsData[limitsData == 0] <- NA
+    
+    # Compile values on a list
+    allLimits[[i]] <- limitsData
+  }
+
+  names(allLimits) <- names(oxyclineData)
+  
+  return(allLimits)
 }
 
 # Takes outputs from Echopen and generates a matrix to calculate Oxycline
@@ -273,13 +322,13 @@
   output <- list(info = list(parameters = list(validFish38 = validFish38,
                                                validBlue38 = validBlue38,
                                                upLimitFluid120 = upLimitFluid120),
-                             n_echograms = length(breakPoints[-1])), 
+                             n_echograms = length(breakPoints) - 1), 
                  data = data)
   
   return(output)
 }
 
-.echogramPlot <- function(echogram, colPallete, ...){
+.echogramPlot <- function(echogram, colEchogram, ...){
   
   # Define raster from echogram
   xAxis <- as.POSIXct(dimnames(echogram)[[2]])
@@ -292,32 +341,31 @@
   # Get plot of raster
   nIntervals <- 5
   
-  # xlim2 <- range(xAxis)
   xlim <- range(pretty_dates(xAxis, nIntervals))
-  
-#   a <- length(xAxis) - 1
-#   b <- as.numeric(difftime(xlim2[2], xlim2[1], units = "secs"))
-#   c1 <- as.numeric(difftime(xlim2[1], xlim1[1], units = "secs"))
-#   c2 <- as.numeric(difftime(xlim1[2], xlim2[2], units = "secs"))
-#   
-#   gap1 <- c1*a/b
-#   gap2 <- c2*a/b
-
-  
   ylim <- range(pretty(yAxis), n = nIntervals)
   
   par(mar = c(3, 4, 2, 3), xaxs = "i", yaxs = "i")
   
   image(echoRaster, xlim = as.numeric(xlim), ylim = ylim, axes = FALSE, ylab = "Depth (m)",
-        useRaster = FALSE, col = colPallete, ...)
+        useRaster = FALSE, col = colEchogram, ...)
 
   axis(2, at = pretty(yAxis), labels = abs(pretty(yAxis)), las = 2)
   axis(1, at = as.numeric(pretty_dates(xlim, nIntervals)), 
        labels = as.Date(pretty_dates(xlim, nIntervals)))
   axis(1, at = as.numeric(pretty_dates(xlim, nIntervals)), 
        labels = strftime(pretty_dates(xlim, nIntervals), format="%H:%M:%S"), line = 1, tick = FALSE)
-  # grid()
+
   box()
+  
+  return(invisible())
+}
+
+.line98Plot <- function(line98, ...){
+  xAxis <- as.POSIXct(rownames(line98))
+  
+  # Add lower and upper limits of oxycline
+  lines(as.numeric(xAxis), line98[,1], ...)
+  lines(as.numeric(xAxis), line98[,2], ...)
   
   return(invisible())
 }
