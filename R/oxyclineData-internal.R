@@ -145,7 +145,7 @@
 # get a better matrix to calculate limits of oxycline
 .getLine98 <- function(fluidMatrix, combinations, stepBYstep){
   
-  fluidTime <- fluidMatrix$time
+  fluidNames <- dimnames(fluidMatrix$echogram)
   fluidMatrix <- fluidMatrix$echogram
   
   # Set combination of filters that wil be applied 
@@ -170,7 +170,9 @@
                          .definerFilter = tempFunction(tempOutput, 
                                                        radius = combinations[i, "radius"],
                                                        times = combinations[i, "times"]),
-                         "Incorrect type of filter.")      
+                         "Incorrect type of filter.")
+    
+    dimnames(tempOutput) <- fluidNames
     
     if(stepBYstep) 
       outputList[[i + 1]] <- tempOutput else 
@@ -216,6 +218,9 @@
     tempData_Fluid <- tempList_Fluid$Data.values
     tempData_Blue <- tempList_Blue$Data.values
     
+    if(i == 1)
+      depth <- as.numeric(tempList_Fluid$depth)
+    
     tempTime <- paste(tempList_Fluid$Ping.date, tempList_Fluid$Ping.time)
     rm(list = c("tempList_Fish", "tempList_Fluid", "tempList_Blue")) 
     
@@ -240,21 +245,30 @@
   # Get points where the difference between two pin is larger than pinInterval (sec)
   breakPoints <- which(as.numeric(diff(allTime)) > pinInterval)
   breakPoints <- if(is.null(dim(breakPoints)) && length(breakPoints) > 1)
-    c(1, dim(allData)[2]) else
-      c(1, breakPoints + 1, dim(allData)[2])
+    c(0, dim(allData)[2]) else
+      c(0, breakPoints, dim(allData)[2])
   
   # Split big matrix by breakpoints to get matrix of echograms
   data <- list()
-  for(i in seq_along(breakPoints[-1])){
+  for(i in seq(2, length(breakPoints))){
     tempEchogram <- list()
+
+    tempMatrix <- allData[,seq(breakPoints[i - 1] + 1, breakPoints[i])]
+    tempTimes <- allTime[seq(breakPoints[i - 1] + 1, breakPoints[i])]
     
-    tempEchogram[[1]] <- allData[,seq(breakPoints[i], breakPoints[i + 1])]
-    tempEchogram[[2]] <- allTime[seq(breakPoints[i], breakPoints[i + 1])]
+    colnames(tempMatrix) <- as.character(tempTimes)
+    rownames(tempMatrix) <- round(depth, 2)
     
-    names(tempEchogram) <- c("echogram", "time")
+    tempEchogram[[1]] <- tempMatrix
+    tempEchogram[[2]] <- list(depth = depth,
+                              time = tempTimes)
     
-    data[[i]] <- tempEchogram
+    names(tempEchogram) <- c("echogram", "dimnames")
+    
+    data[[i - 1]] <- tempEchogram
   }
+  
+  names(data) <- paste0("matrix_", seq_along(breakPoints[-1]))
   
   output <- list(info = list(parameters = list(validFish38 = validFish38,
                                                validBlue38 = validBlue38,
@@ -267,10 +281,41 @@
 
 .echogramPlot <- function(echogram, colPallete, ...){
   
-  image(raster(x = echogram, xmn = 0, xmx = dim(echogram)[2], ymn = 0, ymx = dim(echogram)[1]), 
-        col = colPallete, axes = FALSE, ...)
-  axis(2, at = pretty(1:dim(echogram)[2]), labels = rev(pretty(dim(echogram)[2]:0)), las = 2)
-  axis(1, at = ceiling(seq(from = 0, to = dim(echogram)[2], length.out = 9)))
+  # Define raster from echogram
+  xAxis <- as.POSIXct(dimnames(echogram)[[2]])
+  yAxis <- as.numeric(dimnames(echogram)[[1]])
+  
+  echoRaster <- raster(x = echogram, 
+                       ymn = min(yAxis), ymx = max(yAxis), 
+                       xmn = min(as.numeric(xAxis)), xmx = max(as.numeric(xAxis)))
+  
+  # Get plot of raster
+  nIntervals <- 5
+  
+  # xlim2 <- range(xAxis)
+  xlim <- range(pretty_dates(xAxis, nIntervals))
+  
+#   a <- length(xAxis) - 1
+#   b <- as.numeric(difftime(xlim2[2], xlim2[1], units = "secs"))
+#   c1 <- as.numeric(difftime(xlim2[1], xlim1[1], units = "secs"))
+#   c2 <- as.numeric(difftime(xlim1[2], xlim2[2], units = "secs"))
+#   
+#   gap1 <- c1*a/b
+#   gap2 <- c2*a/b
+
+  
+  ylim <- range(pretty(yAxis), n = nIntervals)
+  
+  par(mar = c(3, 4, 2, 3), xaxs = "i", yaxs = "i")
+  
+  image(echoRaster, xlim = as.numeric(xlim), ylim = ylim, axes = FALSE, ylab = "Depth (m)",
+        useRaster = FALSE, col = colPallete, ...)
+
+  axis(2, at = pretty(yAxis), labels = abs(pretty(yAxis)), las = 2)
+  axis(1, at = as.numeric(pretty_dates(xlim, nIntervals)), 
+       labels = as.Date(pretty_dates(xlim, nIntervals)))
+  axis(1, at = as.numeric(pretty_dates(xlim, nIntervals)), 
+       labels = strftime(pretty_dates(xlim, nIntervals), format="%H:%M:%S"), line = 1, tick = FALSE)
   # grid()
   box()
   
