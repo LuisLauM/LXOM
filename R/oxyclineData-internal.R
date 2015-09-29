@@ -187,7 +187,7 @@
   return(outputList)
 }
 
-.getLine98 <- function(oxyclineData){
+.getOxyrange <- function(oxyclineData){
   
   allLimits <- list()
   for(i in seq_along(oxyclineData)){
@@ -334,10 +334,15 @@
   xAxis <- as.POSIXct(dimnames(echogram)[[2]])
   yAxis <- as.numeric(dimnames(echogram)[[1]])
   
-  echoRaster <- raster(x = echogram, 
-                       ymn = min(yAxis), ymx = max(yAxis), 
-                       xmn = min(as.numeric(xAxis)), xmx = max(as.numeric(xAxis)))
+  ext_xAxis <- seq.POSIXt(range(xAxis)[1], range(xAxis)[2], by = "sec")
   
+  newEchogram <- matrix(NA, nrow = nrow(echogram), ncol = length(ext_xAxis))
+  newEchogram[,match(as.integer(xAxis), as.integer(ext_xAxis))] <- echogram
+  
+  echoRaster <- raster(x = newEchogram, 
+                       ymn = min(yAxis), ymx = max(yAxis), 
+                       xmn = min(as.integer(xAxis)), xmx = max(as.integer(xAxis)))
+
   # Get plot of raster
   nIntervals <- 5
   
@@ -346,7 +351,7 @@
   
   par(mar = c(3, 4, 2, 3), xaxs = "i", yaxs = "i")
   
-  image(echoRaster, xlim = as.numeric(xlim), ylim = ylim, axes = FALSE, ylab = "Depth (m)",
+  image(echoRaster, xlim = as.numeric(xlim), ylim = ylim, axes = FALSE, ylab = "Depth (m)", 
         useRaster = FALSE, col = colEchogram, ...)
 
   axis(2, at = pretty(yAxis), labels = abs(pretty(yAxis)), las = 2)
@@ -360,12 +365,12 @@
   return(invisible())
 }
 
-.line98Plot <- function(line98, ...){
-  xAxis <- as.POSIXct(rownames(line98))
+.lineOxyrangePlot <- function(oxyrange, ...){
+  xAxis <- as.POSIXct(rownames(oxyrange))
   
   # Add lower and upper limits of oxycline
-  lines(as.numeric(xAxis), line98[,1], ...)
-  lines(as.numeric(xAxis), line98[,2], ...)
+  lines(as.numeric(xAxis), oxyrange[,1], ...)
+  lines(as.numeric(xAxis), oxyrange[,2], ...)
   
   return(invisible())
 }

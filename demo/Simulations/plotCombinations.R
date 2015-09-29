@@ -18,7 +18,7 @@ combinations <- split(combinations, combinations$number_comb)
 # Aplicar filtros a ecoggramas leídos
 for(i in seq_along(combinations)){
   # Obtener matrices de ecogramas
-  echoOutputs <- getLine98(fluidMatrix = echoData, 
+  echoOutputs <- getOxyrange(fluidMatrix = echoData, 
                            combinations = combinations[[i]][,-1], stepBYstep = TRUE)
   
   # Create directories for plots

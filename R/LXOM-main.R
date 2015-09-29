@@ -23,7 +23,7 @@ readEchograms <- function(directory, validFish38 = c(-100, -21), validBlue38 = c
   return(echoData)
 }
 
-#' getLine98
+#' getOxyrange
 #'
 #' @title Takes a matrix of echogram and calculate Oxycline.
 #' @description This function search othe Oxycline limits using filters and the procedure 
@@ -37,9 +37,9 @@ readEchograms <- function(directory, validFish38 = c(-100, -21), validBlue38 = c
 #' \code{data.frame(type = c(".noiselessFilter", ".definerFilter"), radius = c(3, 3), times = c(2, 1), tolerance = c(0.2, NA),  stringsAsFactors = FALSE)}
 #'   
 #' @examples
-#' getLine98(fluidMatrix)
+#' getOxyrange(fluidMatrix)
 
-getLine98 <- function(fluidMatrix, combinations = NULL, stepBYstep = TRUE){
+getOxyrange <- function(fluidMatrix, combinations = NULL, stepBYstep = TRUE){
   
   nEchograms <- fluidMatrix$info$n_echograms
   
@@ -56,14 +56,14 @@ getLine98 <- function(fluidMatrix, combinations = NULL, stepBYstep = TRUE){
   names(oxyclineData) <- paste0("matrix_", seq_along(fluidMatrix))
   
   # Get ranges of depth of oxycline using the last matrix of each echogram
-  line98 <- .getLine98(oxyclineData)
+  oxyRange <- .getOxyrange(oxyclineData)
   
   # Compile outputs on a list
   oxyclineData <- list(info = list(number_echograms = nEchograms,
                                    date_range = lapply(fluidMatrix, function(x) range(x$dimnames$time)),
                                    depth_range = lapply(fluidMatrix, function(x) range(x$dimnames$depth))),
                        outputs = oxyclineData,
-                       line98 = line98)
+                       oxycline_range = oxyRange)
   
   # Set class
   class(oxyclineData) <- "oxyclineData"

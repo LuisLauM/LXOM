@@ -10,7 +10,7 @@ print.summary.oxyclineData <- function(x, ...){
   return(NULL)
 }
 
-plot.oxyclineData <- function(x, what = seq_along(x$outputs), plot.line98 = TRUE, 
+plot.oxyclineData <- function(x, what = seq_along(x$outputs), plot.oxyrange = TRUE, 
                               col = NULL, save = FALSE, ...){
   
   what <- suppressWarnings(as.integer(what))
@@ -25,8 +25,8 @@ plot.oxyclineData <- function(x, what = seq_along(x$outputs), plot.line98 = TRUE
       echogramPlot(x$outputs[[i]][[matrix2plot[j]]], colPallete = col, 
                    main = paste(names(matrix2plot)[j], i, sep = "_"), ...)
       
-      if(isTRUE(plot.line98))
-        .line98Plot(x$line98[[i]], lwd = 2)
+      if(isTRUE(plot.oxyrange))
+        .lineOxyrangePlot(x$oxycline_range[[i]], lwd = 2)
     }
   }
   

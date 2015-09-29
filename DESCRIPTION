@@ -1,6 +1,6 @@
 Package: LXOM
 Type: Package
-Title: Line98 eXtended-version for Oxycline Mensuration
+Title: Line-edge eXamination for Oxycline Mensuration
 Version: 1.0
 Date: 2015-05-01
 Authors@R: c(person("Wencheng", "Lau-Medrano", role = c("aut", "cre"),
