@@ -237,7 +237,8 @@
 }
 
 # Takes outputs from Echopen and generates a matrix to calculate Oxycline
-.getEchoData <- function(directory, validFish38, validBlue38, upLimitFluid120, pinInterval = 5){
+.getEchoData <- function(directory, validFish38, validBlue38, upLimitFluid120, pinInterval,
+                         date.format){
   
   # Define ttext pattern of databases
   pattern_Fish38  <- "_2Freq_Fish38.mat"
@@ -270,7 +271,8 @@
     if(i == 1)
       depth <- as.numeric(tempList_Fluid$depth)
     
-    tempTime <- paste(tempList_Fluid$Ping.date, tempList_Fluid$Ping.time)
+    tempTime <- paste(as.character(tempList_Fluid$Ping.date), 
+                      as.character(tempList_Fluid$Ping.time))
     rm(list = c("tempList_Fish", "tempList_Fluid", "tempList_Blue")) 
     
     # Clear data using limit parameters
@@ -289,7 +291,10 @@
   }
   
   # Convert time
-  allTime <- strptime(allTime, format = "%d-%m-%Y %H:%M:%S")
+  allTime <- strptime(allTime, format = date.format)
+  
+  if(sum(is.na(allTime)) > 0)
+    stop("Incorrect value for 'date.format'.")
   
   # Get points where the difference between two pin is larger than pinInterval (sec)
   breakPoints <- which(as.numeric(diff(allTime)) > pinInterval)

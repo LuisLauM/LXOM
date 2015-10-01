@@ -1,8 +1,8 @@
 # Set directory where are outputs of Echopen
-directory <- "D:/NvTomus InDemonic/IMARPE/Trabajos/DGrados/Cr 1110-12"
+directory <- "D:/NvTomus InDemonic/Tesis Pregrado/Datos_9"
 
 # Read echograms
-echoData <- readEchograms(directory = directory)
+echoData <- readEchograms(directory = directory, date.format = "%m-%d-%Y %H:%M:%S")
 
 # Get limits of oxycline
 # Default combination
@@ -32,5 +32,5 @@ while(!is.null(activePlots))
 
 # Plot filtered echograms
 # png(filename = file.path(directory, "ecograma0.png"), width = 4500, height = 1500, res = 120)
-plot(echoOutputs)
+plot(echoOutputs, plot.oxyrange = FALSE)
 # dev.off()

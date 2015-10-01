@@ -1,7 +1,7 @@
 Package: LXOM
 Type: Package
 Title: Line-edge eXamination for Oxycline Mensuration
-Version: 1.0
+Version: 1.01
 Date: 2015-05-01
 Authors@R: c(person("Wencheng", "Lau-Medrano", role = c("aut", "cre"),
          email = "luis.laum@gmail.com"),

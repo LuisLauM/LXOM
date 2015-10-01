@@ -5,7 +5,8 @@
 \title{Takes outputs from Echopen and generates a matrix to calculate Oxycline.}
 \usage{
 readEchograms(directory, validFish38 = c(-100, -21), validBlue38 = c(-100,
-  -56), upLimitFluid120 = -53)
+  -56), upLimitFluid120 = -53, pinInterval = 50,
+  date.format = "\%d-\%m-\%Y \%H:\%M:\%S")
 }
 \arguments{
 \item{directory}{Directory where are outputs of Echoopen for Fluid-like, Blue noise
@@ -16,6 +17,10 @@ and Fish.}
 \item{validBlue38}{Range of valid values for Blue-38kHz}
 
 \item{upLimitFluid120}{Upper limit for Fluidlike-120kHz}
+
+\item{pinInterval}{Time threshold (in secs) to consider separate two matrices (echograms).}
+
+\item{date.format}{A character string. The default method is \code{\%Y-\%m-\%d \%H:\%M:\%S}.}
 }
 \description{
 This function search outputs of Echoopen for Fluid-like, Blue noise

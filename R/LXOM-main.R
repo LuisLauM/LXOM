@@ -9,14 +9,17 @@
 #' @param validFish38 Range of valid values for Fish-38kHz
 #' @param validBlue38 Range of valid values for Blue-38kHz
 #' @param upLimitFluid120 Upper limit for Fluidlike-120kHz
+#' @param pinInterval Time threshold (in secs) to consider separate two matrices (echograms).
+#' @param date.format A character string. The default method is \code{\%Y-\%m-\%d \%H:\%M:\%S}.
 #'   
 #' @examples
 #' readEchograms(directory = "C:/Echodata")
 
 readEchograms <- function(directory, validFish38 = c(-100, -21), validBlue38 = c(-100, -56), 
-                          upLimitFluid120 = -53){
+                          upLimitFluid120 = -53, pinInterval = 50, date.format = "%d-%m-%Y %H:%M:%S"){
   
-  echoData <- .getEchoData(directory, validFish38, validBlue38, upLimitFluid120)
+  echoData <- .getEchoData(directory, validFish38, validBlue38, upLimitFluid120, pinInterval,
+                           date.format)
   
   class(echoData) <- "echoData"
   
