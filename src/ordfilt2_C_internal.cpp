@@ -1,17 +1,20 @@
-#include "ordfilt2_C_internal.h"
+#include <Rcpp.h>
 #include <algorithm>
 #include <math.h>
+using namespace Rcpp;
 
+
+// [[Rcpp::export]]
 NumericMatrix ordfilt2_C_internal(NumericMatrix data, int x, NumericVector weightedMatrix){
   using namespace Rcpp;
-  
+
   int nrows = data.nrow();
   int ncols = data.ncol();
   int radius = sqrt(weightedMatrix.size());
 
-  Rcpp::NumericMatrix emptyData(nrows, ncols);
-  Rcpp::NumericVector miniMatrix(radius*radius);  
-  
+  NumericMatrix emptyData(nrows, ncols);
+  NumericVector miniMatrix(radius*radius);
+
   for(int j = 1; j < ncols - floor(radius/2); j++){
     for(int i = 1; i < nrows - floor(radius/2); i++){
       for(int n = 0; n < radius; n++){
@@ -22,12 +25,12 @@ NumericMatrix ordfilt2_C_internal(NumericMatrix data, int x, NumericVector weigh
           miniMatrix[index] = data(a, b)*weightedMatrix[index];
         }
       }
-      
+
       std::sort(miniMatrix.begin(), miniMatrix.end());
-      
+
       emptyData(i, j) = miniMatrix[x - 1];
     }
   }
-  
+
   return emptyData;
 }

@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // ordfilt2_C_internal
-RcppExport NumericMatrix ordfilt2_C_internal(NumericMatrix data, int x, NumericVector weightedMatrix);
+NumericMatrix ordfilt2_C_internal(NumericMatrix data, int x, NumericVector weightedMatrix);
 RcppExport SEXP LXOM_ordfilt2_C_internal(SEXP dataSEXP, SEXP xSEXP, SEXP weightedMatrixSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
