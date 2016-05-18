@@ -1,82 +1,82 @@
 # .ordfilt2_R <- function(data, x, weightedMatrix){
 #   newData <- data
-#   
+#
 #   # Corner UpLeft
 #   i <- 1
 #   j <- 1
 #   miniData <- data[(i):(i + 2), (j):(j + 2)] * weightedMatrix
 #   newData[i, j] <- miniData[order(miniData)[x]]
-#   
+#
 #   # Corner DownLeft
 #   i <- nrow(data)
 #   j <- 1
 #   miniData <- data[(i):(i - 2), (j):(j + 2)] * weightedMatrix
 #   newData[i, j] <- miniData[order(miniData)[x]]
-#   
+#
 #   # Corner UpRight
 #   i <- 1
 #   j <- ncol(data)
 #   miniData <- data[(i):(i + 2), (j):(j - 2)] * weightedMatrix
 #   newData[i, j] <- miniData[order(miniData)[x]]
-#   
+#
 #   # Corner DownRight
 #   i <- nrow(data)
 #   j <- ncol(data)
 #   miniData <- data[(i):(i - 2), (j):(j - 2)] * weightedMatrix
 #   newData[i, j] <- miniData[order(miniData)[x]]
-#   
-#   
+#
+#
 #   # Downside
 #   i <- nrow(data):(nrow(data) - 2)
 #   for(j in seq(from = 2, to = ncol(data) - 1)){
 #     miniData <- data[i, (j - 1):(j + 1)] * weightedMatrix
 #     newData[i, (j - 1):(j + 1)] <- miniData[order(miniData)[x]]
-#   }  
-#   
+#   }
+#
 #   # Leftside
 #   j <- 1:3
 #   for(i in seq(from = 2, to = nrow(data) - 1)){
 #     miniData <- data[(i - 1):(i + 1), j] * weightedMatrix
 #     newData[(i - 1):(i + 1), j] <- miniData[order(miniData)[x]]
 #   }
-#   
+#
 #   # Upside
 #   i <- 1:3
 #   for(j in seq(from = 2, to = ncol(data) - 1)){
 #     miniData <- data[i, (j - 1):(j + 1)] * weightedMatrix
 #     newData[i, (j - 1):(j + 1)] <- miniData[order(miniData)[x]]
-#   }  
-#   
+#   }
+#
 #   # Rightside
 #   j <- ncol(data):(ncol(data) - 2)
 #   for(i in seq(from = 2, to = nrow(data) - 1)){
 #     miniData <- data[(i - 1):(i + 1), j] * weightedMatrix
 #     newData[(i - 1):(i + 1), j] <- miniData[order(miniData)[x]]
-#   }  
-#   
+#   }
+#
 #   # No borders
 #   for(j in seq(from = 2, to = ncol(data) - 1)){
 #     for(i in seq(from = 2, to = nrow(data) - 1)){
-#       miniData <- data[(i - 1):(i + 1), (j - 1):(j + 1)] 
-#       
+#       miniData <- data[(i - 1):(i + 1), (j - 1):(j + 1)]
+#
 #       if(sum(!is.na(miniData), na.rm = TRUE) == 0)
 #         next
-#       
+#
 #       newData[i, j] <- miniData[order(miniData * weightedMatrix)[x]]
 #     }
 #   }
-#   
+#
 #   return(newData)
 # }
 
 .ordfilt2_C <- function(data, x, weightedMatrix){
-  
-  # Warning messages
+
+  # Error messages
   if(mode(data) != "numeric" | mode(weightedMatrix) != "numeric")
     stop("Incorrect mode of data or weightedMatrix (both must be 'numeric').")
-  
+
   # No borders
-  miniData <- ordfilt2_C_internal(data = data, x = as.integer(x), 
+  miniData <- .ordfilt2_C_internal(data = data, x = as.integer(x),
                                   weightedMatrix = as.numeric(weightedMatrix))
 
   return(miniData)
@@ -87,28 +87,31 @@
   radius <- as.numeric(radius)
   times <- as.numeric(times)
   tolerance <- as.numeric(tolerance)
-  
+
   # Get range of values
   rangeValues <- range(data, na.rm = TRUE)
-  
+
   # Convert NA to -999
   data[is.na(data)] <- -999
-  
+
   # Get weighted Matrix
   weightedMatrix <- diag(radius) + diag(radius)[,radius:1]
   constant1 <- ceiling(radius/2)
   weightedMatrix[constant1,] <- 1
-  
+
   constant2 <- ceiling(sum(weightedMatrix)*tolerance)
+
+  if(constant2 - 1 < 0)
+    stop("Incorrect value for tolerance.")
 
   finalData <- data
   for(i in 1:times)
-    finalData <- .ordfilt2_C(data = finalData, 
-                             x = constant2, 
+    finalData <- .ordfilt2_C(data = finalData,
+                             x = constant2,
                              weightedMatrix = weightedMatrix)
-  
+
   finalData[finalData < rangeValues[1] | finalData == 0] <- NA
-  
+
   return(finalData)
 }
 
@@ -116,266 +119,284 @@
 .definerFilter <- function(data, radius, times){
   radius <- as.numeric(radius)
   times <- as.numeric(times)
-  
+
   # Get range of values
   rangeValues <- range(data, na.rm = TRUE)
-  
+
   # Convert NA to 999
   data[is.na(data)] <- 999
-  
+
   # Get weighted Matrix
   weightedMatrix <- diag(radius) + diag(radius)[,radius:1]
   constant1 <- ceiling(radius/2)
   weightedMatrix[constant1,] <- 1
-  
+
   constant2 <- 1
-  
+
   finalData <- data
   for(i in 1:times)
-    finalData <- .ordfilt2_C(data = finalData, 
-                             x = constant2, 
+    finalData <- .ordfilt2_C(data = finalData,
+                             x = constant2,
                              weightedMatrix = weightedMatrix)
-  
+
   finalData[finalData > rangeValues[2]] <- NA
-  
+
   return(finalData)
 }
 
-# Function that applies a combination of filters (with different parameters) and 
+# Function that applies a combination of filters (with different parameters) and
 # get a better matrix to calculate limits of oxycline
-.getFilteredEchogram <- function(fluidMatrix, combinations, stepBYstep){
-  
+.getFilteredEchogram <- function(fluidMatrix, filterSettings, stepBYstep){
+
   fluidNames <- dimnames(fluidMatrix$echogram)
   fluidMatrix <- fluidMatrix$echogram
-  
-  # Set combination of filters that wil be applied 
-  if(is.null(combinations))
-    combinations <- data.frame(type = c(".noiselessFilter", ".noiselessFilter", ".noiselessFilter", ".definerFilter"),
-                               radius = c(7, 5, 3, 3),
-                               times = c(3, 1, 1, 3),
-                               tolerance = c(0.3, 0.2, 0.2, NA), 
-                               stringsAsFactors = FALSE)
-  
+
   # Get filtered matrix
   tempOutput <- fluidMatrix
   outputList <- list(original = fluidMatrix)
-  for(i in 1:nrow(combinations)){
-    tempFunction <- get(combinations[i, "type"])
-    
-    tempOutput <- switch(combinations[i, "type"],
-                         .noiselessFilter = tempFunction(tempOutput, 
-                                                         radius = combinations[i, "radius"],
-                                                         times = combinations[i, "times"],
-                                                         tolerance = combinations[i, "tolerance"]),
-                         .definerFilter = tempFunction(tempOutput, 
-                                                       radius = combinations[i, "radius"],
-                                                       times = combinations[i, "times"]),
+  for(i in seq(nrow(filterSettings))){
+    tempFunction <- get(filterSettings[i, "type"])
+
+    tempOutput <- switch(filterSettings[i, "type"],
+                         .noiselessFilter = tempFunction(tempOutput,
+                                                         radius = filterSettings[i, "radius"],
+                                                         times = filterSettings[i, "times"],
+                                                         tolerance = filterSettings[i, "tolerance"]),
+                         .definerFilter = tempFunction(tempOutput,
+                                                       radius = filterSettings[i, "radius"],
+                                                       times = filterSettings[i, "times"]),
                          "Incorrect type of filter.")
-    
+
     dimnames(tempOutput) <- fluidNames
-    
-    if(stepBYstep) 
-      outputList[[i + 1]] <- tempOutput else 
-        if(i == nrow(combinations))
+
+    if(stepBYstep)
+      outputList[[i + 1]] <- tempOutput else
+        if(i == nrow(filterSettings))
           outputList[[2]] <- tempOutput
   }
-  
+
   names(outputList) <- if(length(outputList) > 2)
-    c("original", paste0("echogram_", seq(nrow(combinations) - 1)), "finalEchogram") else
+    c("original", paste0("echogram_", seq(nrow(filterSettings) - 1)), "finalEchogram") else
       c("original", "finalEchogram")
-  
+
   return(outputList)
 }
 
-.getOxyrange <- function(oxyclineData){
-  
+.getOxyrange <- function(oxyclineData, oxyDims){
+
   allLimits <- list()
   for(i in seq_along(oxyclineData)){
     # Select the final matrix of each echogram
     tempEchogram <- oxyclineData[[i]]$finalEchogram
-    
+
     # Define lower and upper limits
     lineLimits <- c(0.10, 0.80)
-    
+
     # Get matrix where values of tempEchogram are lower than zero
     dataEchogram <- drop(outer(tempEchogram, 0, "<"))
     dataEchogram[is.na(dataEchogram)] <- 0
-    
+
     # What columns has, at least, one value for getting oxycline range
-    index <- which(as.numeric(colSums(dataEchogram)) > 0)
-    
+    index <- which(colSums(dataEchogram) > 0)
+
     # Get sums by column
     sumByCol <- apply(dataEchogram, 2, sum)
-    
+
     lineLimits <- ceiling(sapply(lineLimits, "*", sumByCol))
-    
+
     dataEchogram <- apply(dataEchogram, 2, cumsum)
 
-    # Set empty matrix for recording range values 
-    limitsData <- mat.or.vec(nr = ncol(tempEchogram), nc = 2)
+    # Set empty matrix for recording range values
+    limitsData <- mat.or.vec(nr = ncol(tempEchogram), nc = 4)
     dimnames(limitsData) <- list(colnames(tempEchogram),
-                                 c("lower_limit", "upper_limit"))
+                                 c("lower_limit", "upper_limit", "lon", "lat"))
     for(j in index){
       # Get vector with cumsum values by depth
       limitVector <- dataEchogram[!duplicated(dataEchogram[,j]), j]
-      
+
       # Select and save limit values
-      limitsData[j,] <- as.numeric(names(limitVector)[match(as.numeric(lineLimits[j,]), 
+      limitsData[j,] <- as.numeric(names(limitVector)[match(as.numeric(lineLimits[j,]),
                                                             limitVector)])
     }
-    
+
     # Convert zeros to NA
     limitsData[limitsData == 0] <- NA
-    
+
     # Compile values on a list
     allLimits[[i]] <- limitsData
   }
 
   names(allLimits) <- names(oxyclineData)
-  
+
   return(allLimits)
+}
+
+# Get dimensions from echogram data
+.getOxyDims <- function(oxyclineData){
+  allDims <- list()
+  for(i in seq_along(oxyclineData)){
+    tempDim <- list(lon = oxyclineData[[i]]$dimnames$lon,
+                    lat = oxyclineData[[i]]$dimnames$lat,
+                    time = oxyclineData[[i]]$dimnames$time)
+
+    allDims[[i]] <- tempDim
+  }
+
+  names(allDims) <- paste0("matrix_", seq_along(oxyclineData))
+
+  return(allDims)
 }
 
 # Takes outputs from Echopen and generates a matrix to calculate Oxycline
 .getEchoData <- function(directory, validFish38, validBlue38, upLimitFluid120, pinInterval,
                          date.format){
-  
+
   # Define ttext pattern of databases
   pattern_Fish38  <- "_2Freq_Fish38.mat"
   # pattern_Fluid38 <- "_2Freq_Fluid38.mat"
   pattern_Blue38  <- "_2Freq_Blue38.mat"
-  
+
   # pattern_Fish120   <- "_2Freq_Fish120.mat"
   pattern_Fluid120  <- "_2Freq_Fluid120.mat"
   # pattern_Blue120   <- "_2Freq_Blue120.mat"
-  
+
   # Generate file list with text patterns
-  listFiles_Fish <- list.files(path = directory, pattern = pattern_Fish38, 
+  listFiles_Fish <- list.files(path = directory, pattern = pattern_Fish38,
                                full.names = TRUE, recursive = TRUE)
-  listFiles_Fluid <- list.files(path = directory, pattern = pattern_Fluid120, 
+  listFiles_Fluid <- list.files(path = directory, pattern = pattern_Fluid120,
                                 full.names = TRUE, recursive = TRUE)
-  listFiles_Blue <- list.files(path = directory, pattern = pattern_Blue38, 
+  listFiles_Blue <- list.files(path = directory, pattern = pattern_Blue38,
                                full.names = TRUE, recursive = TRUE)
-  
+
   # Read files and concatenate in one matrix
-  allData <- allTime <- NULL
+  allData <- allTime <- allLon <- allLat <- NULL
   for(i in seq_along(listFiles_Fish)){
     tempList_Fish <- readMat(listFiles_Fish[i])
     tempList_Fluid <- readMat(listFiles_Fluid[i])
     tempList_Blue <- readMat(listFiles_Blue[i])
-    
+
     tempData_Fish <- tempList_Fish$Data.values
     tempData_Fluid <- tempList_Fluid$Data.values
     tempData_Blue <- tempList_Blue$Data.values
-    
+
     if(i == 1)
       depth <- as.numeric(tempList_Fluid$depth)
-    
-    tempTime <- paste(as.character(tempList_Fluid$Ping.date), 
+
+    tempTime <- paste(as.character(tempList_Fluid$Ping.date),
                       as.character(tempList_Fluid$Ping.time))
-    rm(list = c("tempList_Fish", "tempList_Fluid", "tempList_Blue")) 
-    
+    tempLon <- tempList_Fluid$Longitude
+    tempLat <- tempList_Fluid$Latitude
+    rm(list = c("tempList_Fish", "tempList_Fluid", "tempList_Blue"))
+
     # Clear data using limit parameters
     tempData_Fish[tempData_Fish < -998 | tempData_Fish < validFish38[1] |
                     tempData_Fish > validFish38[2]] <- NaN
     tempData_Blue[tempData_Blue < -998 | tempData_Blue < validBlue38[1] |
-                    tempData_Blue > validBlue38[2]] <- NaN  
+                    tempData_Blue > validBlue38[2]] <- NaN
     tempData_Fluid[tempData_Fluid < -998 | tempData_Fluid > upLimitFluid120] <- NaN
-    
+
     # Clear main data (Fluid-like) using Fish and Blue noise data
     tempData <- tempData_Fluid*(is.na(tempData_Blue) & is.na(tempData_Fish))
-    tempData[tempData == 0] <- NaN  
-    
+    tempData[tempData == 0] <- NaN
+
+    allLon <- c(allLon, tempLon)
+    allLat <- c(allLat, tempLat)
     allTime <- c(allTime, tempTime)
     allData <- cbind(allData, t(tempData))
   }
-  
+
   # Convert time
   allTime <- strptime(allTime, format = date.format)
-  
+
   if(sum(is.na(allTime)) > 0)
     stop("Incorrect value for 'date.format'.")
-  
+
   # Get points where the difference between two pin is larger than pinInterval (sec)
   breakPoints <- which(as.numeric(diff(allTime)) > pinInterval)
   breakPoints <- if(is.null(dim(breakPoints)) && length(breakPoints) > 1)
     c(0, dim(allData)[2]) else
       c(0, breakPoints, dim(allData)[2])
-  
+
   # Split big matrix by breakpoints to get matrix of echograms
   data <- list()
   for(i in seq(2, length(breakPoints))){
     tempEchogram <- list()
 
-    tempMatrix <- allData[,seq(breakPoints[i - 1] + 1, breakPoints[i])]
-    tempTimes <- allTime[seq(breakPoints[i - 1] + 1, breakPoints[i])]
-    
+    index <- seq(breakPoints[i - 1] + 1, breakPoints[i])
+
+    tempMatrix <- allData[,index]
+    tempTimes <- allTime[index]
+    allLon <- allLon[index]
+    allLat <- allLat[index]
+
     colnames(tempMatrix) <- as.character(tempTimes)
     rownames(tempMatrix) <- round(depth, 2)
-    
+
     tempEchogram[[1]] <- tempMatrix
     tempEchogram[[2]] <- list(depth = depth,
-                              time = tempTimes)
-    
+                              time = tempTimes,
+                              lon = allLon,
+                              lat = allLat)
+
     names(tempEchogram) <- c("echogram", "dimnames")
-    
+
     data[[i - 1]] <- tempEchogram
   }
-  
+
   names(data) <- paste0("matrix_", seq_along(breakPoints[-1]))
-  
+
   output <- list(info = list(parameters = list(validFish38 = validFish38,
                                                validBlue38 = validBlue38,
                                                upLimitFluid120 = upLimitFluid120),
-                             n_echograms = length(breakPoints) - 1), 
+                             n_echograms = length(breakPoints) - 1),
                  data = data)
-  
+
   return(output)
 }
 
 .echogramPlot <- function(echogram, colEchogram, ...){
-  
+
   # Define raster from echogram
   xAxis <- as.POSIXct(dimnames(echogram)[[2]])
   yAxis <- as.numeric(dimnames(echogram)[[1]])
-  
+
   ext_xAxis <- seq.POSIXt(range(xAxis)[1], range(xAxis)[2], by = "sec")
-  
+
   newEchogram <- matrix(NA, nrow = nrow(echogram), ncol = length(ext_xAxis))
   newEchogram[,match(as.integer(xAxis), as.integer(ext_xAxis))] <- echogram
-  
-  echoRaster <- raster(x = newEchogram, 
-                       ymn = min(yAxis), ymx = max(yAxis), 
+
+  echoRaster <- raster(x = newEchogram,
+                       ymn = min(yAxis), ymx = max(yAxis),
                        xmn = min(as.integer(xAxis)), xmx = max(as.integer(xAxis)))
 
   # Get plot of raster
   nIntervals <- 5
-  
+
   xlim <- range(pretty_dates(xAxis, nIntervals))
   ylim <- range(pretty(yAxis), n = nIntervals)
-  
+
   par(mar = c(3, 4, 2, 3), xaxs = "i", yaxs = "i")
-  
-  image(echoRaster, xlim = as.numeric(xlim), ylim = ylim, axes = FALSE, ylab = "Depth (m)", 
+
+  image(echoRaster, xlim = as.numeric(xlim), ylim = ylim, axes = FALSE, ylab = "Depth (m)",
         useRaster = FALSE, col = colEchogram, ...)
 
   axis(2, at = pretty(yAxis), labels = abs(pretty(yAxis)), las = 2)
-  axis(1, at = as.numeric(pretty_dates(xlim, nIntervals)), 
+  axis(1, at = as.numeric(pretty_dates(xlim, nIntervals)),
        labels = as.Date(pretty_dates(xlim, nIntervals)))
-  axis(1, at = as.numeric(pretty_dates(xlim, nIntervals)), 
+  axis(1, at = as.numeric(pretty_dates(xlim, nIntervals)),
        labels = strftime(pretty_dates(xlim, nIntervals), format="%H:%M:%S"), line = 1, tick = FALSE)
 
   box()
-  
+
   return(invisible())
 }
 
 .lineOxyrangePlot <- function(oxyrange, ...){
   xAxis <- as.POSIXct(rownames(oxyrange))
-  
+
   # Add lower and upper limits of oxycline
   lines(as.numeric(xAxis), oxyrange[,1], ...)
   lines(as.numeric(xAxis), oxyrange[,2], ...)
-  
+
   return(invisible())
 }

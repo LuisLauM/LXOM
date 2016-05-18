@@ -1,13 +1,11 @@
 #include <Rcpp.h>
 #include <algorithm>
 #include <math.h>
+
 using namespace Rcpp;
 
-
-// [[Rcpp::export]]
+// [[Rcpp::export(name=".ordfilt2_C_internal")]]
 NumericMatrix ordfilt2_C_internal(NumericMatrix data, int x, NumericVector weightedMatrix){
-  using namespace Rcpp;
-
   int nrows = data.nrow();
   int ncols = data.ncol();
   int radius = sqrt(weightedMatrix.size());

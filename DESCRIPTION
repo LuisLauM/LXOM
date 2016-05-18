@@ -1,8 +1,8 @@
-Package: LXOM
+Package: oXim
 Type: Package
-Title: Line-edge eXamination for Oxycline Mensuration
+Title: Oxycline Index from Matrix Echograms
 Version: 1.01
-Date: 2015-05-01
+Date: 2016-05-18
 Authors@R: c(person("Wencheng", "Lau-Medrano", role = c("aut", "cre"),
          email = "luis.laum@gmail.com"),
 	      person("Ricardo", "Oliveros-Ramos", role = "aut"))
@@ -15,10 +15,9 @@ Depends:
     R.matlab,
     lubridate,
     raster,
-    zoo,
-    Rcpp
+    zoo
 LazyData: TRUE
-Imports: 
+Imports:
     Rcpp (>= 0.12.3)
-LinkingTo: 
-    Rcpp
+LinkingTo: Rcpp
+RoxygenNote: 5.0.1

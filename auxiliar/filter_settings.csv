@@ -1,0 +1,5 @@
+name,type,radius,times,tolerance
+default,.noiselessFilter,7,3,0.3
+default,.noiselessFilter,5,1,0.2
+default,.noiselessFilter,3,1,0.2
+default,.definerFilter,3,3,
