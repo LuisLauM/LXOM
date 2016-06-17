@@ -1,19 +1,142 @@
-# Print method for echoData objects
-print.echoData <- function(x, ...){
-  return(NULL)
+#' @title Print method for echoData
+#' @description Shows main information from echodata object
+#'
+#' @param x \code{echoData} object provided by \code{readEchograms} function.
+#'
+#' @examples
+#' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
+#'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
+#'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+#' echoData <- readEchograms(fileMode = fileMode)
+#' print(echoData)
+print.echoData <- function(x){
+
+  cat(paste("\nNumber of echograms: ", x$info$n_echograms, "\n"))
+
+  for(i in seq_along(x$data)){
+    cat(paste0("\nFor echogram ", i, ":\n"))
+
+    tempMatrix <- x$data[[i]]
+
+    rangeLon <- c(.getCoordsAxes(min(tempMatrix$dimnames$lon, na.rm = TRUE), "lon"),
+                  .getCoordsAxes(max(tempMatrix$dimnames$lon, na.rm = TRUE), "lon"))
+    cat(paste("\tRange lon:\tFrom", rangeLon[1], "to", rangeLon[2], "\n"))
+
+    rangeLat <- c(.getCoordsAxes(min(tempMatrix$dimnames$lat, na.rm = TRUE), "lat"),
+                  .getCoordsAxes(max(tempMatrix$dimnames$lat, na.rm = TRUE), "lat"))
+    cat(paste("\tRange lat:\tFrom", rangeLat[1], "to", rangeLat[2], "\n"))
+
+    rangeTime <- .ac(range(tempMatrix$dimnames$time))
+    cat(paste("\tRange time:\tFrom", rangeTime[1], "to", rangeTime[2], "\n"))
+  }
+
+  return(invisible())
 }
 
-# Summary method for echoData objects
-summary.echoData <- function(x, ...){
-  return(NULL)
+#' @title Summary method for echoData
+#' @description Get summary information of echograms included on echodata objects.
+#'
+#' @param x \code{echoData} object provided by \code{readEchograms} function.
+#'
+#' @examples
+#' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
+#'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
+#'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+#' echoData <- readEchograms(fileMode = fileMode)
+#' mySummary <- summary(echoData)
+summary.echoData <- function(x){
+
+  allSummaryData <- list()
+  for(i in seq_along(x$data)){
+
+    echoMatrix <- na.omit(.an(x$data[[i]]$echogram))
+
+    summaryEchogram <- summary(echoMatrix)
+
+    summaryDimensions <- lapply(x$data[[i]]$dimnames[c("lon", "lat")], summary)
+    summaryDimensions <- as.data.frame(do.call(what = "cbind", args = summaryDimensions))
+    summaryDimensions <- summaryDimensions[-nrow(summaryDimensions),]
+
+    tempSummary <- data.frame(sA = as.numeric(summaryEchogram),
+                              lon = summaryDimensions$lon,
+                              lat = summaryDimensions$lat,
+                              time = as.POSIXct(as.vector(summary(x$data[[i]]$dimnames$time)),
+                                                origin = "1970-01-01 00:00.00 UTC"),
+                              stringsAsFactors = FALSE)
+
+    rownames(tempSummary) <- c("Min.", "1st Qu.", "Median", "Mean", "3rd Qu.", "Max.")
+
+    allSummaryData[[i]] <- tempSummary
+  }
+  names(allSummaryData) <- paste0("matrix_", seq_along(x$data))
+
+  allSummaryData <- list(n_echograms = x$info$n_echograms,
+                         summary_echograms = allSummaryData)
+
+  class(allSummaryData) <- c("summary.echoData")
+
+  return(allSummaryData)
 }
 
-# Print method for summary of echoData objects
-print.summary.echoData <- function(x, ...){
-  return(NULL)
+#' @title Print method for summary.echoData
+#' @description Shows main information from echodata.summary object.
+#'
+#' @param x \code{echoData.summary} object provided by application of summary method to \code{echoData} object.
+#'
+#' @examples
+#' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
+#'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
+#'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+#' echoData <- readEchograms(fileMode = fileMode)
+#'
+#' mySummary <- summary(echoData)
+#' print(mySummary)
+print.summary.echoData <- function(x){
+
+  cat(paste("\nNumber of echograms: ", x$n_echograms, "\n"))
+
+  for(i in seq_along(x$summary_echograms)){
+    tempMatrix <- x$summary_echograms[[i]]
+
+    for(j in seq(ncol(tempMatrix))){
+      tempMatrix[,j] <- .ac(tempMatrix[,j])
+    }
+
+    cat(paste0("\nFor echogram ", i, ":\n"))
+
+    cat(paste(c("\t", colnames(tempMatrix), "\n"), collapse = "\t"))
+    for(j in seq(nrow(tempMatrix))){
+      cat(paste0("\t", paste(c(c(rownames(tempMatrix)[j], .ac(tempMatrix[j,])), "\n"),
+                             collapse = "\t")))
+    }
+  }
+
+  return(invisible())
 }
 
-# Plot method for echoData objects
+#' @title Plot method for echoData
+#' @description This function takes an \code{echoData} object and plots an interpolated map
+#' showing oxycline depth along shore.
+#'
+#' @param x \code{echoData} object provided by \code{readEchograms} function.
+#' @param ... Arguments passed from \code{plot} function.
+#'
+#' @examples
+#' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
+#'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
+#'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+#' echoData <- readEchograms(fileMode = fileMode)
+#' print(echoData)
 plot.echoData <- function(x, ...){
-  return(NULL)
+
+  for(i in seq_along(x$data)){
+    echogramPlot(echogramOutput = x$data[[i]]$echogram, main = paste("Echogram", i), ...)
+
+    if(i < length(x$data)){
+      cat("Hit <enter> to see next echogram:")
+      scan(nmax = 1, quiet = TRUE)
+    }
+  }
+
+  return(invisible())
 }

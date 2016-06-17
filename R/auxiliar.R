@@ -1,12 +1,14 @@
 .checkFilterSettings <- function(filterSettings){
+
   if(is.null(filterSettings)){
     message("Message: \n No filter-setting object or file detected. oXim will use default configuration.")
-    output <- .filterSettings[tolower(.filterSettings$name) == "default",]
+    output <- defaultFilterSettings[tolower(defaultFilterSettings$name) == "default",]
   }else if(is.vector(filterSettings) && is.character(filterSettings) && length(filterSettings) == 1){
-    if(!is.element(tolower(filterSettings), tolower(unique(.filterSettings$name))))
+    if(!is.element(tolower(filterSettings), tolower(unique(defaultFilterSettings$name)))){
       stop("Incorrect value for 'filterSettings'. Please define a set of filters using 'createFilterSetting' function.")
+    }
 
-    output <- .filterSettings[tolower(.filterSettings$name) == filterSettings,]
+    output <- defaultFilterSettings[tolower(defaultFilterSettings$name) == filterSettings,]
   }else if(is.data.frame(filterSettings) &&
            all(is.element(c("type", "radius", "times", "tolerance"), tolower(colnames(filterSettings))))){
     output <- filterSettings
@@ -35,3 +37,34 @@
 .isOdd <- function(x){
   return(ifelse(x %% 2 != 0, FALSE, TRUE))
 }
+
+.getCoordsAxes <- function(coord, what){
+
+  if(tolower(what) == "lon"){
+    if(coord < 0){
+      sufix <- "\u00b0 W"
+    }else if(coord > 0){
+      sufix <- "\u00b0 E"
+    }else{
+      sufix <- "\u00b0"
+    }
+  }else if(tolower(what) == "lat"){
+    if(coord < 0){
+      sufix <- "\u00b0 S"
+    }else if(coord > 0){
+      sufix <- "\u00b0 N"
+    }else{
+      sufix <- "\u00b0"
+    }
+  }else{
+    stop("Incorrect value for 'what' parameter.")
+  }
+
+  output <- paste0(round(abs(coord), 3), sufix)
+
+  return(output)
+}
+
+.ac <- as.character
+.an <- as.numeric
+.anc <- function(...) as.numeric(as.character(...))

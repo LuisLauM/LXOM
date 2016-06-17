@@ -18,12 +18,14 @@ This function search othe Oxycline limits using filters and the procedure
 especified in paper of Lau-Medrano W. and Oliveros-Ramos R..
 }
 \details{
-getOxyrange
-
 If \code{filterSettings} parameter is \code{NULL}, oXim will use as default
-\code{data.frame(type = c(".noiselessFilter", ".definerFilter"), radius = c(3, 3), times = c(2, 1), tolerance = c(0.2, NA),  stringsAsFactors = FALSE)}
+\code{data.frame(type = c(".noiselessFilter", ".definerFilter"), radius = c(3, 3), times = c(2, 1), tolerance = c(0.2, NA), stringsAsFactors = FALSE)}
 }
 \examples{
-getOxyrange(fluidMatrix)
+fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
+                 fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
+                 blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+echoData <- readEchograms(fileMode = fileMode)
+oxyclineRange <- getOxyrange(echoData)
 }
 

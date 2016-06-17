@@ -1,9 +1,0 @@
-number_comb,type,radius,times,tolerance
-1,.noiselessFilter,3,2,0.2
-1,.definerFilter,3,1,
-2,.noiselessFilter,3,4,0.7
-2,.definerFilter,3,1,
-2,.noiselessFilter,3,1,0.2
-3,.noiselessFilter,3,2,0.3
-3,.definerFilter,3,2,
-3,.noiselessFilter,3,3,0.2

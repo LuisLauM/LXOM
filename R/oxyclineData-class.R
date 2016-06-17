@@ -1,21 +1,33 @@
-# Print method for oxyclineData objects
-print.oxyclineData <- function(x, ...){
+#' Print method for oxyclineData
+#'
+#' @param x Object of class \code{oxyclineData}.
+print.oxyclineData <- function(x){
   return(NULL)
 }
 
-# Summary method for oxyclineData objects
-summary.oxyclineData <- function(x, ...){
+#' Summary method for oxyclineData
+#'
+#' @param x Object of class \code{oxyclineData}.
+summary.oxyclineData <- function(x){
   return(NULL)
 }
 
-# Print method for summary of oxyclineData objects
-print.summary.oxyclineData <- function(x, ...){
+#' Print method for summary.oxyclineData
+#'
+#' @param x Object of class \code{summary.oxyclineData}.
+print.summary.oxyclineData <- function(x){
   return(NULL)
 }
 
-# Plot method for oxyclineData objects
+#' Plot method for oxyclineData
+#'
+#' @param x Object of class \code{oxyclineData}
+#' @param what What echogram (in number) do you want to plot?
+#' @param plot.oxyrange \code{logical}. If \code{TRUE} (default), show lines of oxycline range.
+#' @param col Vector of color (palette) used to plot echograms.
+#' @param ... Extra arguments passed to \code{echogramPlot} function.
 plot.oxyclineData <- function(x, what = seq_along(x$outputs), plot.oxyrange = TRUE,
-                              col = NULL, save = FALSE, ...){
+                              col = NULL, ...){
 
   what <- suppressWarnings(as.integer(what))
 

@@ -4,7 +4,7 @@
 \alias{createFilterSetting}
 \title{Create filter-settings Object.}
 \usage{
-createFilterSetting(name = NULL, type = NULL, radius = NULL,
+createFilterSetting(name = "default", type = NULL, radius = NULL,
   times = NULL, tolerance = NULL)
 }
 \arguments{
@@ -29,5 +29,6 @@ createFilterSetting(name = "default")
 
 # Generate a personalized profile
 createFilterSetting(type = ".definerFilter", radius = c(3, 5, 5))
+
 }
 

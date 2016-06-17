@@ -1,8 +1,18 @@
+rm(list = ls())
 # Set directory where are outputs of Echopen
-directory <- "../exampleData/Cr 1110-12/"
+directory <- "inst/exampleData/"
+
+fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
+                 fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
+                 blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+
 
 # Read echograms
-echoData <- readEchograms(directory = directory, date.format = "%m-%d-%Y %H:%M:%S")
+# echoData <- readEchograms(directory = directory)
+echoData <- readEchograms(fileMode = fileMode)
+
+print(echoData)
+print(summary(echoData))
 
 # Get limits of oxycline
 # Default combination
@@ -20,17 +30,36 @@ echoData <- readEchograms(directory = directory, date.format = "%m-%d-%Y %H:%M:%
 #                            stringsAsFactors = FALSE)
 
 
-echoOutputs <- getOxyrange(fluidMatrix = echoData, stepBYstep = FALSE, filterSettings = "default")
+echoOutputs <- getOxyrange(fluidMatrix = echoData)
+
+# print(echoData)
+# print(summary(echoData))
 
 # Remove active (previous) plots
-activePlots <- dev.list()
-while(!is.null(activePlots))
-{
-  dev.off()
-  activePlots <- dev.list()
-}
+# activePlots <- dev.list()
+# while(!is.null(activePlots))
+# {
+#   dev.off()
+#   activePlots <- dev.list()
+# }
 
 # Plot filtered echograms
 # png(filename = file.path(directory, "ecograma0.png"), width = 4500, height = 1500, res = 120)
-plot(echoOutputs, plot.oxyrange = FALSE)
+# plot(echoOutputs, plot.oxyrange = FALSE)
 # dev.off()
+
+
+
+fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
+                 fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
+                 blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+echoData <- readEchograms(fileMode = fileMode)
+print(echoData)
+
+
+
+
+
+
+
+

@@ -4,13 +4,14 @@
 \alias{readEchograms}
 \title{Takes outputs from Echopen and generates a matrix to calculate Oxycline.}
 \usage{
-readEchograms(directory, validFish38 = c(-100, -21), validBlue38 = c(-100,
-  -56), upLimitFluid120 = -53, pinInterval = 50,
-  date.format = "\%d-\%m-\%Y \%H:\%M:\%S")
+readEchograms(fileMode = NULL, directoryMode = NULL, validFish38 = c(-100,
+  -21), validBlue38 = c(-100, -56), upLimitFluid120 = -53,
+  pinInterval = 50, date.format = "\%d-\%m-\%Y \%H:\%M:\%S")
 }
 \arguments{
-\item{directory}{Directory where are outputs of Echoopen for Fluid-like, Blue noise
-and Fish.}
+\item{fileMode}{List with needed variables to read single Matlab files. See details below.}
+
+\item{directoryMode}{List with needed variables to read Matlab files from directory. See details below.}
 
 \item{validFish38}{Range of valid values for Fish-38kHz}
 
@@ -27,9 +28,15 @@ This function search outputs of Echoopen for Fluid-like, Blue noise
 and Fish and use them to make a filtered matrix to calculate the Oxycline limits.
 }
 \details{
-readEchograms
+\code{fileMode} must be a list contains filenames for Fish38, Fluid120 and Bluelike38.
+For \code{directoryMode}, it must be a list with a directory with Fish38, Fluid120 and Bluelike38
+files in order to group and build final echograms.
 }
 \examples{
-readEchograms(directory = "C:/Echodata")
+fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
+                 fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
+                 blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+echoData <- readEchograms(fileMode = fileMode)
+print(echoData)
 }
 

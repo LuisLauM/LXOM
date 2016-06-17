@@ -155,7 +155,7 @@
   tempOutput <- fluidMatrix
   outputList <- list(original = fluidMatrix)
   for(i in seq(nrow(filterSettings))){
-    tempFunction <- get(filterSettings[i, "type"])
+    tempFunction <- match.fun(filterSettings[i, "type"])
 
     tempOutput <- switch(filterSettings[i, "type"],
                          .noiselessFilter = tempFunction(tempOutput,
@@ -186,8 +186,9 @@
 
   allLimits <- list()
   for(i in seq_along(oxyclineData)){
-    # Select the final matrix of each echogram
+    # Select the final matrix of each echogram and dims
     tempEchogram <- oxyclineData[[i]]$finalEchogram
+    tempDims <- oxyDims[[i]]
 
     # Define lower and upper limits
     lineLimits <- c(0.10, 0.80)
@@ -207,20 +208,21 @@
     dataEchogram <- apply(dataEchogram, 2, cumsum)
 
     # Set empty matrix for recording range values
-    limitsData <- mat.or.vec(nr = ncol(tempEchogram), nc = 4)
+    limitsData <- matrix(NA, nrow = ncol(tempEchogram), ncol = 4)
     dimnames(limitsData) <- list(colnames(tempEchogram),
                                  c("lower_limit", "upper_limit", "lon", "lat"))
     for(j in index){
       # Get vector with cumsum values by depth
-      limitVector <- dataEchogram[!duplicated(dataEchogram[,j]), j]
+      limitIndex <- !duplicated(dataEchogram[,j])
+      limitVector <- dataEchogram[limitIndex, j]
 
       # Select and save limit values
-      limitsData[j,] <- as.numeric(names(limitVector)[match(as.numeric(lineLimits[j,]),
-                                                            limitVector)])
+      limitIndex <- match(as.numeric(lineLimits[j,]), limitVector)
+      limitsData[j, c(1, 2)] <- as.numeric(names(limitVector)[limitIndex])
+      # c(, tempDims$lon[j], tempDims$lat[j])
     }
 
-    # Convert zeros to NA
-    limitsData[limitsData == 0] <- NA
+    limitsData[,c(3, 4)] <- cbind(tempDims$lon, tempDims$lat)
 
     # Compile values on a list
     allLimits[[i]] <- limitsData
@@ -248,61 +250,213 @@
 }
 
 # Takes outputs from Echopen and generates a matrix to calculate Oxycline
-.getEchoData <- function(directory, validFish38, validBlue38, upLimitFluid120, pinInterval,
-                         date.format){
+# .getEchoData <- function(directory, validFish38, validBlue38, upLimitFluid120, pinInterval,
+#                          date.format){
+#
+#   # Define ttext pattern of databases
+#   pattern_Fish38  <- "_2Freq_Fish38.mat"
+#   # pattern_Fluid38 <- "_2Freq_Fluid38.mat"
+#   pattern_Blue38  <- "_2Freq_Blue38.mat"
+#
+#   # pattern_Fish120   <- "_2Freq_Fish120.mat"
+#   pattern_Fluid120  <- "_2Freq_Fluid120.mat"
+#   # pattern_Blue120   <- "_2Freq_Blue120.mat"
+#
+#   # Generate file list with text patterns
+#   listFiles_Fish <- list.files(path = directory, pattern = pattern_Fish38,
+#                                full.names = TRUE, recursive = TRUE)
+#   listFiles_Fluid <- list.files(path = directory, pattern = pattern_Fluid120,
+#                                 full.names = TRUE, recursive = TRUE)
+#   listFiles_Blue <- list.files(path = directory, pattern = pattern_Blue38,
+#                                full.names = TRUE, recursive = TRUE)
+#
+#   # Read files and concatenate in one matrix
+#   allData <- allTime <- allLon <- allLat <- NULL
+#   for(i in seq_along(listFiles_Fish)){
+#     tempList_Fish <- readMat(listFiles_Fish[i])
+#     tempList_Fluid <- readMat(listFiles_Fluid[i])
+#     tempList_Blue <- readMat(listFiles_Blue[i])
+#
+#     tempData_Fish <- tempList_Fish$Data.values
+#     tempData_Fluid <- tempList_Fluid$Data.values
+#     tempData_Blue <- tempList_Blue$Data.values
+#
+#     if(i == 1)
+#       depth <- as.numeric(tempList_Fluid$depth)
+#
+#     tempTime <- paste(as.character(tempList_Fluid$Ping.date),
+#                       as.character(tempList_Fluid$Ping.time))
+#     tempLon <- tempList_Fluid$Longitude
+#     tempLat <- tempList_Fluid$Latitude
+#     rm(list = c("tempList_Fish", "tempList_Fluid", "tempList_Blue"))
+#
+#     # Clear data using limit parameters
+#     tempData_Fish[tempData_Fish < -998 | tempData_Fish < validFish38[1] |
+#                     tempData_Fish > validFish38[2]] <- NaN
+#     tempData_Blue[tempData_Blue < -998 | tempData_Blue < validBlue38[1] |
+#                     tempData_Blue > validBlue38[2]] <- NaN
+#     tempData_Fluid[tempData_Fluid < -998 | tempData_Fluid > upLimitFluid120] <- NaN
+#
+#     # Clear main data (Fluid-like) using Fish and Blue noise data
+#     tempData <- tempData_Fluid*(is.na(tempData_Blue) & is.na(tempData_Fish))
+#     tempData[tempData == 0] <- NaN
+#
+#     allLon <- c(allLon, tempLon)
+#     allLat <- c(allLat, tempLat)
+#     allTime <- c(allTime, tempTime)
+#     allData <- cbind(allData, t(tempData))
+#   }
+#
+#   # Convert time
+#   allTime <- strptime(allTime, format = date.format)
+#
+#   if(sum(is.na(allTime)) > 0)
+#     stop("Incorrect value for 'date.format'.")
+#
+#   # Get points where the difference between two pin is larger than pinInterval (sec)
+#   breakPoints <- which(as.numeric(diff(allTime)) > pinInterval)
+#   breakPoints <- if(is.null(dim(breakPoints)) && length(breakPoints) > 1)
+#     c(0, dim(allData)[2]) else
+#       c(0, breakPoints, dim(allData)[2])
+#
+#   # Split big matrix by breakpoints to get matrix of echograms
+#   data <- list()
+#   for(i in seq(2, length(breakPoints))){
+#     tempEchogram <- list()
+#
+#     index <- seq(breakPoints[i - 1] + 1, breakPoints[i])
+#
+#     tempMatrix <- allData[,index]
+#     tempTimes <- allTime[index]
+#     tempLon <- allLon[index]
+#     tempLat <- allLat[index]
+#
+#     colnames(tempMatrix) <- as.character(tempTimes)
+#     rownames(tempMatrix) <- round(depth, 2)
+#
+#     tempEchogram[[1]] <- tempMatrix
+#     tempEchogram[[2]] <- list(depth = depth,
+#                               time = tempTimes,
+#                               lon = tempLon,
+#                               lat = tempLat)
+#
+#     names(tempEchogram) <- c("echogram", "dimnames")
+#
+#     data[[i - 1]] <- tempEchogram
+#   }
+#
+#   names(data) <- paste0("matrix_", seq_along(breakPoints[-1]))
+#
+#   output <- list(info = list(parameters = list(validFish38 = validFish38,
+#                                                validBlue38 = validBlue38,
+#                                                upLimitFluid120 = upLimitFluid120),
+#                              n_echograms = length(breakPoints) - 1),
+#                  data = data)
+#
+#   return(output)
+# }
 
-  # Define ttext pattern of databases
-  pattern_Fish38  <- "_2Freq_Fish38.mat"
-  # pattern_Fluid38 <- "_2Freq_Fluid38.mat"
-  pattern_Blue38  <- "_2Freq_Blue38.mat"
+.getEchoData <- function(fileMode, directoryMode,
+                         validFish38, validBlue38, upLimitFluid120,
+                         pinInterval, date.format){
 
-  # pattern_Fish120   <- "_2Freq_Fish120.mat"
-  pattern_Fluid120  <- "_2Freq_Fluid120.mat"
-  # pattern_Blue120   <- "_2Freq_Blue120.mat"
+  if(is.null(fileMode) & is.null(directoryMode)){
+    stop("At least whether fileMode or directoryMode must not be NULL.")
+  }
 
-  # Generate file list with text patterns
-  listFiles_Fish <- list.files(path = directory, pattern = pattern_Fish38,
-                               full.names = TRUE, recursive = TRUE)
-  listFiles_Fluid <- list.files(path = directory, pattern = pattern_Fluid120,
-                                full.names = TRUE, recursive = TRUE)
-  listFiles_Blue <- list.files(path = directory, pattern = pattern_Blue38,
-                               full.names = TRUE, recursive = TRUE)
+  if(!is.null(fileMode)){
 
-  # Read files and concatenate in one matrix
-  allData <- allTime <- allLon <- allLat <- NULL
-  for(i in seq_along(listFiles_Fish)){
-    tempList_Fish <- readMat(listFiles_Fish[i])
-    tempList_Fluid <- readMat(listFiles_Fluid[i])
-    tempList_Blue <- readMat(listFiles_Blue[i])
+    # Read Matlab files (.m)
+    fish38_matrix <- readMat(fileMode$fish38_file)
+    fluid120_matrix <- readMat(fileMode$fluid120_file)
+    blue38_matrix <- readMat(fileMode$blue38_file)
 
-    tempData_Fish <- tempList_Fish$Data.values
-    tempData_Fluid <- tempList_Fluid$Data.values
-    tempData_Blue <- tempList_Blue$Data.values
+    # Extract lon, lat, time and depth
+    allLon <- fluid120_matrix$Longitude
+    allLat <- fluid120_matrix$Latitude
+    allTime <- paste(.ac(fluid120_matrix$Ping.date),
+                     .ac(fluid120_matrix$Ping.time))
+    depth <- fluid120_matrix$depth
 
-    if(i == 1)
-      depth <- as.numeric(tempList_Fluid$depth)
-
-    tempTime <- paste(as.character(tempList_Fluid$Ping.date),
-                      as.character(tempList_Fluid$Ping.time))
-    tempLon <- tempList_Fluid$Longitude
-    tempLat <- tempList_Fluid$Latitude
-    rm(list = c("tempList_Fish", "tempList_Fluid", "tempList_Blue"))
+    # Extract echogram matrix
+    fish38_matrix <- fish38_matrix$Data.values
+    fluid120_matrix <- fluid120_matrix$Data.values
+    blue38_matrix <- blue38_matrix$Data.values
 
     # Clear data using limit parameters
-    tempData_Fish[tempData_Fish < -998 | tempData_Fish < validFish38[1] |
-                    tempData_Fish > validFish38[2]] <- NaN
-    tempData_Blue[tempData_Blue < -998 | tempData_Blue < validBlue38[1] |
-                    tempData_Blue > validBlue38[2]] <- NaN
-    tempData_Fluid[tempData_Fluid < -998 | tempData_Fluid > upLimitFluid120] <- NaN
+    index <- (fish38_matrix < -998 | fish38_matrix < validFish38[1] |
+                fish38_matrix > validFish38[2])
+    fish38_matrix[index] <- NaN
+
+    index <- (blue38_matrix < -998 | blue38_matrix < validBlue38[1] |
+                blue38_matrix > validBlue38[2])
+    blue38_matrix[index] <- NaN
+
+    index <- fluid120_matrix < -998 | fluid120_matrix > upLimitFluid120
+    fluid120_matrix[index] <- NaN
 
     # Clear main data (Fluid-like) using Fish and Blue noise data
-    tempData <- tempData_Fluid*(is.na(tempData_Blue) & is.na(tempData_Fish))
-    tempData[tempData == 0] <- NaN
+    allData <- fluid120_matrix*(is.na(blue38_matrix) & is.na(fish38_matrix))
+    allData[allData == 0] <- NaN
+    allData <- t(allData)
 
-    allLon <- c(allLon, tempLon)
-    allLat <- c(allLat, tempLat)
-    allTime <- c(allTime, tempTime)
-    allData <- cbind(allData, t(tempData))
+  }else{
+
+    directory <- directoryMode$directory
+
+    # Define ttext pattern of databases
+    pattern_Fish38  <- directoryMode$fish38_pattern
+    # pattern_Fluid38 <- "_2Freq_Fluid38.mat"
+    pattern_Blue38  <- directoryMode$blue38_pattern
+
+    # pattern_Fish120   <- "_2Freq_Fish120.mat"
+    pattern_Fluid120  <- directoryMode$fluid120_pattern
+    # pattern_Blue120   <- "_2Freq_Blue120.mat"
+
+    # Generate file list with text patterns
+    listFiles_Fish <- list.files(path = directory, pattern = pattern_Fish38,
+                                 full.names = TRUE, recursive = TRUE)
+    listFiles_Fluid <- list.files(path = directory, pattern = pattern_Fluid120,
+                                  full.names = TRUE, recursive = TRUE)
+    listFiles_Blue <- list.files(path = directory, pattern = pattern_Blue38,
+                                 full.names = TRUE, recursive = TRUE)
+
+    # Read files and concatenate in one matrix
+    allData <- allTime <- allLon <- allLat <- NULL
+    for(i in seq_along(listFiles_Fish)){
+      tempList_Fish <- readMat(listFiles_Fish[i])
+      tempList_Fluid <- readMat(listFiles_Fluid[i])
+      tempList_Blue <- readMat(listFiles_Blue[i])
+
+      tempData_Fish <- tempList_Fish$Data.values
+      tempData_Fluid <- tempList_Fluid$Data.values
+      tempData_Blue <- tempList_Blue$Data.values
+
+      if(i == 1)
+        depth <- .an(tempList_Fluid$depth)
+
+      tempTime <- paste(as.character(tempList_Fluid$Ping.date),
+                        as.character(tempList_Fluid$Ping.time))
+      tempLon <- tempList_Fluid$Longitude
+      tempLat <- tempList_Fluid$Latitude
+      rm(list = c("tempList_Fish", "tempList_Fluid", "tempList_Blue"))
+
+      # Clear data using limit parameters
+      tempData_Fish[tempData_Fish < -998 | tempData_Fish < validFish38[1] |
+                      tempData_Fish > validFish38[2]] <- NaN
+      tempData_Blue[tempData_Blue < -998 | tempData_Blue < validBlue38[1] |
+                      tempData_Blue > validBlue38[2]] <- NaN
+      tempData_Fluid[tempData_Fluid < -998 | tempData_Fluid > upLimitFluid120] <- NaN
+
+      # Clear main data (Fluid-like) using Fish and Blue noise data
+      tempData <- tempData_Fluid*(is.na(tempData_Blue) & is.na(tempData_Fish))
+      tempData[tempData == 0] <- NaN
+
+      allLon <- c(allLon, tempLon)
+      allLat <- c(allLat, tempLat)
+      allTime <- c(allTime, tempTime)
+      allData <- cbind(allData, t(tempData))
+    }
   }
 
   # Convert time
@@ -313,30 +467,32 @@
 
   # Get points where the difference between two pin is larger than pinInterval (sec)
   breakPoints <- which(as.numeric(diff(allTime)) > pinInterval)
-  breakPoints <- if(is.null(dim(breakPoints)) && length(breakPoints) > 1)
-    c(0, dim(allData)[2]) else
-      c(0, breakPoints, dim(allData)[2])
+
+  index <- is.null(dim(breakPoints)) && length(breakPoints) > 1
+  breakPoints <- c(0, if(index) NULL else breakPoints, dim(allData)[2])
 
   # Split big matrix by breakpoints to get matrix of echograms
   data <- list()
   for(i in seq(2, length(breakPoints))){
     tempEchogram <- list()
 
+    # Get index by breakpoints
     index <- seq(breakPoints[i - 1] + 1, breakPoints[i])
 
+    # Split data by index
     tempMatrix <- allData[,index]
     tempTimes <- allTime[index]
-    allLon <- allLon[index]
-    allLat <- allLat[index]
+    tempLon <- allLon[index]
+    tempLat <- allLat[index]
 
-    colnames(tempMatrix) <- as.character(tempTimes)
+    colnames(tempMatrix) <- .ac(tempTimes)
     rownames(tempMatrix) <- round(depth, 2)
 
     tempEchogram[[1]] <- tempMatrix
     tempEchogram[[2]] <- list(depth = depth,
                               time = tempTimes,
-                              lon = allLon,
-                              lat = allLat)
+                              lon = tempLon,
+                              lat = tempLat)
 
     names(tempEchogram) <- c("echogram", "dimnames")
 
@@ -345,6 +501,7 @@
 
   names(data) <- paste0("matrix_", seq_along(breakPoints[-1]))
 
+  # Build final output
   output <- list(info = list(parameters = list(validFish38 = validFish38,
                                                validBlue38 = validBlue38,
                                                upLimitFluid120 = upLimitFluid120),
@@ -358,29 +515,29 @@
 
   # Define raster from echogram
   xAxis <- as.POSIXct(dimnames(echogram)[[2]])
-  yAxis <- as.numeric(dimnames(echogram)[[1]])
+  yAxis <- abs(as.numeric(dimnames(echogram)[[1]]))
 
   ext_xAxis <- seq.POSIXt(range(xAxis)[1], range(xAxis)[2], by = "sec")
 
   newEchogram <- matrix(NA, nrow = nrow(echogram), ncol = length(ext_xAxis))
   newEchogram[,match(as.integer(xAxis), as.integer(ext_xAxis))] <- echogram
 
-  echoRaster <- raster(x = newEchogram,
-                       ymn = min(yAxis), ymx = max(yAxis),
-                       xmn = min(as.integer(xAxis)), xmx = max(as.integer(xAxis)))
+  newEchogram <- t(newEchogram)
+  newEchogram <- newEchogram[,ncol(newEchogram):1]
 
   # Get plot of raster
   nIntervals <- 5
 
   xlim <- range(pretty_dates(xAxis, nIntervals))
-  ylim <- range(pretty(yAxis), n = nIntervals)
+  ylim <- range(pretty(yAxis, n = nIntervals))
 
   par(mar = c(3, 4, 2, 3), xaxs = "i", yaxs = "i")
 
-  image(echoRaster, xlim = as.numeric(xlim), ylim = ylim, axes = FALSE, ylab = "Depth (m)",
+  image(x = ext_xAxis, y = yAxis, z = newEchogram,
+        xlim = as.numeric(xlim), ylim = ylim, axes = FALSE, ylab = "Depth (m)",
         useRaster = FALSE, col = colEchogram, ...)
 
-  axis(2, at = pretty(yAxis), labels = abs(pretty(yAxis)), las = 2)
+  axis(2, at = pretty(yAxis), labels = rev(abs(pretty(yAxis))), las = 2)
   axis(1, at = as.numeric(pretty_dates(xlim, nIntervals)),
        labels = as.Date(pretty_dates(xlim, nIntervals)))
   axis(1, at = as.numeric(pretty_dates(xlim, nIntervals)),
