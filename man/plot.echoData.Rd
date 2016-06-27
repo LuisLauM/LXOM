@@ -2,7 +2,7 @@
 % Please edit documentation in R/echoData-class.R
 \name{plot.echoData}
 \alias{plot.echoData}
-\title{Plot method for echoData}
+\title{Plot method for echoData Objects.}
 \usage{
 \method{plot}{echoData}(x, ...)
 }

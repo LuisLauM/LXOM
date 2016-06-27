@@ -2,7 +2,7 @@
 % Please edit documentation in R/echoData-class.R
 \name{print.echoData}
 \alias{print.echoData}
-\title{Print method for echoData}
+\title{Print method for echoData Objects.}
 \usage{
 \method{print}{echoData}(x)
 }
@@ -10,7 +10,7 @@
 \item{x}{\code{echoData} object provided by \code{readEchograms} function.}
 }
 \description{
-Shows main information from echodata object
+Shows main information from echodata Objects.
 }
 \examples{
 fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),

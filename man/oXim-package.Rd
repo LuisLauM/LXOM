@@ -13,6 +13,6 @@ oXim: Oxycline Index from Matrix Echograms (RJournal)
 }
 \keyword{depth,}
 \keyword{echograms,}
-\keyword{filters}
+\keyword{image-filtering}
 \keyword{oxycline,}
 

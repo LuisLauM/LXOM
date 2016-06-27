@@ -10,7 +10,7 @@
 \item{x}{\code{echoData} object provided by \code{readEchograms} function.}
 }
 \description{
-Get summary information of echograms included on echodata objects.
+Get summary information of echograms included on echodata Objects.
 }
 \examples{
 fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),

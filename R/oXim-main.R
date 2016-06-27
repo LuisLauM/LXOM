@@ -11,7 +11,7 @@
 #' @aliases oXim-package oXim
 #' @docType package
 #' @references oXim: Oxycline Index from Matrix Echograms (RJournal)
-#' @keywords echograms, oxycline, depth, filters
+#' @keywords echograms, oxycline, depth, image-filtering
 NULL
 
 #' @export readEchograms
@@ -102,7 +102,8 @@ getOxyrange <- function(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE){
   # Compile outputs on a list
   oxyclineData <- list(info = list(number_echograms = nEchograms,
                                    date_range = lapply(fluidMatrix, function(x) range(x$dimnames$time)),
-                                   depth_range = lapply(fluidMatrix, function(x) range(x$dimnames$depth))),
+                                   depth_range = lapply(fluidMatrix, function(x) range(x$dimnames$depth)),
+                                   filter_settings = filterSettings),
                        dims = oxyDims,
                        outputs = oxyclineData,
                        oxycline_range = oxyRange)

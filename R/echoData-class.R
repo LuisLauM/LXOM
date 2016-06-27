@@ -1,7 +1,9 @@
-#' @title Print method for echoData
-#' @description Shows main information from echodata object
+#' @title Print method for echoData Objects.
+#' @description Shows main information from echodata Objects.
 #'
 #' @param x \code{echoData} object provided by \code{readEchograms} function.
+#' @method print echoData
+#' @export
 #'
 #' @examples
 #' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
@@ -34,9 +36,12 @@ print.echoData <- function(x){
 }
 
 #' @title Summary method for echoData
-#' @description Get summary information of echograms included on echodata objects.
+#' @description Get summary information of echograms included on echodata Objects.
 #'
 #' @param x \code{echoData} object provided by \code{readEchograms} function.
+#'
+#' @method summary echoData
+#' @export
 #'
 #' @examples
 #' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
@@ -79,9 +84,12 @@ summary.echoData <- function(x){
 }
 
 #' @title Print method for summary.echoData
-#' @description Shows main information from echodata.summary object.
+#' @description Shows main information from echodata.summary Objects.
 #'
 #' @param x \code{echoData.summary} object provided by application of summary method to \code{echoData} object.
+#'
+#' @method print summary.echoData
+#' @export
 #'
 #' @examples
 #' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
@@ -114,12 +122,15 @@ print.summary.echoData <- function(x){
   return(invisible())
 }
 
-#' @title Plot method for echoData
+#' @title Plot method for echoData Objects.
 #' @description This function takes an \code{echoData} object and plots an interpolated map
 #' showing oxycline depth along shore.
 #'
 #' @param x \code{echoData} object provided by \code{readEchograms} function.
 #' @param ... Arguments passed from \code{plot} function.
+#'
+#' @method plot echoData
+#' @export
 #'
 #' @examples
 #' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),

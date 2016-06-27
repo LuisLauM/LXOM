@@ -1,6 +1,12 @@
 #' Print method for oxyclineData
+#' @title Print method for oxyclineData Objects.
+#' @description Shows main information from oxyclineData Objects.
 #'
 #' @param x Object of class \code{oxyclineData}.
+#'
+#' @method print oxyclineData
+#' @export
+#'
 print.oxyclineData <- function(x){
   return(NULL)
 }
@@ -8,6 +14,9 @@ print.oxyclineData <- function(x){
 #' Summary method for oxyclineData
 #'
 #' @param x Object of class \code{oxyclineData}.
+#'
+#' @method summary oxyclineData
+#' @export
 summary.oxyclineData <- function(x){
   return(NULL)
 }
@@ -15,6 +24,9 @@ summary.oxyclineData <- function(x){
 #' Print method for summary.oxyclineData
 #'
 #' @param x Object of class \code{summary.oxyclineData}.
+#'
+#' @method print summary.oxyclineData
+#' @export
 print.summary.oxyclineData <- function(x){
   return(NULL)
 }
@@ -26,6 +38,9 @@ print.summary.oxyclineData <- function(x){
 #' @param plot.oxyrange \code{logical}. If \code{TRUE} (default), show lines of oxycline range.
 #' @param col Vector of color (palette) used to plot echograms.
 #' @param ... Extra arguments passed to \code{echogramPlot} function.
+#'
+#' @method plot oxyclineData
+#' @export
 plot.oxyclineData <- function(x, what = seq_along(x$outputs), plot.oxyrange = TRUE,
                               col = NULL, ...){
 

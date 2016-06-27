@@ -10,7 +10,7 @@
 \item{x}{\code{echoData.summary} object provided by application of summary method to \code{echoData} object.}
 }
 \description{
-Shows main information from echodata.summary object.
+Shows main information from echodata.summary Objects.
 }
 \examples{
 fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),

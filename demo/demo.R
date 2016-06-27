@@ -8,11 +8,15 @@ fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = 
 
 
 # Read echograms
-# echoData <- readEchograms(directory = directory)
 echoData <- readEchograms(fileMode = fileMode)
 
+# Test principal methods
 print(echoData)
-print(summary(echoData))
+
+summEchoData <- summary(echoData)
+print(summEchoData)
+
+plot(echoData)
 
 # Get limits of oxycline
 # Default combination
@@ -47,19 +51,3 @@ echoOutputs <- getOxyrange(fluidMatrix = echoData)
 # png(filename = file.path(directory, "ecograma0.png"), width = 4500, height = 1500, res = 120)
 # plot(echoOutputs, plot.oxyrange = FALSE)
 # dev.off()
-
-
-
-fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
-                 fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
-                 blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
-echoData <- readEchograms(fileMode = fileMode)
-print(echoData)
-
-
-
-
-
-
-
-

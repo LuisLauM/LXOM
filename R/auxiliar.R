@@ -1,7 +1,7 @@
 .checkFilterSettings <- function(filterSettings){
 
   if(is.null(filterSettings)){
-    message("Message: \n No filter-setting object or file detected. oXim will use default configuration.")
+    message("Message: \nNo filter-setting object or file detected. OXim will use default filter configuration.")
     output <- defaultFilterSettings[tolower(defaultFilterSettings$name) == "default",]
   }else if(is.vector(filterSettings) && is.character(filterSettings) && length(filterSettings) == 1){
     if(!is.element(tolower(filterSettings), tolower(unique(defaultFilterSettings$name)))){

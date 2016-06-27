@@ -2,7 +2,7 @@
 % Please edit documentation in R/oxyclineData-class.R
 \name{print.oxyclineData}
 \alias{print.oxyclineData}
-\title{Print method for oxyclineData}
+\title{Print method for oxyclineData Objects.}
 \usage{
 \method{print}{oxyclineData}(x)
 }
@@ -10,6 +10,9 @@
 \item{x}{Object of class \code{oxyclineData}.}
 }
 \description{
+Shows main information from oxyclineData Objects.
+}
+\details{
 Print method for oxyclineData
 }
 
