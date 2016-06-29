@@ -4,15 +4,32 @@
 \alias{print.oxyclineData}
 \title{Print method for oxyclineData Objects.}
 \usage{
-\method{print}{oxyclineData}(x)
+\method{print}{oxyclineData}(x, ...)
 }
 \arguments{
 \item{x}{Object of class \code{oxyclineData}.}
+
+\item{...}{Extra argumemts.}
 }
 \description{
 Shows main information from oxyclineData Objects.
 }
 \details{
 Print method for oxyclineData
+}
+\examples{
+# Set a list of directories
+fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
+                 fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
+                 blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+
+# Read echograms
+echoData <- readEchograms(fileMode = fileMode)
+
+# Calculate oxycline range
+echoOutputs <- getOxyrange(fluidMatrix = echoData)
+
+# Print oxycline range
+print(echoOutputs)
 }
 

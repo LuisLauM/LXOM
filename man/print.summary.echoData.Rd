@@ -4,10 +4,12 @@
 \alias{print.summary.echoData}
 \title{Print method for summary.echoData}
 \usage{
-\method{print}{summary.echoData}(x)
+\method{print}{summary.echoData}(x, ...)
 }
 \arguments{
 \item{x}{\code{echoData.summary} object provided by application of summary method to \code{echoData} object.}
+
+\item{...}{Extra argumemts.}
 }
 \description{
 Shows main information from echodata.summary Objects.

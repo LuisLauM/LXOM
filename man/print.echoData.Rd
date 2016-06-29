@@ -4,10 +4,12 @@
 \alias{print.echoData}
 \title{Print method for echoData Objects.}
 \usage{
-\method{print}{echoData}(x)
+\method{print}{echoData}(x, ...)
 }
 \arguments{
 \item{x}{\code{echoData} object provided by \code{readEchograms} function.}
+
+\item{...}{Extra argumemts.}
 }
 \description{
 Shows main information from echodata Objects.

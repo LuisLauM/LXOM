@@ -4,10 +4,12 @@
 \alias{summary.echoData}
 \title{Summary method for echoData}
 \usage{
-\method{summary}{echoData}(x)
+\method{summary}{echoData}(x, ...)
 }
 \arguments{
 \item{x}{\code{echoData} object provided by \code{readEchograms} function.}
+
+\item{...}{Extra argumemts.}
 }
 \description{
 Get summary information of echograms included on echodata Objects.

@@ -8,6 +8,9 @@
 \description{
 Pack oriented to extract oxycline depth from echogram matrix using Sobel-based algorithms.
 }
+\author{
+Wencheng Lau-Medrano, \email{llau@imarpe.gob.pe}
+}
 \references{
 oXim: Oxycline Index from Matrix Echograms (RJournal)
 }

@@ -4,10 +4,9 @@ Title: Oxycline Index from Matrix Echograms
 Version: 1.0.0
 Date: 2016-06-27
 Authors@R: c(person("Wencheng", "Lau-Medrano", role = c("aut", "cre"),
-         email = "luis.laum@gmail.com"),
-	      person("Ricardo", "Oliveros-Ramos", role = "aut"))
-Author: Wencheng Lau-Medrano [aut, cre], Ricardo Oliveros-Ramos [aut]
-Maintainer: Wencheng Lau-Medrano <luis.laum@gmail.com>
+         email = "llau@imarpe.gob.pe"))
+Author: Wencheng Lau-Medrano [aut, cre]
+Maintainer: Wencheng Lau-Medrano <llau@imarpe.gob.pe>
 Description: Package that implements paper of W. Lau-Medrano & R. Oliveros-Ramos
     to obtaninlimits of oxycline from acoustic datasets.
 License: GPL (>= 2)

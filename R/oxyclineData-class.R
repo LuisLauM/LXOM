@@ -3,31 +3,78 @@
 #' @description Shows main information from oxyclineData Objects.
 #'
 #' @param x Object of class \code{oxyclineData}.
+#' @param ... Extra argumemts.
 #'
-#' @method print oxyclineData
 #' @export
+#' @method print oxyclineData
 #'
-print.oxyclineData <- function(x){
+#' @examples
+#' # Set a list of directories
+#' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
+#'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
+#'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+#'
+#' # Read echograms
+#' echoData <- readEchograms(fileMode = fileMode)
+#'
+#' # Calculate oxycline range
+#' echoOutputs <- getOxyrange(fluidMatrix = echoData)
+#'
+#' # Print oxycline range
+#' print(echoOutputs)
+print.oxyclineData <- function(x, ...){
   return(NULL)
 }
 
 #' Summary method for oxyclineData
 #'
 #' @param x Object of class \code{oxyclineData}.
+#' @param ... Extra argumemts.
 #'
-#' @method summary oxyclineData
 #' @export
-summary.oxyclineData <- function(x){
+#' @method summary oxyclineData
+#'
+#' @examples
+#' # Set a list of directories
+#' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
+#'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
+#'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+#'
+#' # Read echograms
+#' echoData <- readEchograms(fileMode = fileMode)
+#'
+#' # Calculate oxycline range
+#' echoOutputs <- getOxyrange(fluidMatrix = echoData)
+#'
+#' # Get summary
+#' summary(echoOutputs)
+summary.oxyclineData <- function(x, ...){
   return(NULL)
 }
 
 #' Print method for summary.oxyclineData
 #'
 #' @param x Object of class \code{summary.oxyclineData}.
+#' @param ... Extra argumemts.
 #'
-#' @method print summary.oxyclineData
 #' @export
-print.summary.oxyclineData <- function(x){
+#' @method print summary.oxyclineData
+#'
+#' @examples
+#' # Set a list of directories
+#' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
+#'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
+#'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+#'
+#' # Read echograms
+#' echoData <- readEchograms(fileMode = fileMode)
+#'
+#' # Calculate oxycline range
+#' echoOutputs <- getOxyrange(fluidMatrix = echoData)
+#'
+#' # Get and print summary
+#' print(summary(echoOutputs))
+print.summary.oxyclineData <- function(x, ...){
   return(NULL)
 }
 
@@ -39,8 +86,23 @@ print.summary.oxyclineData <- function(x){
 #' @param col Vector of color (palette) used to plot echograms.
 #' @param ... Extra arguments passed to \code{echogramPlot} function.
 #'
-#' @method plot oxyclineData
 #' @export
+#' @method plot oxyclineData
+#'
+#' @examples
+#' # Set a list of directories
+#' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
+#'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
+#'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+#'
+#' # Read echograms
+#' echoData <- readEchograms(fileMode = fileMode)
+#'
+#' # Calculate oxycline range
+#' echoOutputs <- getOxyrange(fluidMatrix = echoData)
+#'
+#' # Plot oxycline range
+#' plot(echoOutputs)
 plot.oxyclineData <- function(x, what = seq_along(x$outputs), plot.oxyrange = TRUE,
                               col = NULL, ...){
 

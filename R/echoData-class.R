@@ -2,8 +2,10 @@
 #' @description Shows main information from echodata Objects.
 #'
 #' @param x \code{echoData} object provided by \code{readEchograms} function.
-#' @method print echoData
+#' @param ... Extra argumemts.
+#'
 #' @export
+#' @method print echoData
 #'
 #' @examples
 #' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
@@ -11,7 +13,7 @@
 #'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
 #' echoData <- readEchograms(fileMode = fileMode)
 #' print(echoData)
-print.echoData <- function(x){
+print.echoData <- function(x, ...){
 
   cat(paste("\nNumber of echograms: ", x$info$n_echograms, "\n"))
 
@@ -39,9 +41,10 @@ print.echoData <- function(x){
 #' @description Get summary information of echograms included on echodata Objects.
 #'
 #' @param x \code{echoData} object provided by \code{readEchograms} function.
+#' @param ... Extra argumemts.
 #'
-#' @method summary echoData
 #' @export
+#' @method summary echoData
 #'
 #' @examples
 #' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
@@ -49,7 +52,7 @@ print.echoData <- function(x){
 #'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
 #' echoData <- readEchograms(fileMode = fileMode)
 #' mySummary <- summary(echoData)
-summary.echoData <- function(x){
+summary.echoData <- function(x, ...){
 
   allSummaryData <- list()
   for(i in seq_along(x$data)){
@@ -87,9 +90,10 @@ summary.echoData <- function(x){
 #' @description Shows main information from echodata.summary Objects.
 #'
 #' @param x \code{echoData.summary} object provided by application of summary method to \code{echoData} object.
+#' @param ... Extra argumemts.
 #'
-#' @method print summary.echoData
 #' @export
+#' @method print summary.echoData
 #'
 #' @examples
 #' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
@@ -99,7 +103,7 @@ summary.echoData <- function(x){
 #'
 #' mySummary <- summary(echoData)
 #' print(mySummary)
-print.summary.echoData <- function(x){
+print.summary.echoData <- function(x, ...){
 
   cat(paste("\nNumber of echograms: ", x$n_echograms, "\n"))
 
@@ -129,8 +133,8 @@ print.summary.echoData <- function(x){
 #' @param x \code{echoData} object provided by \code{readEchograms} function.
 #' @param ... Arguments passed from \code{plot} function.
 #'
-#' @method plot echoData
 #' @export
+#' @method plot echoData
 #'
 #' @examples
 #' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
