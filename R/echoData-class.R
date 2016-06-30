@@ -6,13 +6,6 @@
 #'
 #' @export
 #' @method print echoData
-#'
-#' @examples
-#' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
-#'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
-#'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
-#' echoData <- readEchograms(fileMode = fileMode)
-#' print(echoData)
 print.echoData <- function(x, ...){
 
   cat(paste("\nNumber of echograms: ", x$info$n_echograms, "\n"))
@@ -45,13 +38,6 @@ print.echoData <- function(x, ...){
 #'
 #' @export
 #' @method summary echoData
-#'
-#' @examples
-#' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
-#'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
-#'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
-#' echoData <- readEchograms(fileMode = fileMode)
-#' mySummary <- summary(echoData)
 summary.echoData <- function(object, ...){
 
   allSummaryData <- list()
@@ -94,15 +80,6 @@ summary.echoData <- function(object, ...){
 #'
 #' @export
 #' @method print summary.echoData
-#'
-#' @examples
-#' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
-#'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
-#'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
-#' echoData <- readEchograms(fileMode = fileMode)
-#'
-#' mySummary <- summary(echoData)
-#' print(mySummary)
 print.summary.echoData <- function(x, ...){
 
   cat(paste("\nNumber of echograms: ", x$n_echograms, "\n"))
@@ -135,13 +112,6 @@ print.summary.echoData <- function(x, ...){
 #'
 #' @export
 #' @method plot echoData
-#'
-#' @examples
-#' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
-#'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
-#'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
-#' echoData <- readEchograms(fileMode = fileMode)
-#' print(echoData)
 plot.echoData <- function(x, ...){
 
   for(i in seq_along(x$data)){

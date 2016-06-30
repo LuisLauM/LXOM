@@ -14,19 +14,4 @@
 \description{
 Summary method for oxyclineData
 }
-\examples{
-# Set a list of directories
-fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
-                 fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
-                 blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
-
-# Read echograms
-echoData <- readEchograms(fileMode = fileMode)
-
-# Calculate oxycline range
-echoOutputs <- getOxyrange(fluidMatrix = echoData)
-
-# Get summary
-summary(echoOutputs)
-}
 

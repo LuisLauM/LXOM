@@ -7,21 +7,6 @@
 #'
 #' @export
 #' @method print oxyclineData
-#'
-#' @examples
-#' # Set a list of directories
-#' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
-#'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
-#'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
-#'
-#' # Read echograms
-#' echoData <- readEchograms(fileMode = fileMode)
-#'
-#' # Calculate oxycline range
-#' echoOutputs <- getOxyrange(fluidMatrix = echoData)
-#'
-#' # Print oxycline range
-#' print(echoOutputs)
 print.oxyclineData <- function(x, ...){
   return(NULL)
 }
@@ -33,21 +18,6 @@ print.oxyclineData <- function(x, ...){
 #'
 #' @export
 #' @method summary oxyclineData
-#'
-#' @examples
-#' # Set a list of directories
-#' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
-#'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
-#'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
-#'
-#' # Read echograms
-#' echoData <- readEchograms(fileMode = fileMode)
-#'
-#' # Calculate oxycline range
-#' echoOutputs <- getOxyrange(fluidMatrix = echoData)
-#'
-#' # Get summary
-#' summary(echoOutputs)
 summary.oxyclineData <- function(object, ...){
   return(NULL)
 }
@@ -59,21 +29,6 @@ summary.oxyclineData <- function(object, ...){
 #'
 #' @export
 #' @method print summary.oxyclineData
-#'
-#' @examples
-#' # Set a list of directories
-#' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
-#'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
-#'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
-#'
-#' # Read echograms
-#' echoData <- readEchograms(fileMode = fileMode)
-#'
-#' # Calculate oxycline range
-#' echoOutputs <- getOxyrange(fluidMatrix = echoData)
-#'
-#' # Get and print summary
-#' print(summary(echoOutputs))
 print.summary.oxyclineData <- function(x, ...){
   return(NULL)
 }
@@ -88,21 +43,6 @@ print.summary.oxyclineData <- function(x, ...){
 #'
 #' @export
 #' @method plot oxyclineData
-#'
-#' @examples
-#' # Set a list of directories
-#' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
-#'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
-#'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
-#'
-#' # Read echograms
-#' echoData <- readEchograms(fileMode = fileMode)
-#'
-#' # Calculate oxycline range
-#' echoOutputs <- getOxyrange(fluidMatrix = echoData)
-#'
-#' # Plot oxycline range
-#' plot(echoOutputs)
 plot.oxyclineData <- function(x, what = seq_along(x$outputs), plot.oxyrange = TRUE,
                               col = NULL, ...){
 

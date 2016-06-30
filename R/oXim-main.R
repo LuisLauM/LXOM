@@ -134,7 +134,6 @@ getOxyrange <- function(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE){
 #'
 #' # Generate a personalized profile
 #' createFilterSetting(type = ".definerFilter", radius = c(3, 5, 5))
-#'
 createFilterSetting <- function(name = "default", type = NULL, radius = NULL, times = NULL, tolerance = NULL){
 
   if(is.null(name) || !is.vector(name) || length(name) > 1){
@@ -189,7 +188,6 @@ createFilterSetting <- function(name = "default", type = NULL, radius = NULL, ti
 #'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
 #' echoData <- readEchograms(fileMode = fileMode)
 #' echogramPlot(echoData$data$matrix_1$echogram)
-
 echogramPlot <- function(echogramOutput, colEchogram = "colPalette", ...){
 
   colEchogram <- get(colEchogram)
