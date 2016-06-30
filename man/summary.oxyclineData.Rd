@@ -4,10 +4,10 @@
 \alias{summary.oxyclineData}
 \title{Summary method for oxyclineData}
 \usage{
-\method{summary}{oxyclineData}(x, ...)
+\method{summary}{oxyclineData}(object, ...)
 }
 \arguments{
-\item{x}{Object of class \code{oxyclineData}.}
+\item{object}{Object of class \code{oxyclineData}.}
 
 \item{...}{Extra argumemts.}
 }

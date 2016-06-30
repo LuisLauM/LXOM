@@ -4,7 +4,7 @@
 \alias{echogramPlot}
 \title{Plot a matrix of a filtered echogram.}
 \usage{
-echogramPlot(echogramOutput, colEchogram = colPalette, ...)
+echogramPlot(echogramOutput, colEchogram = "colPalette", ...)
 }
 \arguments{
 \item{echogramOutput}{Object of class \code{oxyclineData} with internal echogram matrix to be plotted.}

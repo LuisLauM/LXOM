@@ -165,6 +165,7 @@ createFilterSetting <- function(name = "default", type = NULL, radius = NULL, ti
                          tolerance = rep(tolerance, length.out = allLength),
                          stringsAsFactors = FALSE)
   }else{
+    defaultFilterSettings <- get("defaultFilterSettings")
     output <- subset(defaultFilterSettings, defaultFilterSettings$name == name)
   }
 
@@ -189,8 +190,9 @@ createFilterSetting <- function(name = "default", type = NULL, radius = NULL, ti
 #' echoData <- readEchograms(fileMode = fileMode)
 #' echogramPlot(echoData$data$matrix_1$echogram)
 
-echogramPlot <- function(echogramOutput, colEchogram = colPalette, ...){
+echogramPlot <- function(echogramOutput, colEchogram = "colPalette", ...){
 
+  colEchogram <- get(colEchogram)
   .echogramPlot(echogramOutput, colEchogram = colEchogram, ...)
 
   return(invisible())

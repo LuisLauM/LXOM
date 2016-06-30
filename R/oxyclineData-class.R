@@ -28,7 +28,7 @@ print.oxyclineData <- function(x, ...){
 
 #' Summary method for oxyclineData
 #'
-#' @param x Object of class \code{oxyclineData}.
+#' @param object Object of class \code{oxyclineData}.
 #' @param ... Extra argumemts.
 #'
 #' @export
@@ -48,7 +48,7 @@ print.oxyclineData <- function(x, ...){
 #'
 #' # Get summary
 #' summary(echoOutputs)
-summary.oxyclineData <- function(x, ...){
+summary.oxyclineData <- function(object, ...){
   return(NULL)
 }
 

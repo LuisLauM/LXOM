@@ -40,7 +40,7 @@ print.echoData <- function(x, ...){
 #' @title Summary method for echoData
 #' @description Get summary information of echograms included on echodata Objects.
 #'
-#' @param x \code{echoData} object provided by \code{readEchograms} function.
+#' @param object \code{echoData} object provided by \code{readEchograms} function.
 #' @param ... Extra argumemts.
 #'
 #' @export
@@ -52,23 +52,23 @@ print.echoData <- function(x, ...){
 #'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
 #' echoData <- readEchograms(fileMode = fileMode)
 #' mySummary <- summary(echoData)
-summary.echoData <- function(x, ...){
+summary.echoData <- function(object, ...){
 
   allSummaryData <- list()
-  for(i in seq_along(x$data)){
+  for(i in seq_along(object$data)){
 
-    echoMatrix <- na.omit(.an(x$data[[i]]$echogram))
+    echoMatriobject <- na.omit(.an(object$data[[i]]$echogram))
 
-    summaryEchogram <- summary(echoMatrix)
+    summaryEchogram <- summary(echoMatriobject)
 
-    summaryDimensions <- lapply(x$data[[i]]$dimnames[c("lon", "lat")], summary)
+    summaryDimensions <- lapply(object$data[[i]]$dimnames[c("lon", "lat")], summary)
     summaryDimensions <- as.data.frame(do.call(what = "cbind", args = summaryDimensions))
     summaryDimensions <- summaryDimensions[-nrow(summaryDimensions),]
 
     tempSummary <- data.frame(sA = as.numeric(summaryEchogram),
                               lon = summaryDimensions$lon,
                               lat = summaryDimensions$lat,
-                              time = as.POSIXct(as.vector(summary(x$data[[i]]$dimnames$time)),
+                              time = as.POSIXct(as.vector(summary(object$data[[i]]$dimnames$time)),
                                                 origin = "1970-01-01 00:00.00 UTC"),
                               stringsAsFactors = FALSE)
 
@@ -76,9 +76,9 @@ summary.echoData <- function(x, ...){
 
     allSummaryData[[i]] <- tempSummary
   }
-  names(allSummaryData) <- paste0("matrix_", seq_along(x$data))
+  names(allSummaryData) <- paste0("matrix_", seq_along(object$data))
 
-  allSummaryData <- list(n_echograms = x$info$n_echograms,
+  allSummaryData <- list(n_echograms = object$info$n_echograms,
                          summary_echograms = allSummaryData)
 
   class(allSummaryData) <- c("summary.echoData")

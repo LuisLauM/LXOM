@@ -1,4 +1,5 @@
 .checkFilterSettings <- function(filterSettings){
+  defaultFilterSettings <- get("defaultFilterSettings")
 
   if(is.null(filterSettings)){
     message("Message: \nNo filter-setting object or file detected. OXim will use default filter configuration.")
