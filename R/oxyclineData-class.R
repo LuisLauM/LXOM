@@ -46,22 +46,22 @@ print.summary.oxyclineData <- function(x, ...){
 plot.oxyclineData <- function(x, what = seq_along(x$outputs), plot.oxyrange = TRUE,
                               col = NULL, ...){
 
-  what <- suppressWarnings(as.integer(what))
-
-  if(is.null(what) || is.na(what))
-    stop("Invalid value for 'what' parameter.")
-
-  for(i in what){
-    matrix2plot <- c("original", "finalEchogram")
-    names(matrix2plot) <- c("Original", "Final echogram")
-    for(j in seq_along(matrix2plot)){
-      echogramPlot(x$outputs[[i]][[matrix2plot[j]]], colPallete = col,
-                   main = paste(names(matrix2plot)[j], i, sep = "_"), ...)
-
-      if(isTRUE(plot.oxyrange))
-        .lineOxyrangePlot(x$oxycline_range[[i]], lwd = 2)
-    }
-  }
+  # what <- suppressWarnings(as.integer(what))
+  #
+  # if(is.null(what) || is.na(what))
+  #   stop("Invalid value for 'what' parameter.")
+  #
+  # for(i in what){
+  #   matrix2plot <- c("original", "finalEchogram")
+  #   names(matrix2plot) <- c("Original", "Final echogram")
+  #   for(j in seq_along(matrix2plot)){
+  #     echogramPlot(x$outputs[[i]][[matrix2plot[j]]], colPallete = col,
+  #                  main = paste(names(matrix2plot)[j], i, sep = "_"), ...)
+  #
+  #     if(isTRUE(plot.oxyrange))
+  #       .lineOxyrangePlot(x$oxycline_range[[i]], lwd = 2)
+  #   }
+  # }
 
   return(invisible())
 }
