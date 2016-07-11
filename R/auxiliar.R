@@ -30,7 +30,7 @@
 
   # Check tolerance
   if(!is.numeric(output$tolerance) | any(output$tolerance <= 0 | output$tolerance >= 1, na.rm = TRUE))
-    stop("Problem with 'filterSettings'. There is, at least, one wrong value on 'times' column.")
+    stop("Problem with 'filterSettings'. There is, at least, one wrong value on 'tolerance' column.")
 
   return(output)
 }

@@ -2,6 +2,9 @@
 # oXim package: Oxycline Index from Matrix Echograms ---------------
 #' @import R.matlab
 #' @import lubridate
+#' @import graphics
+#' @import stats
+#'
 #' @useDynLib oXim
 #'
 #' @title Oxycline Index from Matrix Echograms
@@ -127,6 +130,21 @@ getOxyrange <- function(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE){
 #' @param times Indicates number of times to apply the filters.
 #' @param tolerance For \code{.noiselessFilter}, this parameter indicates proportion of pixels to consider from
 #' filter matrix (radius x radius).
+#'
+#' @details About each parameter:
+#' \describe{
+#' \item{\strong{name}}{This parameter must be a string and it works as a short way to select an specific set of filter
+#' settings. (It will be fully available in next version.)}
+#' \item{\strong{type}}{This parameter must be a string and indicates what kind of filter method will be applied to the
+#' echigrams. There are two options to select: \code{.definerFilter} which works as a reverse-effect median filter
+#' and \code{.noiselessFilter} which removes  noisy signals on the echograms.}
+#' \item{\strong{radius}}{This parameter is useful to specify the size of the filter matrix which will be applied to
+#' the echogram. It must be integer, even and greater than 3.}
+#' \item{\strong{times}}{This parameter is useful to indicate how many times the filter will be applied to the echogram.
+#' It must be integer and greater than 1. The function will remove rows with \code{times=0} values.}
+#' \item{\strong{tolerance}}{Internal parameter to modify selected values on a convolution matrix filter. This parameter
+#' is meaningful only for \code{.noiselessFilter}.}
+#' }
 #'
 #' @examples
 #' # Use default profile

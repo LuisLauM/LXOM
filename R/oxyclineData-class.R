@@ -8,7 +8,8 @@
 #' @export
 #' @method print oxyclineData
 print.oxyclineData <- function(x, ...){
-  return(NULL)
+
+  return(invisible())
 }
 
 #' Summary method for oxyclineData
