@@ -4,6 +4,7 @@
 #' @import lubridate
 #' @import graphics
 #' @import stats
+#' @import akima
 #'
 #' @useDynLib oXim
 #'
@@ -76,7 +77,6 @@ readEchograms <- function(fileMode = NULL, directoryMode = NULL,
 #'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
 #' echoData <- readEchograms(fileMode = fileMode)
 #' oxyclineRange <- getOxyrange(echoData)
-
 getOxyrange <- function(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE){
 
   nEchograms <- fluidMatrix$info$n_echograms
@@ -94,6 +94,7 @@ getOxyrange <- function(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE){
   # Get dimensions (lon, lat, time) of outputs' matrix
   oxyDims <- .getOxyDims(oxyclineData = fluidMatrix)
 
+  # Fill outputs' matrix
   oxyclineData <- list()
   for(i in seq_along(fluidMatrix)){
     oxyclineData[[i]] <- .getFilteredEchogram(fluidMatrix[[i]], filterSettings, stepBYstep)

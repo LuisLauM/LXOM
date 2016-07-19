@@ -191,7 +191,7 @@
     tempDims <- oxyDims[[i]]
 
     # Define lower and upper limits
-    lineLimits <- c(0.10, 0.80)
+    lineLimits <- c(0.10, 0.98)
 
     # Get matrix where values of tempEchogram are lower than zero
     dataEchogram <- drop(outer(tempEchogram, 0, "<"))
@@ -225,7 +225,8 @@
     limitsData[,c(3, 4)] <- cbind(tempDims$lon, tempDims$lat)
 
     # Compile values on a list
-    allLimits[[i]] <- limitsData
+    output <- as.data.frame(limitsData, stringsAsFactors = FALSE)
+    allLimits[[i]] <- output[complete.cases(output[,c("lon", "lat")]),]
   }
 
   names(allLimits) <- names(oxyclineData)

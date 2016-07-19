@@ -9,9 +9,11 @@ Maintainer: Wencheng Lau-Medrano <llau@imarpe.gob.pe>
 Description: Package that implements paper of W. Lau-Medrano to obtaninlimits of oxycline from acoustic datasets.
 License: GPL (>= 2)
 LazyData: TRUE
+Depends: R (>= 3.2.1)
 Imports:
     Rcpp (>= 0.12.3),
     R.matlab,
-    lubridate
+    lubridate,
+    akima
 LinkingTo: Rcpp
 RoxygenNote: 5.0.1

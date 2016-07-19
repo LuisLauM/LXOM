@@ -4,19 +4,19 @@
 \alias{plot.oxyclineData}
 \title{Plot method for oxyclineData}
 \usage{
-\method{plot}{oxyclineData}(x, what = seq_along(x$outputs),
-  plot.oxyrange = TRUE, col = NULL, ...)
+\method{plot}{oxyclineData}(x, interpParams = list(duplicate = "strip"),
+  coastline = TRUE, ...)
 }
 \arguments{
 \item{x}{Object of class \code{oxyclineData}}
+
+\item{...}{Extra arguments passed to \code{echogramPlot} function.}
 
 \item{what}{What echogram (in number) do you want to plot?}
 
 \item{plot.oxyrange}{\code{logical}. If \code{TRUE} (default), show lines of oxycline range.}
 
 \item{col}{Vector of color (palette) used to plot echograms.}
-
-\item{...}{Extra arguments passed to \code{echogramPlot} function.}
 }
 \description{
 Plot method for oxyclineData

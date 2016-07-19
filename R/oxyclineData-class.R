@@ -20,7 +20,7 @@ print.oxyclineData <- function(x, ...){
 #' @export
 #' @method summary oxyclineData
 summary.oxyclineData <- function(object, ...){
-  return(NULL)
+  return(invisible())
 }
 
 #' Print method for summary.oxyclineData
@@ -31,7 +31,7 @@ summary.oxyclineData <- function(object, ...){
 #' @export
 #' @method print summary.oxyclineData
 print.summary.oxyclineData <- function(x, ...){
-  return(NULL)
+  return(invisible())
 }
 
 #' Plot method for oxyclineData
@@ -44,8 +44,23 @@ print.summary.oxyclineData <- function(x, ...){
 #'
 #' @export
 #' @method plot oxyclineData
-plot.oxyclineData <- function(x, what = seq_along(x$outputs), plot.oxyrange = TRUE,
-                              col = NULL, ...){
+plot.oxyclineData <- function(x, interpParams = list(duplicate = "strip"), coastline = TRUE, ...){
+
+  # Remove rows with no-data in lat, lon or upper_limit
+  index <- complete.cases(x[,c("lon", "lat", "upper_limit")])
+  x <- x[index,]
+
+  # Make interpolation using akima package
+  x <- interp(x = x$oxycline_range$matrix_1$lon, y = x$oxycline_range$matrix_1$lat,
+              z = x$oxycline_range$matrix_1$upper_limit, interpParams)
+
+  # Plot map
+  image(x, ...)
+
+  if(isTRUE(coastline)){
+    map("world", add = TRUE)
+  }
+
 
   # what <- suppressWarnings(as.integer(what))
   #
