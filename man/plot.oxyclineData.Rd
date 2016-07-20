@@ -5,20 +5,22 @@
 \title{Plot method for oxyclineData}
 \usage{
 \method{plot}{oxyclineData}(x, interpParams = list(duplicate = "strip"),
-  coastline = TRUE, ...)
+  coastline = TRUE, mapParams = list(database = "world"), ...)
 }
 \arguments{
 \item{x}{Object of class \code{oxyclineData}}
 
-\item{...}{Extra arguments passed to \code{echogramPlot} function.}
+\item{interpParams}{\code{list} object including parameters passed to \code{\link{interp}} function.}
 
-\item{what}{What echogram (in number) do you want to plot?}
+\item{coastline}{\code{logical}. Do you want to show the coast line over the map?}
 
-\item{plot.oxyrange}{\code{logical}. If \code{TRUE} (default), show lines of oxycline range.}
+\item{mapParams}{If \code{coastline=TRUE}, \code{list} object including parameters passed to \code{\link{map}}
+function.}
 
-\item{col}{Vector of color (palette) used to plot echograms.}
+\item{...}{Extra arguments passed to \code{\link{image}} function.}
 }
 \description{
-Plot method for oxyclineData
+This method takes an \code{oxyclineData} object, make an interpolation of oxycline
+values and show them on a map.
 }
 
