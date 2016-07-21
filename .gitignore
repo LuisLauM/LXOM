@@ -11,3 +11,5 @@
 /src/RcppExports.o
 /src/oXim.so
 /src/ordfilt2_C_internal.o
+.Rproj.user
+/src/*.dll
