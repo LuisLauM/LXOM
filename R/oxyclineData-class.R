@@ -1,4 +1,3 @@
-#' Print method for oxyclineData
 #' @title Print method for oxyclineData Objects.
 #' @description Shows main information from oxyclineData Objects.
 #'
@@ -9,12 +8,32 @@
 #' @method print oxyclineData
 print.oxyclineData <- function(x, ...){
 
+  for(i in seq_along(x$oxycline_range)){
 
+    tempData <- x$oxycline_range[[i]]
+
+    cat(paste0("\nFor echogram ", i, ":\n"))
+
+    rangeLon <- c(.getCoordsAxes(min(tempData$lon, na.rm = TRUE), "lon"),
+                  .getCoordsAxes(max(tempData$lon, na.rm = TRUE), "lon"))
+    cat(paste("\tRange lon:\tFrom", rangeLon[1], "to", rangeLon[2], "\n"))
+
+    rangeLat <- c(.getCoordsAxes(min(tempData$lat, na.rm = TRUE), "lat"),
+                  .getCoordsAxes(max(tempData$lat, na.rm = TRUE), "lat"))
+    cat(paste("\tRange lat:\tFrom", rangeLat[1], "to", rangeLat[2], "\n"))
+
+    rangeTime <- .ac(range(as.POSIXct(rownames(tempData))))
+    cat(paste("\tRange time:\tFrom", rangeTime[1], "to", rangeTime[2], "\n"))
+
+    rangeOxylimits <- round(abs(range(tempData$upper_limit, na.rm = TRUE)), 1)
+    cat(paste("\tRange oxycline depth:\tFrom", rangeOxylimits[2], "m to", rangeOxylimits[1], "m\n"))
+  }
 
   return(invisible())
 }
 
-#' Summary method for oxyclineData
+#' @title Summary method for oxyclineData Objects.
+#' @description Get summary information of oxycline depth limits included on \code{oxyclineData} objects.
 #'
 #' @param object Object of class \code{oxyclineData}.
 #' @param ... Extra argumemts.
@@ -22,10 +41,45 @@ print.oxyclineData <- function(x, ...){
 #' @export
 #' @method summary oxyclineData
 summary.oxyclineData <- function(object, ...){
-  return(invisible())
+
+  allSummaryData <- list()
+  for(i in seq_along(object$oxycline_range)){
+
+    tempData <- object$oxycline_range[[i]]
+
+    # Get summary for oxycline depth info
+    oxylimitsObject <- na.omit(tempData$upper_limit)
+    summaryOxylimits <- .an(summary(oxylimitsObject))
+
+    # Get summary for coords info
+    summaryCoords <- data.frame(lon = .an(summary(tempData$lon)),
+                                lat = .an(summary(tempData$lat)),
+                                stringsAsFactors = FALSE)
+
+    # Get summary for time info
+    summaryTime <- .ac(summary(as.POSIXct(rownames(tempData))))
+
+    # Join all summary info in one single data frame
+    tempSummary <- data.frame(lon = summaryCoords$lon, lat = summaryCoords$lat,
+                              limits = summaryOxylimits, time = summaryTime,
+                              stringsAsFactors = FALSE)
+
+    rownames(tempSummary) <- c("Min.", "1st Qu.", "Median", "Mean", "3rd Qu.", "Max.")
+
+    allSummaryData[[i]] <- tempSummary
+  }
+  names(allSummaryData) <- paste0("matrix_", seq_along(object$data))
+
+  allSummaryData <- list(n_database = length(object$oxycline_range),
+                         summary_database = allSummaryData)
+
+  class(allSummaryData) <- c("summary.oxyclineData")
+
+  return(allSummaryData)
 }
 
-#' Print method for summary.oxyclineData
+#' @title Print method for summary.oxyclineData
+#' @description Shows main information from \code{oxyclineData.summary} objects.
 #'
 #' @param x Object of class \code{summary.oxyclineData}.
 #' @param ... Extra argumemts.
@@ -33,24 +87,39 @@ summary.oxyclineData <- function(object, ...){
 #' @export
 #' @method print summary.oxyclineData
 print.summary.oxyclineData <- function(x, ...){
+
+  cat(paste("\nNumber of database: ", x$n_database, "\n"))
+
+  for(i in seq_along(x$summary_database)){
+    tempMatrix <- x$summary_database[[i]]
+
+    for(j in seq(ncol(tempMatrix))){
+      tempMatrix[,j] <- .ac(tempMatrix[,j])
+    }
+
+    cat(paste0("\nFor database ", i, ":\n"))
+
+    cat(paste(c("\t", colnames(tempMatrix), "\n"), collapse = "\t"))
+    for(j in seq(nrow(tempMatrix))){
+      cat(paste0("\t", paste(c(c(rownames(tempMatrix)[j], .ac(tempMatrix[j,])), "\n"),
+                             collapse = "\t")))
+    }
+  }
+
   return(invisible())
 }
 
-#' Plot method for oxyclineData
+#' @title Plot method for oxyclineData
 #'
 #' @description This method takes an \code{oxyclineData} object, make an interpolation of oxycline
 #' values and show them on a map.
 #'
 #' @param x Object of class \code{oxyclineData}
 #' @param interpParams \code{list} object including parameters passed to \code{\link{interp}} function.
-#' @param coastline \code{logical}. Do you want to show the coast line over the map?
-#' @param mapParams If \code{coastline=TRUE}, \code{list} object including parameters passed to \code{\link{map}}
-#' function.
 #' @param ... Extra arguments passed to \code{\link{image}} function.
 #'
 #' @export
-plot.oxyclineData <- function(x, interpParams = list(duplicate = "strip"), coastline = TRUE,
-                              mapParams = list(database = "world"), ...){
+plot.oxyclineData <- function(x, interpParams = list(duplicate = "strip"), ...){
 
   # Combine all matrices in one data.frame
   allData <- NULL
@@ -72,11 +141,6 @@ plot.oxyclineData <- function(x, interpParams = list(duplicate = "strip"), coast
 
   # Plot map
   image(x = x, ...)
-
-  # Add map
-  if(isTRUE(coastline)){
-    do.call(map, list(list(add = TRUE), mapParams))
-  }
 
   return(invisible())
 }

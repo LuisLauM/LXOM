@@ -2,7 +2,7 @@
 % Please edit documentation in R/oxyclineData-class.R
 \name{summary.oxyclineData}
 \alias{summary.oxyclineData}
-\title{Summary method for oxyclineData}
+\title{Summary method for oxyclineData Objects.}
 \usage{
 \method{summary}{oxyclineData}(object, ...)
 }
@@ -12,6 +12,6 @@
 \item{...}{Extra argumemts.}
 }
 \description{
-Summary method for oxyclineData
+Get summary information of oxycline depth limits included on \code{oxyclineData} objects.
 }
 

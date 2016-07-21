@@ -5,7 +5,6 @@
 #' @import graphics
 #' @import stats
 #' @import akima
-#' @import maps
 #'
 #' @useDynLib oXim
 #'

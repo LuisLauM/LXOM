@@ -4,18 +4,12 @@
 \alias{plot.oxyclineData}
 \title{Plot method for oxyclineData}
 \usage{
-\method{plot}{oxyclineData}(x, interpParams = list(duplicate = "strip"),
-  coastline = TRUE, mapParams = list(database = "world"), ...)
+\method{plot}{oxyclineData}(x, interpParams = list(duplicate = "strip"), ...)
 }
 \arguments{
 \item{x}{Object of class \code{oxyclineData}}
 
 \item{interpParams}{\code{list} object including parameters passed to \code{\link{interp}} function.}
-
-\item{coastline}{\code{logical}. Do you want to show the coast line over the map?}
-
-\item{mapParams}{If \code{coastline=TRUE}, \code{list} object including parameters passed to \code{\link{map}}
-function.}
 
 \item{...}{Extra arguments passed to \code{\link{image}} function.}
 }

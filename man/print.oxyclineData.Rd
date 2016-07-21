@@ -14,7 +14,4 @@
 \description{
 Shows main information from oxyclineData Objects.
 }
-\details{
-Print method for oxyclineData
-}
 

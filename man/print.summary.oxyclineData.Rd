@@ -12,6 +12,6 @@
 \item{...}{Extra argumemts.}
 }
 \description{
-Print method for summary.oxyclineData
+Shows main information from \code{oxyclineData.summary} objects.
 }
 
