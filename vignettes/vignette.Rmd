@@ -1,0 +1,78 @@
+---
+title: "Vignette Title"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# oXim
+
+**Oxycline Index from Matrix Echograms**
+
+This package is built to take echogram data from Echopen software outputs and calculate oxycline depth limits using image-filtering algoriths.
+
+Algoriths used by ´oXim´ include median-filter and 2D-convolution based algoriths implemented on Rcpp (C++) because the applicaion of this filters to echograms is very intensive and time expensive due to the size of echograms. ´oXim´ allows to change some parameters for filtering routines using an easily format (a table, ´data.frame´ object).
+
+An echogram can be described as a visual representation of an acoustic variable, usually refered to the backscattering energy received after the emision of sound pulse to the water. Actualy, there are many softwares oriented to explore and analyze echogram data from echosounders as Echoview. One of them is Echopen, which was developed by IRD people under a Matlab environment and include libraries and routines for reading, integrate and cleaning databases from multibeam echosounders. ´oXim´ requires Echopen outputs as inputs for work. 
+
+
+## Installation
+
+Get the development version from github:
+
+```R
+# install.packages("devtools")
+devtools::install_github("LuisLauM/oXim")
+```
+
+
+## Examples
+
+## Read data from Echopen outputs
+For reading data, it is necesary to specify Echopen outputs files (.m extension).
+
+```{r, echo = FALSE}
+
+# Set directories where the Echopen's outputs are located
+fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
+                 fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
+                 blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+
+# Read echograms (echoData object)
+echoData <- readEchograms(fileMode = fileMode)
+
+```
+
+Once the files have been read, output object will be of class ´echoData´ what means there are methods oriented to show main information (print), make a summary of data inside echograms (summary) and visualize the echograms as an image (plot). Then, methods for ´echoData´ objects are shown:
+
+```{r}
+
+# Set directories where the Echopen's outputs are located
+fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
+                 fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
+                 blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+
+
+# Read echograms (echoData object)
+echoData <- readEchograms(fileMode = fileMode)
+
+# Print method
+print(echoData)
+
+# Summary method
+summaryEchodata <- summary(echoData)
+
+# Print summary
+print(summaryEchodata)
+
+# Plot method
+plot(echoData)
+
+```
+
+## Calculate oxycline depth limits
+For oxycline depth calculation, ´getOxyrange´ function provides an easy-to-use environment

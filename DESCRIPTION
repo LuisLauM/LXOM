@@ -6,10 +6,10 @@ Date: 2016-06-27
 Authors@R: c(person("Wencheng", "Lau-Medrano", role = c("aut", "cre"), email = "llau@imarpe.gob.pe"))
 Author: Wencheng Lau-Medrano [aut, cre]
 Maintainer: Wencheng Lau-Medrano <llau@imarpe.gob.pe>
-Description: Package that implements paper of W. Lau-Medrano to obtaninlimits of oxycline from acoustic datasets.
+Description: Package that implements paper of W. Lau-Medrano to get limits of oxycline from acoustic datasets.
 License: GPL (>= 2)
 LazyData: TRUE
-Depends: R (>= 3.2.1)
+Depends: R (<= 3.2.5)
 Imports:
     Rcpp (>= 0.12.3),
     R.matlab,
@@ -17,3 +17,6 @@ Imports:
     akima
 LinkingTo: Rcpp
 RoxygenNote: 5.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

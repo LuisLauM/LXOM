@@ -18,8 +18,7 @@ This function search othe Oxycline limits using filters and the procedure
 especified in paper of Lau-Medrano W. and Oliveros-Ramos R..
 }
 \details{
-If \code{filterSettings} parameter is \code{NULL}, oXim will use as default
-\code{data.frame(type = c(".noiselessFilter", ".definerFilter"), radius = c(3, 3), times = c(2, 1), tolerance = c(0.2, NA), stringsAsFactors = FALSE)}
+If \code{filterSettings} parameter is \code{NULL}, oXim will use as default \code{data.frame(type = c(".noiselessFilter", ".definerFilter"), radius = c(3, 3), times = c(2, 1), tolerance = c(0.2, NA), stringsAsFactors = FALSE)}
 }
 \examples{
 fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),

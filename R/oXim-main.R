@@ -12,7 +12,7 @@
 #'
 #' @author Wencheng Lau-Medrano, \email{llau@@imarpe.gob.pe}
 #' @name oXim-package
-#' @description Pack oriented to extract oxycline depth from echogram matrix using Sobel-based algorithms.
+#' @description Pack oriented to extract oxycline depth from echogram matrix using madian-filter and 2D-convolution based algorithms.
 #' @aliases oXim-package oXim
 #' @docType package
 #' @references oXim: Oxycline Index from Matrix Echograms (RJournal)
@@ -68,8 +68,7 @@ readEchograms <- function(fileMode = NULL, directoryMode = NULL,
 #' @param filterSettings List with combination of filters.
 #' @param stepBYstep Returns each echogram on a list.
 #'
-#' @details If \code{filterSettings} parameter is \code{NULL}, oXim will use as default
-#' \code{data.frame(type = c(".noiselessFilter", ".definerFilter"), radius = c(3, 3), times = c(2, 1), tolerance = c(0.2, NA), stringsAsFactors = FALSE)}
+#' @details If \code{filterSettings} parameter is \code{NULL}, oXim will use as default \code{data.frame(type = c(".noiselessFilter", ".definerFilter"), radius = c(3, 3), times = c(2, 1), tolerance = c(0.2, NA), stringsAsFactors = FALSE)}
 #'
 #' @examples
 #' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
@@ -233,5 +232,4 @@ NULL
 #' @docType data
 #' @usage defaultFilterSettings
 #' @format A \code{data.frame} with columns name, type, radius, times and tolerance.
-#' @references Lau-Medrano, Luis & Oliveros-Ramos, Ricardo paper.
 NULL

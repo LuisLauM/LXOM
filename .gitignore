@@ -13,3 +13,6 @@
 /src/ordfilt2_C_internal.o
 .Rproj.user
 /src/*.dll
+inst/doc
+/.Rhistory
+/README-unnamed-chunk-3-1.png

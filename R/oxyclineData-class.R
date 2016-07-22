@@ -112,7 +112,7 @@ print.summary.oxyclineData <- function(x, ...){
 #' @title Plot method for oxyclineData
 #'
 #' @description This method takes an \code{oxyclineData} object, make an interpolation of oxycline
-#' values and show them on a map.
+#' values and show them on a map. Interpolation methodology is based on \code{akima} package.
 #'
 #' @param x Object of class \code{oxyclineData}
 #' @param interpParams \code{list} object including parameters passed to \code{\link{interp}} function.
