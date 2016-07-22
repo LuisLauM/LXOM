@@ -61,14 +61,15 @@ readEchograms <- function(fileMode = NULL, directoryMode = NULL,
 #' @exportClass oxyclineData
 #'
 #' @title Takes a matrix of echogram and calculate Oxycline.
-#' @description This function search othe Oxycline limits using filters and the procedure
-#' especified in paper of Lau-Medrano W. and Oliveros-Ramos R..
+#' @description This function takes a filter configuration and applies to echograms given on an \code{echoData} object.
 #'
-#' @param fluidMatrix Matrix or list of matrix of echograms.
+#' @param fluidMatrix Object of class \code{echoData} (from \code{\link{readEchograms}} function) with echogram
 #' @param filterSettings List with combination of filters.
-#' @param stepBYstep Returns each echogram on a list.
+#' @param stepBYstep \code{logical}. If \code{FALSE} (default), returns just original and final echogram, otherwise each
+#' echogram (after applying filters one by one) will be returned.
 #'
-#' @details If \code{filterSettings} parameter is \code{NULL}, oXim will use as default \code{data.frame(type = c(".noiselessFilter", ".definerFilter"), radius = c(3, 3), times = c(2, 1), tolerance = c(0.2, NA), stringsAsFactors = FALSE)}
+#' @details If \code{filterSettings = NULL}, oXim will use filter configuration present on \code{defaultFilterSettings}
+#' dataset. For extra details about image filters, see \code{\link{createFilterSetting}} help.
 #'
 #' @examples
 #' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),

@@ -1,11 +1,11 @@
 ---
-title: "Vignette Title"
-author: "Vignette Author"
+title: "Vignette for oXim package"
+author: "Wencheng Lau-Medrano"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{oXim Vignette}
+  %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -35,7 +35,9 @@ devtools::install_github("LuisLauM/oXim")
 ## Read data from Echopen outputs
 For reading data, it is necesary to specify Echopen outputs files (.m extension).
 
-```{r, echo = FALSE}
+```{r, cache=TRUE}
+
+library(oXim)
 
 # Set directories where the Echopen's outputs are located
 fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
@@ -47,32 +49,53 @@ echoData <- readEchograms(fileMode = fileMode)
 
 ```
 
+
 Once the files have been read, output object will be of class ´echoData´ what means there are methods oriented to show main information (print), make a summary of data inside echograms (summary) and visualize the echograms as an image (plot). Then, methods for ´echoData´ objects are shown:
 
 ```{r}
-
-# Set directories where the Echopen's outputs are located
-fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
-                 fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
-                 blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
-
-
-# Read echograms (echoData object)
-echoData <- readEchograms(fileMode = fileMode)
-
 # Print method
 print(echoData)
+```
 
-# Summary method
-summaryEchodata <- summary(echoData)
+```{r}
+# Print method
+summary(echoData)
+```
 
-# Print summary
-print(summaryEchodata)
-
+```{r, fig.height=5, fig.width=7}
 # Plot method
 plot(echoData)
 
 ```
 
 ## Calculate oxycline depth limits
-For oxycline depth calculation, ´getOxyrange´ function provides an easy-to-use environment
+For oxycline depth calculation, ´getOxyrange´ function provides an easy-to-use way for applying median-filter and 2D convolution-based filters. This filters are explained below:
+
+* ´.noiselessFilter´: Median filter can be defined as a technique which returns the median value of the neighborhood of each cell of a matrix. Let $X$ a matrix with dimensions $n \times m$. Median filter will going to build a minimatrix (neighborhood) of $p \times q$ dimensions (size defined by user) using each cell as center of this neighborhood. Then median filter will replace values of cells with the median of their own neighborhoods. ´getOxyrange´ implements a sub-function (´.noiselessFilter´) which allows to use not only percentile-50 value to make the replacing (medain filter) but also others values so by ´tolerance´ parameter. Thereby, ´tolerance = 0´ will use first value (minimum) to make the replacing, ´tolerance = 1´ will use the maximum, ´tolerance = 0.5´ the median and so on. ´radius´ parameter will be use to indicate size of neighborhood (it will be an square neighborhood $radius \times radius$). Finally, with ´times´ parameter, user may indicate how many times the filter will be applied.
+
+* ´.definerFilter´: Thisfunction can be defined as a wrapper of ´.noiselessFilter´ with ´tolerance = 1´.
+
+Both .noiselessFilter and .definerFilter do not use all values of neighborhood but only those located within diagonals of it. That because better results were found weighting up cells of diagonals.
+
+For calculate oxycline depth limits from ´echoData´ objects, ´getOxyrange´ should be applied as follows:
+
+```{r, cache=TRUE}
+
+# Calculate oxycline limits (oxyclineData object)
+oxyLimits <- getOxyrange(fluidMatrix = echoData)
+
+```
+
+Likewise with ´readEchograms´ function, ´getOxyrange´ will return an object of class ´oxyclineData´ with their associated methods (print, summary and plot).
+
+```{r}
+print(oxyLimits)
+```
+
+```{r}
+summary(oxyLimits)
+```
+
+```{r, fig.height=5, fig.width=7}
+plot(oxyLimits)
+```
