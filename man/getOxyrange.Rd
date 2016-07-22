@@ -7,18 +7,19 @@
 getOxyrange(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE)
 }
 \arguments{
-\item{fluidMatrix}{Matrix or list of matrix of echograms.}
+\item{fluidMatrix}{Object of class \code{echoData} (from \code{\link{readEchograms}} function) with echogram}
 
 \item{filterSettings}{List with combination of filters.}
 
-\item{stepBYstep}{Returns each echogram on a list.}
+\item{stepBYstep}{\code{logical}. If \code{FALSE} (default), returns just original and final echogram, otherwise each
+echogram (after applying filters one by one) will be returned.}
 }
 \description{
-This function search othe Oxycline limits using filters and the procedure
-especified in paper of Lau-Medrano W. and Oliveros-Ramos R..
+This function takes a filter configuration and applies to echograms given on an \code{echoData} object.
 }
 \details{
-If \code{filterSettings} parameter is \code{NULL}, oXim will use as default \code{data.frame(type = c(".noiselessFilter", ".definerFilter"), radius = c(3, 3), times = c(2, 1), tolerance = c(0.2, NA), stringsAsFactors = FALSE)}
+If \code{filterSettings = NULL}, oXim will use filter configuration present on \code{defaultFilterSettings}
+dataset. For extra details about image filters, see \code{\link{createFilterSetting}} help.
 }
 \examples{
 fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
