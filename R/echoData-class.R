@@ -118,8 +118,7 @@ plot.echoData <- function(x, ...){
     echogramPlot(echogramOutput = x$data[[i]]$echogram, main = paste("Echogram", i), ...)
 
     if(i < length(x$data)){
-      cat("Hit <enter> to see next echogram:")
-      scan(nmax = 1, quiet = TRUE)
+      readline(prompt = "Hit <enter> to see next echogram:")
     }
   }
 
