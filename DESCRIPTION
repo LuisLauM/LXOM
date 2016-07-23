@@ -6,7 +6,7 @@ Date: 2016-06-27
 Authors@R: c(person("Wencheng", "Lau-Medrano", role = c("aut", "cre"), email = "llau@imarpe.gob.pe"))
 Author: Wencheng Lau-Medrano [aut, cre]
 Maintainer: Wencheng Lau-Medrano <llau@imarpe.gob.pe>
-Description: Package that implements paper of W. Lau-Medrano to get limits of oxycline from acoustic datasets.
+Description: Package that implements paper of W. Lau-Medrano to get limits of oxycline from acoustic data sets.
 License: GPL (>= 2)
 LazyData: TRUE
 Depends: R (>= 3.2.0)

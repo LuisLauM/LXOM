@@ -69,7 +69,7 @@ readEchograms <- function(fileMode = NULL, directoryMode = NULL,
 #' echogram (after applying filters one by one) will be returned.
 #'
 #' @details If \code{filterSettings = NULL}, oXim will use filter configuration present on \code{defaultFilterSettings}
-#' dataset. For extra details about image filters, see \code{\link{createFilterSetting}} help.
+#' data set. For extra details about image filters, see \code{\link{createFilterSetting}} help.
 #'
 #' @examples
 #' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
