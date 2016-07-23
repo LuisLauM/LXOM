@@ -70,4 +70,42 @@ plot(echoData)
 Calculate oxycline depth limits
 -------------------------------
 
-For oxycline depth calculation, ´getOxyrange´ function
+For oxycline depth calculation, `getOxyrange` function provides an easy-to-use way for applying median-filter and 2D convolution-based filters.
+
+For calculate oxycline depth limits from `echoData` objects, `getOxyrange` should be applied as follows:
+
+``` r
+
+# Calculate oxycline limits (oxyclineData object)
+oxyLimits <- getOxyrange(fluidMatrix = echoData)
+#> Message: 
+#> No filter-setting object or file detected. OXim will use default filter configuration.
+
+# Print method
+print(oxyLimits)
+#> 
+#> For echogram 1:
+#>  Range lon:  From 74.167° W to 74.113° W 
+#>  Range lat:  From 17.218° S to 17.187° S 
+#>  Range time: From 2011-09-12 00:54:31 to 2011-09-12 01:18:37 
+#>  Range oxycline depth:   From 63.6 m to 86.6 m
+
+# Summary method
+summary(oxyLimits)
+#> 
+#> Number of database:  1 
+#> 
+#> For database 1:
+#>      lon lat limits  time    
+#>  Min.    -74.17  -17.22  -86.62  2011-09-12 00:54:31 
+#>  1st Qu. -74.15  -17.21  -77.88  2011-09-12 00:59:51 
+#>  Median  -74.14  -17.2   -75.38  2011-09-12 01:06:06 
+#>  Mean    -74.14  -17.2   -73.87  2011-09-12 01:06:09 
+#>  3rd Qu. -74.13  -17.19  -68.25  2011-09-12 01:12:22 
+#>  Max.    -74.11  -17.19  -63.62  2011-09-12 01:18:37 
+
+# Plot method
+plot(oxyLimits)
+```
+
+![](README-unnamed-chunk-3-1.png)

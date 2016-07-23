@@ -35,7 +35,7 @@ devtools::install_github("LuisLauM/oXim")
 ## Read data from Echopen outputs
 For reading data, it is necesary to specify Echopen outputs files (.m extension). ´readEchograms´ function returns an object of class ´echoData´, so some methods may be applied: print, summary and plot.
 
-```{r}
+```{r, cache=TRUE}
 
 # Set directories where the Echopen's outputs are located
 fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
@@ -61,4 +61,21 @@ plot(echoData)
 ```
 
 ## Calculate oxycline depth limits
-For oxycline depth calculation, ´getOxyrange´ function 
+For oxycline depth calculation, `getOxyrange` function provides an easy-to-use way for applying median-filter and 2D convolution-based filters.
+
+For calculate oxycline depth limits from `echoData` objects, `getOxyrange` should be applied as follows:
+
+```{r}
+
+# Calculate oxycline limits (oxyclineData object)
+oxyLimits <- getOxyrange(fluidMatrix = echoData)
+
+# Print method
+print(oxyLimits)
+
+# Summary method
+summary(oxyLimits)
+
+# Plot method
+plot(oxyLimits)
+```
