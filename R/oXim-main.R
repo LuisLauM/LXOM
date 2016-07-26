@@ -10,7 +10,7 @@
 #'
 #' @title Oxycline Index from Matrix Echograms
 #'
-#' @author Wencheng Lau-Medrano, \email{llau@@imarpe.gob.pe}
+#' @author Wencheng Lau-Medrano, \email{luis.laum@gmail.com}
 #' @name oXim-package
 #' @description Pack oriented to extract oxycline depth from echogram matrix using madian-filter and 2D-convolution based algorithms.
 #' @aliases oXim-package oXim
