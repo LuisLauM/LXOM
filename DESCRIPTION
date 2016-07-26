@@ -4,7 +4,6 @@ Title: Oxycline Index from Matrix Echograms
 Version: 1.0.0
 Date: 2016-06-27
 Authors@R: c(person("Wencheng", "Lau-Medrano", role = c("aut", "cre"), email = "llau@imarpe.gob.pe"), person("Ricardo", "Oliveros-Ramos", role = c("ctb"), email = "ricardo.oliveros@gmail.com"))
-Author: Wencheng Lau-Medrano [aut, cre]
 Maintainer: Wencheng Lau-Medrano <llau@imarpe.gob.pe>
 Description: Pack oriented to extract oxycline depth from echogram matrix using madian-filter and 2D-convolution based algorithms
 License: GPL (>= 2)
