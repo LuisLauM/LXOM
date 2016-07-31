@@ -4,7 +4,8 @@
 #' @import lubridate
 #' @import graphics
 #' @import stats
-#' @import akima
+#' @import sp
+#' @import gstat
 #'
 #' @useDynLib oXim
 #'
@@ -19,9 +20,6 @@
 #' @keywords echograms, oxycline, depth, image-filtering
 NULL
 
-#' @export readEchograms
-#' @exportClass echoData
-#'
 #' @title Takes outputs from Echopen and generates a matrix to calculate Oxycline.
 #' @description This function search outputs of Echoopen for Fluid-like, Blue noise
 #' and Fish and use them to make a filtered matrix to calculate the Oxycline limits.
@@ -44,6 +42,9 @@ NULL
 #'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
 #' echoData <- readEchograms(fileMode = fileMode)
 #' print(echoData)
+#'
+#' @export
+#' @exportClass echoData
 readEchograms <- function(fileMode = NULL, directoryMode = NULL,
                           validFish38 = c(-100, -21), validBlue38 = c(-100, -56),
                           upLimitFluid120 = -53, pinInterval = 50, date.format = "%d-%m-%Y %H:%M:%S"){
@@ -57,9 +58,6 @@ readEchograms <- function(fileMode = NULL, directoryMode = NULL,
   return(echoData)
 }
 
-#' @export getOxyrange
-#' @exportClass oxyclineData
-#'
 #' @title Takes a matrix of echogram and calculate Oxycline.
 #' @description This function takes a filter configuration and applies to echograms given on an \code{echoData} object.
 #'
@@ -76,7 +74,10 @@ readEchograms <- function(fileMode = NULL, directoryMode = NULL,
 #'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
 #'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
 #' echoData <- readEchograms(fileMode = fileMode)
-#' oxyclineRange <- getOxyrange(echoData)
+#' oxyLimits <- getOxyrange(fluidMatrix = echoData)
+#'
+#' @export
+#' @exportClass oxyclineData
 getOxyrange <- function(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE){
 
   nEchograms <- fluidMatrix$info$n_echograms

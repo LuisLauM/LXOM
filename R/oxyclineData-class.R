@@ -115,11 +115,12 @@ print.summary.oxyclineData <- function(x, ...){
 #' values and show them on a map. Interpolation methodology is based on \code{akima} package.
 #'
 #' @param x Object of class \code{oxyclineData}
-#' @param interpParams \code{list} object including parameters passed to \code{\link{interp}} function.
-#' @param ... Extra arguments passed to \code{\link{image}} function.
+#' @param interpParams \code{list} object including parameters passed to \code{\link{idw}} function.
+#' @param ... Extra arguments passed to \code{\link{plot.SpatialGridDataFrame}} function.
 #'
 #' @export
-plot.oxyclineData <- function(x, interpParams = list(duplicate = "strip"), ...){
+#' @method plot oxyclineData
+plot.oxyclineData <- function(x, interpParams = list(myGrid = NULL), ...){
 
   # Combine all matrices in one data.frame
   allData <- NULL
@@ -137,10 +138,15 @@ plot.oxyclineData <- function(x, interpParams = list(duplicate = "strip"), ...){
   x <- x[index,]
 
   # Make interpolation using akima package
-  x <- do.call(what = interp, args = c(list(x = x$lon, y = x$lat, z = x$upper_limit), interpParams))
+  x <- do.call(what = ".interpIDW",
+               args = c(list(myData = x, XYZnames = c("lon", "lat", "upper_limit")), interpParams))
 
   # Plot map
-  image(x = x, ...)
+  plot(x = x, ...)
+
+  axis(1)
+  axis(2)
+  box()
 
   return(invisible())
 }

@@ -38,5 +38,6 @@ fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = 
                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
 echoData <- readEchograms(fileMode = fileMode)
 print(echoData)
+
 }
 

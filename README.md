@@ -112,6 +112,7 @@ summary(oxyLimits)
 
 # Plot method
 plot(oxyLimits)
+#> [inverse distance weighted interpolation]
 ```
 
 ![](README-unnamed-chunk-3-1.png)

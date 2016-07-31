@@ -66,6 +66,34 @@
   return(output)
 }
 
+#' Function that makes an IDW interpolation using sp and gstat tools
+#' @importFrom gstat idw
+.interpIDW <- function(myData, XYZnames = c("x", "y", "z"), myGrid = NULL, ...){
+
+  myData <- data.frame(x = myData[,XYZnames[1]],
+                       y = myData[,XYZnames[2]],
+                       z = myData[,XYZnames[3]],
+                       stringsAsFactors = FALSE)
+
+  coordinates(myData) <- ~ x + y
+
+  if(is.null(myGrid)){
+
+    xyRange <- apply(myData@coords, 2, range)
+
+    myGrid <- expand.grid(x = seq(floor(xyRange[1, 1]), ceiling(xyRange[2, 1]), 0.1),
+                          y = seq(floor(xyRange[1, 2]), ceiling(xyRange[2, 2]), 0.1),
+                          stringsAsFactors = FALSE)
+  }
+
+  coordinates(myGrid) <- ~ x + y
+  gridded(myGrid) <- TRUE
+
+  myIDW <- idw(formula = z ~ 1, locations = myData, newdata = myGrid, ...)
+
+  return(myIDW)
+}
+
 .ac <- as.character
 .an <- as.numeric
 .anc <- function(...) as.numeric(as.character(...))

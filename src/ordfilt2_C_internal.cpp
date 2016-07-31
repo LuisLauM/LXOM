@@ -4,10 +4,9 @@
 
 using namespace Rcpp;
 
-//' @param data Echogram as matrix of numeric values.
-//' @param x radius.
-//' @param weightedMatrix Matrix used to filtering echogram.
-//' @importFrom Rcpp evalCpp
+//' @import Rcpp
+//' @useDynLib oXim
+//' @export
 // [[Rcpp::export(name=".ordfilt2_C_internal")]]
 NumericMatrix ordfilt2_C_internal(NumericMatrix data, int x, NumericVector weightedMatrix){
   int nrows = data.nrow();

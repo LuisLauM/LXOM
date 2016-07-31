@@ -26,6 +26,7 @@ fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = 
                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
 echoData <- readEchograms(fileMode = fileMode)
-oxyclineRange <- getOxyrange(echoData)
+oxyLimits <- getOxyrange(fluidMatrix = echoData)
+
 }
 
