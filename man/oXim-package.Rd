@@ -9,7 +9,7 @@
 Pack oriented to extract oxycline depth from echogram matrix using madian-filter and 2D-convolution based algorithms.
 }
 \author{
-Wencheng Lau-Medrano, \email{llau@imarpe.gob.pe}
+Wencheng Lau-Medrano, \email{luis.laum@gmail.com}
 }
 \references{
 oXim: Oxycline Index from Matrix Echograms (RJournal)
