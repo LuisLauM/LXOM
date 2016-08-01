@@ -6,7 +6,7 @@
 \alias{oXim-package}
 \title{Oxycline Index from Matrix Echograms}
 \description{
-Pack oriented to extract oxycline depth from echogram matrix using madian-filter and 2D-convolution based algorithms.
+Pack oriented to extract oxycline depth from echogram matrix using median-filter and 2D-convolution based algorithms.
 }
 \author{
 Wencheng Lau-Medrano, \email{luis.laum@gmail.com}
