@@ -81,8 +81,8 @@
 
     xyRange <- apply(myData@coords, 2, range)
 
-    myGrid <- expand.grid(x = seq(floor(xyRange[1, 1]), ceiling(xyRange[2, 1]), 0.1),
-                          y = seq(floor(xyRange[1, 2]), ceiling(xyRange[2, 2]), 0.1),
+    myGrid <- expand.grid(x = seq(floor(xyRange[1, 1]), ceiling(xyRange[2, 1]), 0.01),
+                          y = seq(floor(xyRange[1, 2]), ceiling(xyRange[2, 2]), 0.01),
                           stringsAsFactors = FALSE)
   }
 
@@ -91,7 +91,10 @@
 
   myIDW <- idw(formula = z ~ 1, locations = myData, newdata = myGrid, ...)
 
-  return(myIDW)
+  output <- list(myIDW = myIDW,
+                 myGrid = myGrid)
+
+  return(output)
 }
 
 .ac <- as.character

@@ -1,5 +1,11 @@
+    ## Loading required package: Rcpp
+
+    ## Loading required package: sp
+
 oXim
 ====
+
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/oXim)](http://cran.r-project.org/package=oXim) [![](http://cranlogs.r-pkg.org/badges/oXim)](http://cran.rstudio.com/web/packages/oXim/index.html)
 
 **Oxycline Index from Matrix Echograms**
 

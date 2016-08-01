@@ -4,10 +4,7 @@
 
 using namespace Rcpp;
 
-//' @import Rcpp
-//' @useDynLib oXim
-//' @export
-// [[Rcpp::export(name=".ordfilt2_C_internal")]]
+// [[Rcpp::export]]
 NumericMatrix ordfilt2_C_internal(NumericMatrix data, int x, NumericVector weightedMatrix){
   int nrows = data.nrow();
   int ncols = data.ncol();

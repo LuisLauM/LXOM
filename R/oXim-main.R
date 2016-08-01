@@ -6,6 +6,7 @@
 #' @import stats
 #' @import sp
 #' @import gstat
+#' @import Rcpp
 #'
 #' @useDynLib oXim
 #'

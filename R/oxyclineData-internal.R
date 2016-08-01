@@ -76,7 +76,7 @@
     stop("Incorrect mode of data or weightedMatrix (both must be 'numeric').")
 
   # No borders
-  miniData <- .ordfilt2_C_internal(data = data, x = as.integer(x),
+  miniData <- ordfilt2_C_internal(data = data, x = as.integer(x),
                                   weightedMatrix = as.numeric(weightedMatrix))
 
   return(miniData)

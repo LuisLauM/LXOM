@@ -116,11 +116,13 @@ print.summary.oxyclineData <- function(x, ...){
 #'
 #' @param x Object of class \code{oxyclineData}
 #' @param interpParams \code{list} object including parameters passed to \code{\link{idw}} function.
-#' @param ... Extra arguments passed to \code{\link{plot.SpatialGridDataFrame}} function.
+#' @param xlengthAxes Desired length of the axis 'x' labels.
+#' @param ylengthAxes Desired length of the axis 'y' labels.
+#' @param ... Extra arguments passed to \code{\link{image}} function.
 #'
 #' @export
 #' @method plot oxyclineData
-plot.oxyclineData <- function(x, interpParams = list(myGrid = NULL), ...){
+plot.oxyclineData <- function(x, interpParams = list(myGrid = NULL), xlengthAxes = 5, ylengthAxes = 5, ...){
 
   # Combine all matrices in one data.frame
   allData <- NULL
@@ -141,11 +143,27 @@ plot.oxyclineData <- function(x, interpParams = list(myGrid = NULL), ...){
   x <- do.call(what = ".interpIDW",
                args = c(list(myData = x, XYZnames = c("lon", "lat", "upper_limit")), interpParams))
 
-  # Plot map
-  plot(x = x, ...)
+  myGrid <- x$myGrid
+  x <- x$myIDW
 
-  axis(1)
-  axis(2)
+  x <- matrix(data = x@data$var1.pred, nrow = x@grid@cells.dim[1], ncol = x@grid@cells.dim[2])
+
+  # Plot map
+  originalPar <- par()
+
+  par(mar = c(4, 4, 1, 1))
+  image(x = x, axes = FALSE, ...)
+
+  xAxes <- range(myGrid$x)
+  xAxes <- seq(from = xAxes[1], to = xAxes[2], length.out = xlengthAxes)
+
+  yAxes <- range(myGrid$y)
+  yAxes <- seq(from = yAxes[1], to = yAxes[2], length.out = ylengthAxes)
+
+  axis(side = 1, at = seq(from = 0, to = 1, length.out = xlengthAxes),
+       labels = sapply(xAxes, .getCoordsAxes, what = "lon"))
+  axis(side = 2, at = seq(from = 0, to = 1, length.out = ylengthAxes),
+       labels = sapply(yAxes, .getCoordsAxes, what = "lat"), las = 2)
   box()
 
   return(invisible())

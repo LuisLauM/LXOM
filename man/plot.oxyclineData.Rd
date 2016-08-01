@@ -4,14 +4,19 @@
 \alias{plot.oxyclineData}
 \title{Plot method for oxyclineData}
 \usage{
-\method{plot}{oxyclineData}(x, interpParams = list(myGrid = NULL), ...)
+\method{plot}{oxyclineData}(x, interpParams = list(myGrid = NULL),
+  xlengthAxes = 5, ylengthAxes = 5, ...)
 }
 \arguments{
 \item{x}{Object of class \code{oxyclineData}}
 
 \item{interpParams}{\code{list} object including parameters passed to \code{\link{idw}} function.}
 
-\item{...}{Extra arguments passed to \code{\link{plot.SpatialGridDataFrame}} function.}
+\item{xlengthAxes}{Desired length of the axis 'x' labels.}
+
+\item{ylengthAxes}{Desired length of the axis 'y' labels.}
+
+\item{...}{Extra arguments passed to \code{\link{image}} function.}
 }
 \description{
 This method takes an \code{oxyclineData} object, make an interpolation of oxycline
