@@ -24,7 +24,7 @@ This is a new release, so there are no reverse dependencies.
 > 
 > Possibly mis-spelled words in DESCRIPTION:
 >   madian (8:84)
-
+>
 > median?
 
 Yes, it was my mistake, I corrected this.
@@ -42,22 +42,28 @@ In order to avoid this license problem on the future with akima package, I decid
 > ** running examples for arch 'i386' ... ERROR
 > Running examples in 'oXim-Ex.R' failed
 > The error most likely occurred in:
-> 
-> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
-> ### Name: getOxyrange
-> ### Title: Takes a matrix of echogram and calculate Oxycline.
-> ### Aliases: getOxyrange
 >
-> ### ** Examples
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+>
+> \### Name: getOxyrange
+>
+> \### Title: Takes a matrix of echogram and calculate Oxycline.
+>
+> \### Aliases: getOxyrange
+>
+> \### ** Examples
 >
 > fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
-> +                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
-> +                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+>                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
+>                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
+>
 > echoData <- readEchograms(fileMode = fileMode)
+>
 > oxyclineRange <- getOxyrange(echoData)
+>
 > Message:
 > No filter-setting object or file detected. OXim will use default filter configuration.
 > 
 > And here the output stops (crash?).
 
-I have made some corrections and the functions are working well again. Nevertheless, when I check, I am still observing the error with x64 arch.
+I have made some corrections and the functions are working well again (I have used demos and made some calculations with external data). Nevertheless, when I check (ONLY IN R >= 3.0.0), I am still observing the error with x64 arch examples. In short, this problem is only observable in example's environment. Moreover, there is little information about this issue, most forums suggest some problem with DLL source in R 3.0.x.

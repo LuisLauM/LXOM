@@ -51,7 +51,7 @@ summary.echoData <- function(object, ...){
     summaryDimensions <- as.data.frame(do.call(what = "cbind", args = summaryDimensions))
     summaryDimensions <- summaryDimensions[-nrow(summaryDimensions),]
 
-    tempSummary <- data.frame(sA = as.numeric(summaryEchogram),
+    tempSummary <- data.frame(sA = .an(summaryEchogram),
                               lon = summaryDimensions$lon,
                               lat = summaryDimensions$lat,
                               time = as.POSIXct(as.vector(summary(object$data[[i]]$dimnames$time)),

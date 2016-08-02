@@ -5,7 +5,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-NumericMatrix ordfilt2_C_internal(NumericMatrix data, int x, NumericVector weightedMatrix){
+NumericMatrix ordfiltInC(NumericMatrix data, int x, NumericVector weightedMatrix){
   int nrows = data.nrow();
   int ncols = data.ncol();
   int radius = sqrt(weightedMatrix.size());

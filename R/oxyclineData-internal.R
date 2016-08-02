@@ -1,4 +1,4 @@
-# .ordfilt2_R <- function(data, x, weightedMatrix){
+# ordfiltInR <- function(data, x, weightedMatrix){
 #   newData <- data
 #
 #   # Corner UpLeft
@@ -76,17 +76,16 @@
     stop("Incorrect mode of data or weightedMatrix (both must be 'numeric').")
 
   # No borders
-  miniData <- ordfilt2_C_internal(data = data, x = as.integer(x),
-                                  weightedMatrix = as.numeric(weightedMatrix))
+  miniData <- ordfiltInC(data = data, x = as.integer(x), weightedMatrix = .an(weightedMatrix))
 
   return(miniData)
 }
 
 # Filter that removes (converts to NaN) isolated pixels
 .noiselessFilter <- function(data, radius, times, tolerance){
-  radius <- as.numeric(radius)
-  times <- as.numeric(times)
-  tolerance <- as.numeric(tolerance)
+  radius <- .an(radius)
+  times <- .an(times)
+  tolerance <- .an(tolerance)
 
   # Get range of values
   rangeValues <- range(data, na.rm = TRUE)
@@ -117,8 +116,8 @@
 
 # Filter that takes isolated pixels and reforce its closest environment
 .definerFilter <- function(data, radius, times){
-  radius <- as.numeric(radius)
-  times <- as.numeric(times)
+  radius <- .an(radius)
+  times <- .an(times)
 
   # Get range of values
   rangeValues <- range(data, na.rm = TRUE)
@@ -218,7 +217,7 @@
 
       # Select and save limit values
       limitIndex <- match(as.numeric(lineLimits[j,]), limitVector)
-      limitsData[j, c(1, 2)] <- as.numeric(names(limitVector)[limitIndex])
+      limitsData[j, c(1, 2)] <- .an(names(limitVector)[limitIndex])
       # c(, tempDims$lon[j], tempDims$lat[j])
     }
 
@@ -436,8 +435,8 @@
       if(i == 1)
         depth <- .an(tempList_Fluid$depth)
 
-      tempTime <- paste(as.character(tempList_Fluid$Ping.date),
-                        as.character(tempList_Fluid$Ping.time))
+      tempTime <- paste(.ac(tempList_Fluid$Ping.date),
+                        .ac(tempList_Fluid$Ping.time))
       tempLon <- tempList_Fluid$Longitude
       tempLat <- tempList_Fluid$Latitude
       rm(list = c("tempList_Fish", "tempList_Fluid", "tempList_Blue"))
@@ -467,7 +466,7 @@
     stop("Incorrect value for 'date.format'.")
 
   # Get points where the difference between two pin is larger than pinInterval (sec)
-  breakPoints <- which(as.numeric(diff(allTime)) > pinInterval)
+  breakPoints <- which(.an(diff(allTime)) > pinInterval)
 
   index <- is.null(dim(breakPoints)) && length(breakPoints) > 1
   breakPoints <- c(0, if(index) NULL else breakPoints, dim(allData)[2])
@@ -516,7 +515,7 @@
 
   # Define raster from echogram
   xAxis <- as.POSIXct(dimnames(echogram)[[2]])
-  yAxis <- abs(as.numeric(dimnames(echogram)[[1]]))
+  yAxis <- abs(.an(dimnames(echogram)[[1]]))
 
   ext_xAxis <- seq.POSIXt(range(xAxis)[1], range(xAxis)[2], by = "sec")
 
@@ -535,13 +534,13 @@
   par(mar = c(3, 4, 2, 3), xaxs = "i", yaxs = "i")
 
   image(x = ext_xAxis, y = yAxis, z = newEchogram,
-        xlim = as.numeric(xlim), ylim = ylim, axes = FALSE, ylab = "Depth (m)",
+        xlim = .an(xlim), ylim = ylim, axes = FALSE, ylab = "Depth (m)",
         useRaster = FALSE, col = colEchogram, ...)
 
   axis(2, at = pretty(yAxis), labels = rev(abs(pretty(yAxis))), las = 2)
-  axis(1, at = as.numeric(pretty_dates(xlim, nIntervals)),
+  axis(1, at = .an(pretty_dates(xlim, nIntervals)),
        labels = as.Date(pretty_dates(xlim, nIntervals)))
-  axis(1, at = as.numeric(pretty_dates(xlim, nIntervals)),
+  axis(1, at = .an(pretty_dates(xlim, nIntervals)),
        labels = strftime(pretty_dates(xlim, nIntervals), format="%H:%M:%S"), line = 1, tick = FALSE)
 
   box()
@@ -553,8 +552,8 @@
   xAxis <- as.POSIXct(rownames(oxyrange))
 
   # Add lower and upper limits of oxycline
-  lines(as.numeric(xAxis), oxyrange[,1], ...)
-  lines(as.numeric(xAxis), oxyrange[,2], ...)
+  lines(.an(xAxis), oxyrange[,1], ...)
+  lines(.an(xAxis), oxyrange[,2], ...)
 
   return(invisible())
 }
