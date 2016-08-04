@@ -4,29 +4,33 @@
 
 using namespace Rcpp;
 
+//' @importFrom Rcpp evalCpp
+//' @useDynLib oXim
 // [[Rcpp::export]]
-NumericMatrix ordfiltInC(NumericMatrix data, int x, NumericVector weightedMatrix){
+NumericMatrix ordfiltInC(NumericMatrix data, double x, NumericMatrix weightedMatrix){
   int nrows = data.nrow();
   int ncols = data.ncol();
-  int radius = sqrt(weightedMatrix.size());
+
+  int wmrows = weightedMatrix.nrow();
+  int wmcols = weightedMatrix.ncol();
 
   NumericMatrix emptyData(nrows, ncols);
-  NumericVector miniMatrix(radius*radius);
+  NumericVector miniMatrix(wmrows*wmcols);
 
-  for(int j = 1; j < ncols - floor(radius/2); j++){
-    for(int i = 1; i < nrows - floor(radius/2); i++){
-      for(int n = 0; n < radius; n++){
-        for(int m = 0; m < radius; m++){
-          int index = radius*m + n;
+  for(int j = 1; j < ncols - std::abs(floor(wmcols/2)); j++){
+    for(int i = 1; i < nrows - std::abs(floor(wmrows/2)); i++){
+      for(int n = 0; n < wmcols; n++){
+        for(int m = 0; m < wmrows; m++){
+          int index = m*3 + n;
           int a = i + m - 1;
           int b = j + n - 1;
-          miniMatrix[index] = data(a, b)*weightedMatrix[index];
+          miniMatrix[index] = data(a, b)*weightedMatrix(m, n);
         }
       }
 
       std::sort(miniMatrix.begin(), miniMatrix.end());
 
-      emptyData(i, j) = miniMatrix[x - 1];
+      emptyData(i, j) = miniMatrix[std::abs(x) - 1];
     }
   }
 

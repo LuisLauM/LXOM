@@ -18,6 +18,7 @@ This is a new release, so there are no reverse dependencies.
 
 * There were some problems with R version 3.0.0 and higher when check algorithms tried to run examples on 64-bits architectures. This problems were not present compiling and checking the package on R v. 3.2.5 or lower. The ERROR showed above was related to this.
 
+
 ## Second submission
 
 > Thanks, we see:
@@ -67,3 +68,10 @@ In order to avoid this license problem on the future with akima package, I decid
 > And here the output stops (crash?).
 
 I have made some corrections and the functions are working well again (I have used demos and made some calculations with external data). Nevertheless, when I check (ONLY IN R >= 3.0.0), I am still observing the error with x64 arch examples. In short, this problem is only observable in example's environment. Moreover, there is little information about this issue, most forums suggest some problem with DLL source in R 3.0.x.
+
+
+## Third submission
+
+> Pls remove the redundant "Package oriented to" from DESCRIPTION file.
+
+Done

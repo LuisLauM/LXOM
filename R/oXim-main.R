@@ -1,14 +1,10 @@
 
 # oXim package: Oxycline Index from Matrix Echograms ---------------
 #' @import R.matlab
-#' @import lubridate
 #' @import graphics
 #' @import stats
 #' @import sp
 #' @import gstat
-#' @import Rcpp
-#'
-#' @useDynLib oXim
 #'
 #' @title Oxycline Index from Matrix Echograms
 #'

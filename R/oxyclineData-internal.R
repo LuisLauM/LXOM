@@ -76,7 +76,7 @@
     stop("Incorrect mode of data or weightedMatrix (both must be 'numeric').")
 
   # No borders
-  miniData <- ordfiltInC(data = data, x = as.integer(x), weightedMatrix = .an(weightedMatrix))
+  miniData <- ordfiltInC(data = data, x = as.integer(x), weightedMatrix = weightedMatrix)
 
   return(miniData)
 }
@@ -528,7 +528,9 @@
   # Get plot of raster
   nIntervals <- 5
 
-  xlim <- range(pretty_dates(xAxis, nIntervals))
+  xVector <- seq.POSIXt(from = min(xAxis), to = max(xAxis), length.out = nIntervals)
+
+  xlim <- range(xVector)
   ylim <- range(pretty(yAxis, n = nIntervals))
 
   par(mar = c(3, 4, 2, 3), xaxs = "i", yaxs = "i")
@@ -538,10 +540,8 @@
         useRaster = FALSE, col = colEchogram, ...)
 
   axis(2, at = pretty(yAxis), labels = rev(abs(pretty(yAxis))), las = 2)
-  axis(1, at = .an(pretty_dates(xlim, nIntervals)),
-       labels = as.Date(pretty_dates(xlim, nIntervals)))
-  axis(1, at = .an(pretty_dates(xlim, nIntervals)),
-       labels = strftime(pretty_dates(xlim, nIntervals), format="%H:%M:%S"), line = 1, tick = FALSE)
+  axis(1, at = .an(xVector), labels = as.Date(xVector))
+  axis(1, at = .an(xVector), labels = strftime(xVector, format="%H:%M:%S"), line = 1, tick = FALSE)
 
   box()
 
