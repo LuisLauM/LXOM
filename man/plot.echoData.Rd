@@ -4,7 +4,7 @@
 \alias{plot.echoData}
 \title{Plot method for echoData Objects.}
 \usage{
-\method{plot}{echoData}(x, ...)
+\method{plot}{echoData}(x, main = NULL, ...)
 }
 \arguments{
 \item{x}{\code{echoData} object provided by \code{readEchograms} function.}

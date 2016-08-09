@@ -1,7 +1,3 @@
-    ## Loading required package: Rcpp
-
-    ## Loading required package: sp
-
 oXim
 ====
 
@@ -100,7 +96,7 @@ print(oxyLimits)
 #>  Range lon:  From 74.167° W to 74.113° W 
 #>  Range lat:  From 17.218° S to 17.187° S 
 #>  Range time: From 2011-09-12 00:54:31 to 2011-09-12 01:18:37 
-#>  Range oxycline depth:   From 63.6 m to 86.6 m
+#>  Range oxycline depth:   From 5.4 m to 101.1 m
 
 # Summary method
 summary(oxyLimits)
@@ -109,12 +105,12 @@ summary(oxyLimits)
 #> 
 #> For database 1:
 #>      lon lat limits  time    
-#>  Min.    -74.17  -17.22  -86.62  2011-09-12 00:54:31 
-#>  1st Qu. -74.15  -17.21  -77.88  2011-09-12 00:59:51 
-#>  Median  -74.14  -17.2   -75.38  2011-09-12 01:06:06 
-#>  Mean    -74.14  -17.2   -73.87  2011-09-12 01:06:09 
-#>  3rd Qu. -74.13  -17.19  -68.25  2011-09-12 01:12:22 
-#>  Max.    -74.11  -17.19  -63.62  2011-09-12 01:18:37 
+#>  Min.    -74.17  -17.22  -101.1  2011-09-12 00:54:31 
+#>  1st Qu. -74.15  -17.21  -81.62  2011-09-12 00:59:51 
+#>  Median  -74.14  -17.2   -78.12  2011-09-12 01:06:06 
+#>  Mean    -74.14  -17.2   -76.28  2011-09-12 01:06:09 
+#>  3rd Qu. -74.13  -17.19  -75.62  2011-09-12 01:12:22 
+#>  Max.    -74.11  -17.19  -5.38   2011-09-12 01:18:37 
 
 # Plot method
 plot(oxyLimits)

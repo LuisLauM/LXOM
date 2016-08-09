@@ -112,10 +112,14 @@ print.summary.echoData <- function(x, ...){
 #'
 #' @export
 #' @method plot echoData
-plot.echoData <- function(x, ...){
+plot.echoData <- function(x, main = NULL, ...){
 
   for(i in seq_along(x$data)){
-    echogramPlot(echogramOutput = x$data[[i]]$echogram, main = paste("Echogram", i), ...)
+    if(is.null(main)){
+      main <- paste("Echogram", i)
+    }
+
+    echogramPlot(echogramOutput = x$data[[i]]$echogram, main = main, ...)
 
     if(i < length(x$data)){
       readline(prompt = "Hit <enter> to see next echogram:")

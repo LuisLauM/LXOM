@@ -7,7 +7,7 @@ using namespace Rcpp;
 //' @importFrom Rcpp evalCpp
 //' @useDynLib oXim
 // [[Rcpp::export]]
-NumericMatrix ordfiltInC(NumericMatrix data, double x, NumericMatrix weightedMatrix){
+NumericMatrix ordfiltInC(NumericMatrix data, int x, NumericMatrix weightedMatrix){
   int nrows = data.nrow();
   int ncols = data.ncol();
 
