@@ -7,23 +7,23 @@ using namespace Rcpp;
 //' @importFrom Rcpp evalCpp
 //' @useDynLib oXim
 // [[Rcpp::export]]
-NumericMatrix ordfiltInC(NumericMatrix data, int x, NumericMatrix weightedMatrix){
-  int nrows = data.nrow();
-  int ncols = data.ncol();
+NumericMatrix ordfiltInC(NumericMatrix data, double x, NumericMatrix weightedMatrix){
+  double nrows = data.nrow();
+  double ncols = data.ncol();
 
-  int wmrows = weightedMatrix.nrow();
-  int wmcols = weightedMatrix.ncol();
+  double wmrows = weightedMatrix.nrow();
+  double wmcols = weightedMatrix.ncol();
 
   NumericMatrix emptyData(nrows, ncols);
   NumericVector miniMatrix(wmrows*wmcols);
 
-  for(int j = 1; j < ncols - std::abs(floor(wmcols/2)); j++){
-    for(int i = 1; i < nrows - std::abs(floor(wmrows/2)); i++){
-      for(int n = 0; n < wmcols; n++){
-        for(int m = 0; m < wmrows; m++){
-          int index = m*3 + n;
-          int a = i + m - 1;
-          int b = j + n - 1;
+  for(double j = 1; j < ncols - std::abs(floor(wmcols/2)); j++){
+    for(double i = 1; i < nrows - std::abs(floor(wmrows/2)); i++){
+      for(double n = 0; n < wmcols; n++){
+        for(double m = 0; m < wmrows; m++){
+          double index = m*3 + n;
+          double a = i + m - 1;
+          double b = j + n - 1;
           miniMatrix[index] = data(a, b)*weightedMatrix(m, n);
         }
       }

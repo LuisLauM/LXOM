@@ -112,12 +112,11 @@ print.summary.echoData <- function(x, ...){
 #'
 #' @export
 #' @method plot echoData
-plot.echoData <- function(x, main = NULL, ...){
+plot.echoData <- function(x, ...){
 
   for(i in seq_along(x$data)){
-    if(is.null(main)){
-      main <- paste("Echogram", i)
-    }
+
+    main <- paste("Echogram", i)
 
     echogramPlot(echogramOutput = x$data[[i]]$echogram, main = main, ...)
 
