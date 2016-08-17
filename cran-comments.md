@@ -75,3 +75,33 @@ I have made some corrections and the functions are working well again (I have us
 > Pls remove the redundant "Package oriented to" from DESCRIPTION file.
 
 Done
+
+## Fourth submission
+> The installation errors are covered at https://cran.r-project.org/doc/manuals/r-patched/R-exts.html#Portable-C-and-C_002b_002b-code : it seems you do not understand C/C++ integer arithmtic so need to review your code thoroughly.
+
+I have checked C++ code, avoiding to use functions like sqrt and changing class for number variables (now, I am using double instead int in order to solve ambiguity problems).
+
+> For OS X, traceback() shows
+> 
+> 8: pretty_dates(xAxis, nIntervals)
+>
+> 9: seq.POSIXt(start, end, paste(binlength, binunits))
+> 
+> Selection: 8
+>
+> Called from: top level
+>
+> Browse[1]> start
+>
+> [1] "POSIXct of length 0"
+>
+> so I guess there is yet another bug in the lubridate package you use (it is notorious for leaving them unfixed): use base R facilities instead.
+
+Now, 'oXim' does not need lubridate package, I have remove it from depends.
+
+> Packages almost never need to depend on Rcpp and can just have it in LinkingTo.
+
+Done
+
+#### Extra
+Problems with devtools check in Windows were still present, so I decided to use 'dontrun' sentence with 'getOxyrange' examples. I have searching and asking about the problem with dll but there is not a certain answer. I have test 'oXim' in Ubuntu (R 3.2.3) and it is working perfectly (testing --as-cran). I am still with no explaination for this problem, but I think that is not a C++ code issue but in the dll files managing (at least in Windows).
