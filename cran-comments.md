@@ -105,3 +105,9 @@ Done
 
 #### Extra
 Problems with devtools check in Windows were still present, so I decided to use 'dontrun' sentence with 'getOxyrange' examples. I have searching and asking about the problem with dll but there is not a certain answer. I have test 'oXim' in Ubuntu (R 3.2.3) and it is working perfectly (testing --as-cran). I am still with no explaination for this problem, but I think that is not a C++ code issue but in the dll files managing (at least in Windows).
+
+
+## Fifth submission
+> Insufficient package version (submitted: 1.0.0, existing: 1.0.0)
+
+Done.
