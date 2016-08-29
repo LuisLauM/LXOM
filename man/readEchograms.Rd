@@ -29,8 +29,10 @@ and Fish and use them to make a filtered matrix to calculate the Oxycline limits
 }
 \details{
 \code{fileMode} must be a list contains filenames for Fish38, Fluid120 and Bluelike38.
-For \code{directoryMode}, it must be a list with a directory with Fish38, Fluid120 and Bluelike38
-files in order to group and build final echograms.
+For \code{directoryMode}, it must be a \code{list} with the next structure: \code{directory} (folder
+where the files are storaged), \code{fish38_pattern} (text pattern for recognizing fish38 files),
+\code{blue38_pattern} (text pattern for recognizing blue38 files) and \code{fluid120_pattern}
+(text pattern for recognizing fluid120 files).
 }
 \examples{
 fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),

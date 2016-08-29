@@ -221,7 +221,6 @@
       # Select and save limit values
       limitIndex <- match(as.numeric(lineLimits[j,]), limitVector)
       limitsData[j, c(1, 2)] <- .an(names(limitVector)[limitIndex])
-      # c(, tempDims$lon[j], tempDims$lat[j])
     }
 
     limitsData[,c(3, 4)] <- cbind(tempDims$lon, tempDims$lat)
@@ -407,7 +406,7 @@
 
     directory <- directoryMode$directory
 
-    # Define ttext pattern of databases
+    # Define text pattern of data bases
     pattern_Fish38  <- directoryMode$fish38_pattern
     # pattern_Fluid38 <- "_2Freq_Fluid38.mat"
     pattern_Blue38  <- directoryMode$blue38_pattern

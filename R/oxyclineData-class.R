@@ -119,10 +119,12 @@ print.summary.oxyclineData <- function(x, ...){
 #' @param xlengthAxes Desired length of the axis 'x' labels.
 #' @param ylengthAxes Desired length of the axis 'y' labels.
 #' @param ... Extra arguments passed to \code{\link{image}} function.
+#' @param showLimits \code{logical}. Do you want to show the oxycline limit line?
 #'
 #' @export
 #' @method plot oxyclineData
-plot.oxyclineData <- function(x, interpParams = list(myGrid = NULL), xlengthAxes = 6, ylengthAxes = 6, ...){
+plot.oxyclineData <- function(x, interpParams = list(myGrid = NULL), xlengthAxes = 6, ylengthAxes = 6,
+                              showLimits = FALSE, ...){
 
   # Combine all matrices in one data.frame
   allData <- NULL
@@ -173,6 +175,38 @@ plot.oxyclineData <- function(x, interpParams = list(myGrid = NULL), xlengthAxes
   }
 
   box()
+
+  return(invisible())
+}
+
+#' @title echogramPlot method for oxyclineData
+#'
+#' @description This method takes an \code{oxyclineData} object and plots output echograms. Optionaly,
+#' users can add oxycline line.
+#'
+#' @param x Object of class \code{oxyclineData}
+#' @param oxyLine \code{logical}. Do you want to add oxycline line to the plot?
+#' @param oxyLineParams If \code{oxyLine = TRUE}, parameters passed to \code{\link{lines}} function.
+#' @param ... Extra arguments passed to \code{\link{echogramPlot}} function.
+#'
+#' @export
+#' @method echogramPlot oxyclineData
+echogramPlot.oxyclineData <- function(x, oxyLine = TRUE, oxyLineParams = list(), ...){
+
+  for(i in seq_along(x$outputs)){
+    # Plot echogram
+    echogramPlot(echogramOutput = x$outputs[[i]]$finalEchogram, ...)
+
+    # Add oxycline line
+    if(isTRUE(oxyLine)){
+
+      timeVector <- as.POSIXct(rownames(oxyLimits$oxycline_range[[i]]))
+      oxyLimit <- oxyLimits$oxycline_range[[i]]$lower_limit
+
+      do.call(what = "lines",
+              args = c(with(oxyLimits$oxycline_range[[i]], list(x = timeVector, y = oxyLimit)), oxyLineParams))
+    }
+  }
 
   return(invisible())
 }
