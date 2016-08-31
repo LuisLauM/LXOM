@@ -66,7 +66,6 @@
   return(output)
 }
 
-#' Function that makes an IDW interpolation using sp and gstat tools
 #' @importFrom gstat idw
 .interpIDW <- function(myData, XYZnames = c("x", "y", "z"), myGrid = NULL, ...){
 

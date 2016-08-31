@@ -6,15 +6,16 @@
 \alias{echogramPlot.matrix}
 \title{Plot a matrix of a filtered echogram.}
 \usage{
-\method{echogramPlot}{default}(echogramOutput, colEchogram = "colPalette",
-  ...)
+\method{echogramPlot}{default}(x, colEchogram = "colPalette", ...)
 
-echogramPlot(echogramOutput, colEchogram = "colPalette", ...)
+echogramPlot(x, colEchogram = "colPalette", ...)
 
 \method{echogramPlot}{matrix}(x, ...)
 }
 \arguments{
-\item{echogramOutput}{Object of class \code{oxyclineData} with internal echogram matrix to be plotted.}
+\item{x}{Object of class \code{oxyclineData}, \code{echoData} or \code{matrix} with information for make
+an echogram plot. If \code{x} is a \code{matrix}, column names must indicate the time and row names, the
+depth.}
 
 \item{colEchogram}{Pallete of colours to plot the echograms. If \code{NULL} (default) the system
 will use the same combination used on object \code{colPallete}.}

@@ -184,7 +184,7 @@ plot.oxyclineData <- function(x, interpParams = list(myGrid = NULL), xlengthAxes
 #' @description This method takes an \code{oxyclineData} object and plots output echograms. Optionaly,
 #' users can add oxycline line.
 #'
-#' @param x Object of class \code{oxyclineData}
+#' @param x Object of class \code{oxyclineData} with internal echogram matrix to be plotted.
 #' @param oxyLine \code{logical}. Do you want to add oxycline line to the plot?
 #' @param oxyLineParams If \code{oxyLine = TRUE}, parameters passed to \code{\link{lines}} function.
 #' @param ... Extra arguments passed to \code{\link{echogramPlot}} function.
@@ -195,7 +195,7 @@ echogramPlot.oxyclineData <- function(x, oxyLine = TRUE, oxyLineParams = list(),
 
   for(i in seq_along(x$outputs)){
     # Plot echogram
-    echogramPlot.default(echogramOutput = x$outputs[[i]]$finalEchogram, ...)
+    echogramPlot.default(x = x$outputs[[i]]$finalEchogram, ...)
 
     # Add oxycline line
     if(isTRUE(oxyLine)){
@@ -217,7 +217,7 @@ echogramPlot.oxyclineData <- function(x, oxyLine = TRUE, oxyLineParams = list(),
 #' @export
 echogramPlot.matrix <- function(x, ...){
 
-  echogramPlot.default(echogramOutput = x, ...)
+  echogramPlot.default(x = x, ...)
 
   return(invisible())
 }

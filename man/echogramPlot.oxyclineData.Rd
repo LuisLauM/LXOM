@@ -8,7 +8,7 @@
   oxyLineParams = list(), ...)
 }
 \arguments{
-\item{x}{Object of class \code{oxyclineData}}
+\item{x}{Object of class \code{oxyclineData} with internal echogram matrix to be plotted.}
 
 \item{oxyLine}{\code{logical}. Do you want to add oxycline line to the plot?}
 

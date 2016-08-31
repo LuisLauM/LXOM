@@ -1,6 +1,4 @@
 
-# Calculate oxycline limits from oxyclineData object -------------------------------
-
 # Set directories where the Echopen's outputs are located
 fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
@@ -25,4 +23,5 @@ print(summaryOxyLimits)
 # Plot method
 plot(oxyLimits)
 
+# echogramPlot method
 echogramPlot(oxyLimits)

@@ -25,14 +25,16 @@ NULL
 #'
 #' @param fileMode List with needed variables to read single Matlab files. See details below.
 #' @param directoryMode List with needed variables to read Matlab files from directory. See details below.
-#' @param validFish38 Range of valid values for Fish-38kHz
-#' @param validBlue38 Range of valid values for Blue-38kHz
-#' @param upLimitFluid120 Upper limit for Fluidlike-120kHz
+#' @param validFish38 Range of valid values for Fish-38kHz.
+#' @param validBlue38 Range of valid values for Blue-38kHz.
+#' @param upLimitFluid120 Upper limit for Fluidlike-120kHz.
 #' @param pinInterval Time threshold (in secs) to consider separate two matrices (echograms).
 #' @param date.format A character string. The default method is \code{\%Y-\%m-\%d \%H:\%M:\%S}.
 #'
-#' @details \code{fileMode} must be a list contains filenames for Fish38, Fluid120 and Bluelike38.
-#' For \code{directoryMode}, it must be a \code{list} with the next structure: \code{directory} (folder
+#' @details \code{fileMode} must be a \code{list} with the next structure: \code{fish38_file} (directory for fish38 file),
+#' \code{blue38_file} (directory for blue38 file) and \code{fluid120_file} (directory for fluid120 file).
+#'
+#' Similarly, \code{directoryMode} must be a \code{list} with the next structure: \code{directory} (folder
 #' where the files are storaged), \code{fish38_pattern} (text pattern for recognizing fish38 files),
 #' \code{blue38_pattern} (text pattern for recognizing blue38 files) and \code{fluid120_pattern}
 #' (text pattern for recognizing fluid120 files).
@@ -136,7 +138,8 @@ getOxyrange <- function(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE){
 #' @details About each parameter:
 #' \describe{
 #' \item{\strong{name}}{This parameter must be a string and it works as a short way to select an specific set of filter
-#' settings. (It will be fully available in next version.)}
+#' settings. This parameter has priority over the others, so to create a personalized set of filters, `name` will must
+#' set as \code{NULL}. (It will be fully available in next version.)}
 #' \item{\strong{type}}{This parameter must be a string and indicates what kind of filter method will be applied to the
 #' echigrams. There are two options to select: \code{.definerFilter} which works as a reverse-effect median filter
 #' and \code{.noiselessFilter} which removes  noisy signals on the echograms.}
@@ -156,8 +159,16 @@ getOxyrange <- function(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE){
 #' createFilterSetting(type = ".definerFilter", radius = c(3, 5, 5))
 createFilterSetting <- function(name = "default", type = NULL, radius = NULL, times = NULL, tolerance = NULL){
 
-  if(is.null(name) || !is.vector(name) || length(name) > 1){
+  defaultFilterSettings <- get("defaultFilterSettings")
+
+  if(is.null(name) || !is.vector(name) || length(name) > 1 || !is.element(name, defaultFilterSettings$name)){
     # Check variables of fileter settings object
+    for(i in c("type", "radius", "times", "tolerance")){
+     if(is.null(get(x = i))){
+       stop("There is no valid value for ", i, ".")
+     }
+    }
+
     # Chaeck name
     if(!is.element(sort(unique(type)), c(".definerFilter", ".noiselessFilter")))
       stop("Problem with 'filterSettings'. There is, at least, one wrong value on 'type' column.")
@@ -184,7 +195,7 @@ createFilterSetting <- function(name = "default", type = NULL, radius = NULL, ti
                          tolerance = rep(tolerance, length.out = allLength),
                          stringsAsFactors = FALSE)
   }else{
-    defaultFilterSettings <- get("defaultFilterSettings")
+
     output <- subset(defaultFilterSettings, defaultFilterSettings$name == name)
   }
 
@@ -195,7 +206,9 @@ createFilterSetting <- function(name = "default", type = NULL, radius = NULL, ti
 #' @title Plot a matrix of a filtered echogram.
 #' @description This function uses an oxyclineData-class object and plot .
 #'
-#' @param echogramOutput Object of class \code{oxyclineData} with internal echogram matrix to be plotted.
+#' @param x Object of class \code{oxyclineData}, \code{echoData} or \code{matrix} with information for make
+#' an echogram plot. If \code{x} is a \code{matrix}, column names must indicate the time and row names, the
+#' depth.
 #' @param colEchogram Pallete of colours to plot the echograms. If \code{NULL} (default) the system
 #' will use the same combination used on object \code{colPallete}.
 #' @param ... Graphical parameters for \code{\link{image}} may also passed as arguments to this function.
@@ -208,8 +221,8 @@ createFilterSetting <- function(name = "default", type = NULL, radius = NULL, ti
 #'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
 #' echoData <- readEchograms(fileMode = fileMode)
 #' echogramPlot(echoData$data$matrix_1$echogram)
-echogramPlot <- function(echogramOutput, colEchogram = "colPalette", ...){
-  UseMethod(generic = "echogramPlot", echogramOutput)
+echogramPlot <- function(x, colEchogram = "colPalette", ...){
+  UseMethod(generic = "echogramPlot", x)
 }
 
 #' @title Default color palette most using on acostic echograms.

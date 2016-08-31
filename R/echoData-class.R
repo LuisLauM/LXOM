@@ -118,7 +118,7 @@ plot.echoData <- function(x, ...){
 
     main <- paste("Echogram", i)
 
-    echogramPlot(echogramOutput = x$data[[i]]$echogram, main = main, ...)
+    echogramPlot.default(x = x$data[[i]]$echogram, main = main, ...)
 
     if(i < length(x$data)){
       readline(prompt = "Hit <enter> to see next echogram:")
@@ -143,7 +143,7 @@ echogramPlot.echoData <- function(x, ...){
 
     main <- paste("Echogram", i)
 
-    echogramPlot.default(echogramOutput = x$data[[i]]$echogram, main = main, ...)
+    echogramPlot.default(x = x$data[[i]]$echogram, main = main, ...)
   }
 
   return(invisible())

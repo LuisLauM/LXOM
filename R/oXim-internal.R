@@ -2,9 +2,9 @@
 #'
 #' @rdname echogramPlot
 #' @export
-echogramPlot.default <- function(echogramOutput, colEchogram = "colPalette", ...){
+echogramPlot.default <- function(x, colEchogram = "colPalette", ...){
   colEchogram <- get(colEchogram)
-  .echogramPlot(echogramOutput, colEchogram = colEchogram, ...)
+  .echogramPlot(x, colEchogram = colEchogram, ...)
 
   return(invisible())
 }
