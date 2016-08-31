@@ -189,24 +189,35 @@ plot.oxyclineData <- function(x, interpParams = list(myGrid = NULL), xlengthAxes
 #' @param oxyLineParams If \code{oxyLine = TRUE}, parameters passed to \code{\link{lines}} function.
 #' @param ... Extra arguments passed to \code{\link{echogramPlot}} function.
 #'
-#' @export
 #' @method echogramPlot oxyclineData
+#' @export
 echogramPlot.oxyclineData <- function(x, oxyLine = TRUE, oxyLineParams = list(), ...){
 
   for(i in seq_along(x$outputs)){
     # Plot echogram
-    echogramPlot(echogramOutput = x$outputs[[i]]$finalEchogram, ...)
+    echogramPlot.default(echogramOutput = x$outputs[[i]]$finalEchogram, ...)
 
     # Add oxycline line
     if(isTRUE(oxyLine)){
 
-      timeVector <- as.POSIXct(rownames(oxyLimits$oxycline_range[[i]]))
-      oxyLimit <- oxyLimits$oxycline_range[[i]]$lower_limit
+      timeVector <- as.POSIXct(rownames(x$oxycline_range[[i]]))
+      oxyLimit <- x$oxycline_range[[i]]$lower_limit
 
       do.call(what = "lines",
-              args = c(with(oxyLimits$oxycline_range[[i]], list(x = timeVector, y = oxyLimit)), oxyLineParams))
+              args = c(with(x$oxycline_range[[i]], list(x = timeVector, y = oxyLimit)), oxyLineParams))
     }
   }
+
+  return(invisible())
+}
+
+
+#' @rdname echogramPlot
+#' @method echogramPlot matrix
+#' @export
+echogramPlot.matrix <- function(x, ...){
+
+  echogramPlot.default(echogramOutput = x, ...)
 
   return(invisible())
 }

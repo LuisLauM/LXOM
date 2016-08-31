@@ -143,7 +143,7 @@ echogramPlot.echoData <- function(x, ...){
 
     main <- paste("Echogram", i)
 
-    echogramPlot(echogramOutput = x$data[[i]]$echogram, main = main, ...)
+    echogramPlot.default(echogramOutput = x$data[[i]]$echogram, main = main, ...)
   }
 
   return(invisible())

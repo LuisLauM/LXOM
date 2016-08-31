@@ -15,6 +15,8 @@
 #' @docType package
 #' @references oXim: Oxycline Index from Matrix Echograms (RJournal)
 #' @keywords echograms, oxycline, depth, image-filtering
+#' @exportClass echoData
+#' @exportClass oxyclineData
 NULL
 
 #' @title Takes outputs from Echopen and generates a matrix to calculate Oxycline.
@@ -43,7 +45,6 @@ NULL
 #' print(echoData)
 #'
 #' @export
-#' @exportClass echoData
 readEchograms <- function(fileMode = NULL, directoryMode = NULL,
                           validFish38 = c(-100, -21), validBlue38 = c(-100, -56),
                           upLimitFluid120 = -53, pinInterval = 50, date.format = "%d-%m-%Y %H:%M:%S"){
@@ -69,13 +70,11 @@ readEchograms <- function(fileMode = NULL, directoryMode = NULL,
 #' data set. For extra details about image filters, see \code{\link{createFilterSetting}} help.
 #'
 #' @examples
-#' \dontrun{
 #' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
 #'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
 #'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
 #' echoData <- readEchograms(fileMode = fileMode)
 #' oxyLimits <- getOxyrange(fluidMatrix = echoData)
-#' }
 #'
 #' @export
 #' @exportClass oxyclineData
@@ -193,8 +192,6 @@ createFilterSetting <- function(name = "default", type = NULL, radius = NULL, ti
 }
 
 
-#' @export echogramPlot
-#'
 #' @title Plot a matrix of a filtered echogram.
 #' @description This function uses an oxyclineData-class object and plot .
 #'
@@ -203,6 +200,8 @@ createFilterSetting <- function(name = "default", type = NULL, radius = NULL, ti
 #' will use the same combination used on object \code{colPallete}.
 #' @param ... Graphical parameters for \code{\link{image}} may also passed as arguments to this function.
 #'
+#' @export
+#'
 #' @examples
 #' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
 #'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
@@ -210,11 +209,7 @@ createFilterSetting <- function(name = "default", type = NULL, radius = NULL, ti
 #' echoData <- readEchograms(fileMode = fileMode)
 #' echogramPlot(echoData$data$matrix_1$echogram)
 echogramPlot <- function(echogramOutput, colEchogram = "colPalette", ...){
-
-  colEchogram <- get(colEchogram)
-  .echogramPlot(echogramOutput, colEchogram = colEchogram, ...)
-
-  return(invisible())
+  UseMethod(generic = "echogramPlot", echogramOutput)
 }
 
 #' @title Default color palette most using on acostic echograms.

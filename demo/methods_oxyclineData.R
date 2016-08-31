@@ -24,3 +24,5 @@ print(summaryOxyLimits)
 
 # Plot method
 plot(oxyLimits)
+
+echogramPlot(oxyLimits)
