@@ -362,6 +362,9 @@
                          validFish38, validBlue38, upLimitFluid120,
                          pinInterval, date.format){
 
+  # dayHours <- c("06:30", "17:30")
+  # nightHours <- c("19:30", "04:50")
+
   if(is.null(fileMode) & is.null(directoryMode)){
     stop("At least whether fileMode or directoryMode must not be NULL.")
   }
