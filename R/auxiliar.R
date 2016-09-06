@@ -99,3 +99,14 @@
 .ac <- as.character
 .an <- as.numeric
 .anc <- function(...) as.numeric(as.character(...))
+
+.onLoad <- function(...) {
+
+  packageStartupMessage("
+'oXim': Tools for read Echopen outputs and get oxycline limits from echogram data
+https://cran.r-project.org/web/packages/oXim/index.html\n
+'Echopen': toolbox for the multifrequency analysis of fisheries acoustics data.
+http://www.france-nord.ird.fr/les-ressources/outils-informatiques\n")
+
+  return(invisible())
+}
