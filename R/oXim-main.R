@@ -13,7 +13,6 @@
 #' @description Pack oriented to extract oxycline depth from echogram matrix using median-filter and 2D-convolution based algorithms.
 #' @aliases oXim-package oXim
 #' @docType package
-#' @references oXim: Oxycline Index from Matrix Echograms (RJournal)
 #' @keywords echograms, oxycline, depth, image-filtering
 #' @exportClass echoData
 #' @exportClass oxyclineData
