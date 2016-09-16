@@ -184,7 +184,10 @@
   return(outputList)
 }
 
-.getOxyrange <- function(oxyclineData, oxyDims){
+.getOxyrange <- function(oxyclineData, oxyDims, spar = 0.25){
+
+  # Define lower and upper limits
+  lineLimits <- c(0.7, 0.99)
 
   allLimits <- list()
   for(i in seq_along(oxyclineData)){
@@ -192,42 +195,31 @@
     tempEchogram <- oxyclineData[[i]]$finalEchogram
     tempDims <- oxyDims[[i]]
 
-    # Define lower and upper limits
-    lineLimits <- c(0.10, 0.98)
+    # Matrix index by line limits
+    matrixIndex <- apply(tempEchogram, 2, getLimits, probs = lineLimits)
 
-    # Get matrix where values of tempEchogram are lower than zero
-    dataEchogram <- drop(outer(tempEchogram, 0, "<"))
-    dataEchogram[is.na(dataEchogram)] <- 0
+    # Get upper and lower values by column (time)
+    limitsData <- apply(matrixIndex, 2, getStartFinish, values = .an(rownames(tempEchogram)))
+    limitsData[limitsData > 0] <- NA
 
-    # What columns has, at least, one value for getting oxycline range
-    index <- which(colSums(dataEchogram) > 0)
+    # Reorganize info
+    limitsData <- data.frame(lon = tempDims$lon,
+                             lat = tempDims$lat,
+                             lower_limit = limitsData[1,],
+                             upper_limit = limitsData[2,],
+                             stringsAsFactors = FALSE)
+    rownames(limitsData) <- colnames(matrixIndex)
 
-    # Get sums by column
-    sumByCol <- apply(dataEchogram, 2, sum)
+    # nMovingAverage <- 20
+    # limitsData$lower_limit <- movingAverage(x = limitsData$lower_limit, n = nMovingAverage)
+    # limitsData$upper_limit <- movingAverage(x = limitsData$upper_limit, n = nMovingAverage)
 
-    lineLimits <- ceiling(sapply(lineLimits, "*", sumByCol))
-
-    dataEchogram <- apply(dataEchogram, 2, cumsum)
-
-    # Set empty matrix for recording range values
-    limitsData <- matrix(NA, nrow = ncol(tempEchogram), ncol = 4)
-    dimnames(limitsData) <- list(colnames(tempEchogram),
-                                 c("lower_limit", "upper_limit", "lon", "lat"))
-    for(j in index){
-      # Get vector with cumsum values by depth
-      limitIndex <- !duplicated(dataEchogram[,j])
-      limitVector <- dataEchogram[limitIndex, j]
-
-      # Select and save limit values
-      limitIndex <- match(as.numeric(lineLimits[j,]), limitVector)
-      limitsData[j, c(1, 2)] <- .an(names(limitVector)[limitIndex])
-    }
-
-    limitsData[,c(3, 4)] <- cbind(tempDims$lon, tempDims$lat)
+    # Smooth lower and upper limits
+    limitsData$lower_limit <- smoothVector(limitsData$lower_limit, spar = spar)
+    limitsData$upper_limit <- smoothVector(limitsData$upper_limit, spar = spar)
 
     # Compile values on a list
-    output <- as.data.frame(limitsData, stringsAsFactors = FALSE)
-    allLimits[[i]] <- output[complete.cases(output[,c("lon", "lat")]),]
+    allLimits[[i]] <- limitsData
   }
 
   names(allLimits) <- names(oxyclineData)
@@ -371,6 +363,11 @@
 
   if(!is.null(fileMode)){
 
+    # Check if files exist or not
+    if(all(!sapply(fileMode, file.exists))){
+      stop("Some given files do not exist.")
+    }
+
     # Read Matlab files (.m)
     fish38_matrix <- readMat(fileMode$fish38_file)
     fluid120_matrix <- readMat(fileMode$fluid120_file)
@@ -411,12 +408,8 @@
 
     # Define text pattern of data bases
     pattern_Fish38  <- directoryMode$fish38_pattern
-    # pattern_Fluid38 <- "_2Freq_Fluid38.mat"
     pattern_Blue38  <- directoryMode$blue38_pattern
-
-    # pattern_Fish120   <- "_2Freq_Fish120.mat"
     pattern_Fluid120  <- directoryMode$fluid120_pattern
-    # pattern_Blue120   <- "_2Freq_Blue120.mat"
 
     # Generate file list with text patterns
     listFiles_Fish <- list.files(path = directory, pattern = pattern_Fish38,

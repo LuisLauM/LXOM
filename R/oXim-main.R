@@ -204,7 +204,7 @@ createFilterSetting <- function(name = "default", type = NULL, radius = NULL, ti
 
 
 #' @title Plot a matrix of a filtered echogram.
-#' @description This function uses an oxyclineData-class object and plot .
+#' @description This function takes an echogram matrix and plot it.
 #'
 #' @param x Object of class \code{oxyclineData}, \code{echoData} or \code{matrix} with information for make
 #' an echogram plot. If \code{x} is a \code{matrix}, column names must indicate the time and row names, the
@@ -213,6 +213,9 @@ createFilterSetting <- function(name = "default", type = NULL, radius = NULL, ti
 #' will use the same combination used on object \code{colPallete}.
 #' @param ... Graphical parameters for \code{\link{image}} may also passed as arguments to this function.
 #'
+#' @details Typically, `echogramPlot` can be applied to echogram matrix object, however it also may use
+#' `echoData` and `oxyclineData` objects, as a method.
+#'
 #' @export
 #'
 #' @examples
@@ -220,7 +223,7 @@ createFilterSetting <- function(name = "default", type = NULL, radius = NULL, ti
 #'                  fluid120_file = system.file("extdata", "fluid120.mat", package = "oXim"),
 #'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
 #' echoData <- readEchograms(fileMode = fileMode)
-#' echogramPlot(echoData$data$matrix_1$echogram)
+#' echogramPlot(x = echoData)
 echogramPlot <- function(x, colEchogram = "colPalette", ...){
   UseMethod(generic = "echogramPlot", x)
 }

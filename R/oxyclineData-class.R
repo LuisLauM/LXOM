@@ -202,6 +202,7 @@ echogramPlot.oxyclineData <- function(x, oxyLine = TRUE, oxyLineParams = list(),
 
       timeVector <- as.POSIXct(rownames(x$oxycline_range[[i]]))
       oxyLimit <- x$oxycline_range[[i]]$lower_limit
+      oxyLimit <- abs(min(.an(rownames(x$outputs[[i]]$finalEchogram)))) + oxyLimit
 
       do.call(what = "lines",
               args = c(with(x$oxycline_range[[i]], list(x = timeVector, y = oxyLimit)), oxyLineParams))
