@@ -52,8 +52,8 @@ summary.oxyclineData <- function(object, ...){
     summaryOxylimits <- .an(summary(oxylimitsObject))
 
     # Get summary for coords info
-    summaryCoords <- data.frame(lon = .an(summary(tempData$lon)),
-                                lat = .an(summary(tempData$lat)),
+    summaryCoords <- data.frame(lon = .an(summary(na.omit(tempData$lon))),
+                                lat = .an(summary(na.omit(tempData$lat))),
                                 stringsAsFactors = FALSE)
 
     # Get summary for time info
