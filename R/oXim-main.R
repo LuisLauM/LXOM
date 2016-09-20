@@ -66,6 +66,7 @@ readEchograms <- function(fileMode = NULL, directoryMode = NULL,
 #' @param filterSettings List with combination of filters.
 #' @param stepBYstep \code{logical}. If \code{FALSE} (default), returns just original and final echogram, otherwise each
 #' echogram (after applying filters one by one) will be returned.
+#' @param ... Not used
 #'
 #' @details If \code{filterSettings = NULL}, oXim will use filter configuration present on \code{defaultFilterSettings}
 #' data set. For extra details about image filters, see \code{\link{createFilterSetting}} help.
@@ -79,7 +80,7 @@ readEchograms <- function(fileMode = NULL, directoryMode = NULL,
 #'
 #' @export
 #' @exportClass oxyclineData
-getOxyrange <- function(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE){
+getOxyrange <- function(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE, ...){
 
   nEchograms <- fluidMatrix$info$n_echograms
 
@@ -104,7 +105,7 @@ getOxyrange <- function(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE){
   names(oxyclineData) <- paste0("matrix_", seq_along(fluidMatrix))
 
   # Get ranges of depth of oxycline using the last matrix of each echogram
-  oxyRange <- .getOxyrange(oxyclineData = oxyclineData, oxyDims = oxyDims)
+  oxyRange <- .getOxyrange(oxyclineData = oxyclineData, oxyDims = oxyDims, ...)
 
   # Compile outputs on a list
   oxyclineData <- list(info = list(number_echograms = nEchograms,

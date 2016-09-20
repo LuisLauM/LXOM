@@ -4,7 +4,7 @@
 \alias{getOxyrange}
 \title{Takes a matrix of echogram and calculate Oxycline.}
 \usage{
-getOxyrange(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE)
+getOxyrange(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE, ...)
 }
 \arguments{
 \item{fluidMatrix}{Object of class \code{echoData} (from \code{\link{readEchograms}} function) with echogram}
@@ -13,6 +13,8 @@ getOxyrange(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE)
 
 \item{stepBYstep}{\code{logical}. If \code{FALSE} (default), returns just original and final echogram, otherwise each
 echogram (after applying filters one by one) will be returned.}
+
+\item{...}{Not used}
 }
 \description{
 This function takes a filter configuration and applies to echograms given on an \code{echoData} object.

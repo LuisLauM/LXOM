@@ -25,7 +25,7 @@ print.oxyclineData <- function(x, ...){
     rangeTime <- .ac(range(as.POSIXct(rownames(tempData))))
     cat(paste("\tRange time:\tFrom", rangeTime[1], "to", rangeTime[2], "\n"))
 
-    rangeOxylimits <- round(abs(range(tempData$upper_limit, na.rm = TRUE)), 1)
+    rangeOxylimits <- round(abs(range(tempData$oxycline_limit, na.rm = TRUE)), 1)
     cat(paste("\tRange oxycline depth:\tFrom", rangeOxylimits[2], "m to", rangeOxylimits[1], "m\n"))
   }
 
@@ -48,7 +48,7 @@ summary.oxyclineData <- function(object, ...){
     tempData <- object$oxycline_range[[i]]
 
     # Get summary for oxycline depth info
-    oxylimitsObject <- na.omit(tempData$upper_limit)
+    oxylimitsObject <- na.omit(tempData$oxycline_limit)
     summaryOxylimits <- .an(summary(oxylimitsObject))
 
     # Get summary for coords info
@@ -138,17 +138,18 @@ plot.oxyclineData <- function(x, interpParams = list(myGrid = NULL), xlengthAxes
   x <- allData
 
   # Remove rows with no-data in lat, lon or upper_limit
-  index <- complete.cases(x[,c("lon", "lat", "upper_limit")])
+  index <- complete.cases(x[,c("lon", "lat", "oxycline_limit")])
   x <- x[index,]
 
   # Make interpolation using akima package
   x <- do.call(what = ".interpIDW",
-               args = c(list(myData = x, XYZnames = c("lon", "lat", "upper_limit")), interpParams))
+               args = c(list(myData = x, XYZnames = c("lon", "lat", "oxycline_limit")), interpParams))
 
   myGrid <- x$myGrid
   x <- x$myIDW
 
-  x <- matrix(data = x@data$var1.pred, nrow = x@grid@cells.dim[1], ncol = x@grid@cells.dim[2])
+  x <- list(x = unique(x@coords[,1]), y = unique(x@coords[,2]),
+            z = matrix(data = x@data$var1.pred, nrow = x@grid@cells.dim[1], ncol = x@grid@cells.dim[2]))
 
   # Plot map
   originalPar <- par()
@@ -156,22 +157,20 @@ plot.oxyclineData <- function(x, interpParams = list(myGrid = NULL), xlengthAxes
   par(mar = c(4, 4, 1, 1))
   image(x = x, axes = FALSE, ...)
 
-  xAxes <- range(myGrid$x)
+  xAxes <- range(x$x)
   xAxes <- seq(from = xAxes[1], to = xAxes[2], length.out = xlengthAxes)
 
-  yAxes <- range(myGrid$y)
+  yAxes <- range(x$y)
   yAxes <- seq(from = yAxes[1], to = yAxes[2], length.out = ylengthAxes)
 
   if(!is.null(list(...)$cex.axis)){
-    axis(side = 1, at = seq(from = 0, to = 1, length.out = xlengthAxes),
-         labels = sapply(xAxes, .getCoordsAxes, what = "lon"), cex.axis = list(...)$cex.axis)
-    axis(side = 2, at = seq(from = 0, to = 1, length.out = ylengthAxes),
-         labels = sapply(yAxes, .getCoordsAxes, what = "lat"), las = 2, cex.axis = list(...)$cex.axis)
+    axis(side = 1, at = xAxes, labels = sapply(xAxes, .getCoordsAxes, what = "lon"),
+         cex.axis = list(...)$cex.axis)
+    axis(side = 2, at = yAxes, labels = sapply(yAxes, .getCoordsAxes, what = "lat"),
+         las = 2, cex.axis = list(...)$cex.axis)
   }else{
-    axis(side = 1, at = seq(from = 0, to = 1, length.out = xlengthAxes),
-         labels = sapply(xAxes, .getCoordsAxes, what = "lon"))
-    axis(side = 2, at = seq(from = 0, to = 1, length.out = ylengthAxes),
-         labels = sapply(yAxes, .getCoordsAxes, what = "lat"), las = 2)
+    axis(side = 1, at = xAxes, labels = sapply(xAxes, .getCoordsAxes, what = "lon"))
+    axis(side = 2, at = yAxes, labels = sapply(yAxes, .getCoordsAxes, what = "lat"), las = 2)
   }
 
   box()
@@ -195,13 +194,13 @@ echogramPlot.oxyclineData <- function(x, oxyLine = TRUE, oxyLineParams = list(),
 
   for(i in seq_along(x$outputs)){
     # Plot echogram
-    echogramPlot.default(x = x$outputs[[i]]$finalEchogram, ...)
+    echogramPlot.default(x = x$outputs[[i]]$original, ...)
 
     # Add oxycline line
     if(isTRUE(oxyLine)){
 
       timeVector <- as.POSIXct(rownames(x$oxycline_range[[i]]))
-      oxyLimit <- x$oxycline_range[[i]]$lower_limit
+      oxyLimit <- x$oxycline_range[[i]]$oxycline_limit
       oxyLimit <- abs(min(.an(rownames(x$outputs[[i]]$finalEchogram)))) + oxyLimit
 
       do.call(what = "lines",

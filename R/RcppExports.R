@@ -3,6 +3,12 @@
 
 #' @importFrom Rcpp evalCpp
 #' @useDynLib oXim
+cumsumCol <- function(data, colSums) {
+    .Call('oXim_cumsumCol', PACKAGE = 'oXim', data, colSums)
+}
+
+#' @importFrom Rcpp evalCpp
+#' @useDynLib oXim
 ordfiltInC <- function(data, x, weightedMatrix) {
     .Call('oXim_ordfiltInC', PACKAGE = 'oXim', data, x, weightedMatrix)
 }

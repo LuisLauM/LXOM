@@ -145,7 +145,7 @@ getLimits <- function(x, probs){
 
   x[is.na(x)] <- 0
   x <- cumsum(x)/sum(x)
-  x <- cut(x = x, breaks = c(-Inf, probs, Inf), labels = c(-1, 0, 1))
+  x <- cut(x = x, breaks = c(-Inf, probs, Inf), labels = c(-1, rep(0, length(probs) - 1), 1))
   x <- !abs(.anc(x))
 
   return(x)
@@ -160,6 +160,18 @@ getStartFinish <- function(x, values){
   }else{
     output <- values[range(x)]
   }
+
+  return(output)
+}
+
+relativeCumsum <- function(data){
+
+  columnsSums <- colSums(data, na.rm = TRUE)
+
+  output <- matrix(data = NA, nrow = nrow(data), ncol = ncol(data))
+
+  index <- columnsSums > 0
+  output[,index] <- cumsumCol(data[,index], columnsSums[index])
 
   return(output)
 }

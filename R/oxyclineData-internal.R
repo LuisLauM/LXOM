@@ -184,39 +184,51 @@
   return(outputList)
 }
 
-.getOxyrange <- function(oxyclineData, oxyDims, spar = 0.25){
+.getOxyrange <- function(oxyclineData, oxyDims, ...){
 
-  # Define lower and upper limits
-  lineLimits <- c(0.7, 0.99)
+  # Define lower and upper limits c(Upper, Lower, Limit)
+  if(is.null(list(...)$lineLimits)){
+    lineLimits <- c(0.2, 0.99, 0.5)
+  }else{
+    lineLimits <- list(...)$lineLimits
+  }
 
   allLimits <- list()
   for(i in seq_along(oxyclineData)){
     # Select the final matrix of each echogram and dims
-    tempEchogram <- oxyclineData[[i]]$finalEchogram
-    tempDims <- oxyDims[[i]]
+    tempEchogram <- -oxyclineData[[i]]$finalEchogram
+    originalMatrix <- -oxyclineData[[i]]$original
 
-    # Matrix index by line limits
-    matrixIndex <- apply(tempEchogram, 2, getLimits, probs = lineLimits)
+    # Replace NA with zeros
+    tempEchogram[is.na(tempEchogram)] <- 0
+    originalMatrix[is.na(originalMatrix)] <- 0
 
-    # Get upper and lower values by column (time)
-    limitsData <- apply(matrixIndex, 2, getStartFinish, values = .an(rownames(tempEchogram)))
-    limitsData[limitsData > 0] <- NA
+    # Extract original values from filtered matrix
+    cumsumMatrix <- apply(tempEchogram, 2, function(x) cumsum(x)/sum(x))
+    cumsumMatrix <- apply(cumsumMatrix, 2, findInterval, vec = c(-Inf, lineLimits[1:2], Inf))
+    originalMatrix[cumsumMatrix != 2] <- 0
+
+    # Extract oxycline limits
+    cumsumMatrix <- apply(originalMatrix, 2, function(x) cumsum(x)/sum(x))
+    cumsumMatrix <- apply(cumsumMatrix, 2, findInterval, vec = c(-Inf, lineLimits[3], Inf))
+
+    limitsData <- rep(NA, ncol(cumsumMatrix))
+
+    index <- colSums(cumsumMatrix, na.rm = TRUE) > 0
+    limitsData[index] <- apply(cumsumMatrix[,index], 2, function(x) na.omit(which(!duplicated(x))))[2,]
+    limitsData[index] <- sapply(limitsData[index], function(x, depths) depths[x],
+                                depths = .an(rownames(tempEchogram)))
+
+    # Make smoothing
+    limitsData <- smoothVector(limitsData, spar = ifelse(is.null(list(...)$spar), 0.1, list(...)$spar))
+    # limitsData <- movingAverage(x = limitsData, n = 20)
 
     # Reorganize info
-    limitsData <- data.frame(lon = tempDims$lon,
-                             lat = tempDims$lat,
-                             lower_limit = limitsData[1,],
-                             upper_limit = limitsData[2,],
+    limitsData <- data.frame(lon = oxyDims[[i]]$lon,
+                             lat = oxyDims[[i]]$lat,
+                             oxycline_limit = limitsData,
                              stringsAsFactors = FALSE)
-    rownames(limitsData) <- colnames(matrixIndex)
-
-    # nMovingAverage <- 20
-    # limitsData$lower_limit <- movingAverage(x = limitsData$lower_limit, n = nMovingAverage)
-    # limitsData$upper_limit <- movingAverage(x = limitsData$upper_limit, n = nMovingAverage)
-
-    # Smooth lower and upper limits
-    limitsData$lower_limit <- smoothVector(limitsData$lower_limit, spar = spar)
-    limitsData$upper_limit <- smoothVector(limitsData$upper_limit, spar = spar)
+    rownames(limitsData) <- colnames(tempEchogram)
 
     # Compile values on a list
     allLimits[[i]] <- limitsData
@@ -543,16 +555,6 @@
        tick = FALSE, cex.axis = cex.axis)
 
   box()
-
-  return(invisible())
-}
-
-.lineOxyrangePlot <- function(oxyrange, ...){
-  xAxis <- as.POSIXct(rownames(oxyrange))
-
-  # Add lower and upper limits of oxycline
-  lines(.an(xAxis), oxyrange[,1], ...)
-  lines(.an(xAxis), oxyrange[,2], ...)
 
   return(invisible())
 }
