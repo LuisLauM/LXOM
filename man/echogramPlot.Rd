@@ -8,7 +8,7 @@
 \usage{
 \method{echogramPlot}{default}(x, colEchogram = "colPalette", ...)
 
-echogramPlot(x, colEchogram = "colPalette", ...)
+echogramPlot(x)
 
 \method{echogramPlot}{matrix}(x, ...)
 }
@@ -16,11 +16,6 @@ echogramPlot(x, colEchogram = "colPalette", ...)
 \item{x}{Object of class \code{oxyclineData}, \code{echoData} or \code{matrix} with information for make
 an echogram plot. If \code{x} is a \code{matrix}, column names must indicate the time and row names, the
 depth.}
-
-\item{colEchogram}{Pallete of colours to plot the echograms. If \code{NULL} (default) the system
-will use the same combination used on object \code{colPallete}.}
-
-\item{...}{Graphical parameters for \code{\link{image}} may also passed as arguments to this function.}
 }
 \value{
 \code{NULL}

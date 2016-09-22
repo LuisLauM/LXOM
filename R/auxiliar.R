@@ -93,7 +93,6 @@ smoothVector <- function(x, y = NULL, ...){
   return(output)
 }
 
-#' @importFrom gstat idw
 .interpIDW <- function(myData, XYZnames = c("x", "y", "z"), myGrid = NULL, ...){
 
   myData <- data.frame(x = myData[,XYZnames[1]],
@@ -160,18 +159,6 @@ getStartFinish <- function(x, values){
   }else{
     output <- values[range(x)]
   }
-
-  return(output)
-}
-
-relativeCumsum <- function(data){
-
-  columnsSums <- colSums(data, na.rm = TRUE)
-
-  output <- matrix(data = NA, nrow = nrow(data), ncol = ncol(data))
-
-  index <- columnsSums > 0
-  output[,index] <- cumsumCol(data[,index], columnsSums[index])
 
   return(output)
 }
