@@ -184,17 +184,19 @@ plot.oxyclineData <- function(x, interpParams = list(myGrid = NULL), xlengthAxes
 #' users can add oxycline line.
 #'
 #' @param x Object of class \code{oxyclineData} with internal echogram matrix to be plotted.
+#' @param colEchogram Pallete of colours to plot the echograms. If \code{NULL} (default) the system
+#' will use the same combination used on object \code{colPallete}.
 #' @param oxyLine \code{logical}. Do you want to add oxycline line to the plot?
 #' @param oxyLineParams If \code{oxyLine = TRUE}, parameters passed to \code{\link{lines}} function.
 #' @param ... Extra arguments passed to \code{\link{echogramPlot}} function.
 #'
 #' @method echogramPlot oxyclineData
 #' @export
-echogramPlot.oxyclineData <- function(x, oxyLine = TRUE, oxyLineParams = list(), ...){
+echogramPlot.oxyclineData <- function(x, colEchogram = "colPalette", oxyLine = TRUE, oxyLineParams = list(), ...){
 
   for(i in seq_along(x$outputs)){
     # Plot echogram
-    echogramPlot.default(x = x$outputs[[i]]$original, ...)
+    echogramPlot.default(x = x$outputs[[i]]$original, colEchogram = colEchogram, ...)
 
     # Add oxycline line
     if(isTRUE(oxyLine)){

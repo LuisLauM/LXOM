@@ -4,11 +4,14 @@
 \alias{echogramPlot.oxyclineData}
 \title{echogramPlot method for oxyclineData}
 \usage{
-\method{echogramPlot}{oxyclineData}(x, oxyLine = TRUE,
-  oxyLineParams = list(), ...)
+\method{echogramPlot}{oxyclineData}(x, colEchogram = "colPalette",
+  oxyLine = TRUE, oxyLineParams = list(), ...)
 }
 \arguments{
 \item{x}{Object of class \code{oxyclineData} with internal echogram matrix to be plotted.}
+
+\item{colEchogram}{Pallete of colours to plot the echograms. If \code{NULL} (default) the system
+will use the same combination used on object \code{colPallete}.}
 
 \item{oxyLine}{\code{logical}. Do you want to add oxycline line to the plot?}
 

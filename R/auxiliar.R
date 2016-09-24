@@ -128,7 +128,7 @@ smoothVector <- function(x, y = NULL, ...){
 .anc <- function(...) as.numeric(as.character(...))
 
 # Welcome message
-.onLoad <- function(...) {
+.onAttach <- function(...) {
 
   packageStartupMessage("
 'oXim': Tools for read Echopen outputs and get oxycline limits from echogram data.

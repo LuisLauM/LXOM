@@ -27,12 +27,6 @@ summary(echoData)
 # Plot method
 plot(echoData)
 
-## ---- cache=TRUE---------------------------------------------------------
-
-# Calculate oxycline limits (oxyclineData object)
-oxyLimits <- getOxyrange(fluidMatrix = echoData)
-
-
 ## ------------------------------------------------------------------------
 print(oxyLimits)
 

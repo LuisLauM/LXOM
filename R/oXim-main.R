@@ -209,6 +209,10 @@ createFilterSetting <- function(name = "default", type = NULL, radius = NULL, ti
 #' @param x Object of class \code{oxyclineData}, \code{echoData} or \code{matrix} with information for make
 #' an echogram plot. If \code{x} is a \code{matrix}, column names must indicate the time and row names, the
 #' depth.
+#' @param colEchogram Pallete of colours to plot the echograms. If \code{NULL} (default) the system
+#' will use the same combination used on object \code{colPallete}.
+#' @param ... Extra arguments passed to \code{\link{echogramPlot}} function.
+#'
 #' @details Typically, `echogramPlot` can be applied to echogram matrix object, however it also may use
 #' `echoData` and `oxyclineData` objects, as a method.
 #'
@@ -220,7 +224,7 @@ createFilterSetting <- function(name = "default", type = NULL, radius = NULL, ti
 #'                  blue38_file   = system.file("extdata", "blue38.mat", package = "oXim"))
 #' echoData <- readEchograms(fileMode = fileMode)
 #' echogramPlot(x = echoData)
-echogramPlot <- function(x){
+echogramPlot <- function(x, colEchogram = "colPalette", ...){
   UseMethod(generic = "echogramPlot", object = x)
 }
 
