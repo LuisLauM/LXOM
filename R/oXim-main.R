@@ -1,6 +1,7 @@
 
 # oXim package: Oxycline Index from Matrix Echograms ---------------
 #' @importFrom R.matlab readMat
+#' @importFrom imagine convolutionQuantile
 #' @import graphics
 #' @import stats
 #' @import sp
