@@ -11,7 +11,7 @@
 #'
 #' @author Wencheng Lau-Medrano, \email{luis.laum@gmail.com}
 #' @name oXim-package
-#' @description Tools to get oxycline depth from echogram matrix
+#' @description Tools for oxycline depth calculation from echogram matrices
 #' @aliases oXim-package oXim
 #' @docType package
 #' @keywords echograms, oxycline, depth, image-filtering

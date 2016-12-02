@@ -6,7 +6,7 @@
 \alias{oXim-package}
 \title{Oxycline Index from Matrix Echograms}
 \description{
-Tools to get oxycline depth from echogram matrix
+Tools for oxycline depth calculation from echogram matrices
 }
 \author{
 Wencheng Lau-Medrano, \email{luis.laum@gmail.com}
