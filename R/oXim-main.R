@@ -67,10 +67,13 @@ readEchograms <- function(fileMode = NULL, directoryMode = NULL,
 #' @param filterSettings List with combination of filters.
 #' @param stepBYstep \code{logical}. If \code{FALSE} (default), returns just original and final echogram, otherwise each
 #' echogram (after applying filters one by one) will be returned.
-#' @param ... Not used
+#' @param ... Arguments passed to \code{\link{smooth.spline}} function. See Details.
 #'
 #' @details If \code{filterSettings = NULL}, oXim will use filter configuration present on \code{defaultFilterSettings}
 #' data set. For extra details about image filters, see \code{\link{createFilterSetting}} help.
+#'
+#' Application of filters may produce some gaps in the final matrix. In order to fill them, the function uses
+#' \code{\link{smooth.spline}} whose arguments can be passed using by \code{...}.
 #'
 #' @examples
 #' fileMode <- list(fish38_file   = system.file("extdata", "fish38.mat", package = "oXim"),
@@ -101,7 +104,8 @@ getOxyrange <- function(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE, 
   # Fill outputs' matrix
   oxyclineData <- list()
   for(i in seq_along(fluidMatrix)){
-    oxyclineData[[i]] <- .getFilteredEchogram(fluidMatrix[[i]], filterSettings, stepBYstep)
+    oxyclineData[[i]] <- .getFilteredEchogram(fluidMatrix = fluidMatrix[[i]],
+                                              filterSettings = filterSettings, stepBYstep = stepBYstep)
   }
   names(oxyclineData) <- paste0("matrix_", seq_along(fluidMatrix))
 

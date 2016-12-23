@@ -9,6 +9,10 @@
   constant1 <- ceiling(radius/2)
   weightedMatrix[constant1,] <- 1
 
+  weightedMatrix <- mat.or.vec(nr = radius, nc = radius) + 1
+  weightedMatrix[,constant1] <- 2
+  weightedMatrix[constant1, constant1] <- 0
+
   # Apply filters
   finalData <- convolutionQuantile(dataMatrix = matrixData, kernel = weightedMatrix,
                                    x = tolerance, times = times)
@@ -27,6 +31,10 @@
   constant1 <- ceiling(radius/2)
   weightedMatrix[constant1,] <- 1
 
+  weightedMatrix <- mat.or.vec(nr = radius, nc = radius) + 1
+  weightedMatrix[,constant1] <- 2
+  weightedMatrix[constant1, constant1] <- 0
+
   # Apply filters
   finalData <- convolutionQuantile(dataMatrix = matrixData, kernel = weightedMatrix,
                                    x = tolerance, times = times)
@@ -41,9 +49,15 @@
   fluidNames <- dimnames(fluidMatrix$echogram)
   fluidMatrix <- fluidMatrix$echogram
 
+  diffLag <- 5
+  diffValues <- apply(fluidMatrix, 2, diff, lag = diffLag)
+  diffValues <- abs(apply(diffValues, 2, which.max)) + diffLag*10
+
+  tempOutput <- sapply(diffValues, function(x, limit) c(rep(1, x), rep(NaN, limit - x)), limit = nrow(fluidMatrix))
+  tempOutput <- fluidMatrix*tempOutput
+
   # Get filtered matrix
-  tempOutput <- fluidMatrix
-  outputList <- list(original = fluidMatrix)
+  outputList <- list(original = fluidMatrix, tempOutput)
   for(i in seq(nrow(filterSettings))){
     tempFunction <- match.fun(filterSettings[i, "type"])
 
@@ -59,15 +73,10 @@
 
     dimnames(tempOutput) <- fluidNames
 
-    if(stepBYstep)
-      outputList[[i + 1]] <- tempOutput else
-        if(i == nrow(filterSettings))
-          outputList[[2]] <- tempOutput
+    outputList[[i + 2]] <- tempOutput
   }
 
-  names(outputList) <- if(length(outputList) > 2)
-    c("original", paste0("echogram_", seq(nrow(filterSettings) - 1)), "finalEchogram") else
-      c("original", "finalEchogram")
+  names(outputList) <- c("original", paste0("echogram_", seq(nrow(filterSettings))), "finalEchogram")
 
   return(outputList)
 }
@@ -76,7 +85,7 @@
 
   # Define lower and upper limits c(Upper, Lower, Limit)
   if(is.null(list(...)$lineLimits)){
-    lineLimits <- c(0.2, 0.99, 0.5)
+    lineLimits <- c(0.2, 0.99, 0.98)
   }else{
     lineLimits <- list(...)$lineLimits
   }
@@ -85,7 +94,7 @@
   for(i in seq_along(oxyclineData)){
     # Select the final matrix of each echogram and dims
     tempEchogram <- -oxyclineData[[i]]$finalEchogram
-    originalMatrix <- -oxyclineData[[i]]$original
+    originalMatrix <- -oxyclineData[[i]][[2]]
 
     # Replace NA with zeros
     tempEchogram[is.na(tempEchogram)] <- 0
@@ -94,10 +103,10 @@
     # Extract original values from filtered matrix
     cumsumMatrix <- apply(tempEchogram, 2, function(x) cumsum(x)/sum(x))
     cumsumMatrix <- apply(cumsumMatrix, 2, findInterval, vec = c(-Inf, lineLimits[1:2], Inf))
-    originalMatrix[cumsumMatrix != 2] <- 0
+    tempEchogram[cumsumMatrix != 2] <- 0
 
     # Extract oxycline limits
-    cumsumMatrix <- apply(originalMatrix, 2, function(x) cumsum(x)/sum(x))
+    cumsumMatrix <- apply(tempEchogram, 2, function(x) cumsum(x)/sum(x))
     cumsumMatrix <- apply(cumsumMatrix, 2, findInterval, vec = c(-Inf, lineLimits[3], Inf))
 
     limitsData <- rep(NA, ncol(cumsumMatrix))
