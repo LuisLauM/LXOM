@@ -5,13 +5,7 @@
   tolerance <- .an(tolerance)
 
   # Get weighted Matrix (kernel)
-  weightedMatrix <- diag(radius) + diag(radius)[,radius:1]
-  constant1 <- ceiling(radius/2)
-  weightedMatrix[constant1,] <- 1
-
-  weightedMatrix <- mat.or.vec(nr = radius, nc = radius) + 1
-  weightedMatrix[,constant1] <- 2
-  weightedMatrix[constant1, constant1] <- 0
+  weightedMatrix <- getWeightedMatrix(radius = radius)
 
   # Apply filters
   finalData <- convolutionQuantile(dataMatrix = matrixData, kernel = weightedMatrix,
@@ -24,16 +18,10 @@
 .definerFilter <- function(matrixData, radius, times){
   radius <- .an(radius)
   times <- .an(times)
-  tolerance <- 1
+  tolerance <- 0.1
 
   # Get weighted Matrix (kernel)
-  weightedMatrix <- diag(radius) + diag(radius)[,radius:1]
-  constant1 <- ceiling(radius/2)
-  weightedMatrix[constant1,] <- 1
-
-  weightedMatrix <- mat.or.vec(nr = radius, nc = radius) + 1
-  weightedMatrix[,constant1] <- 2
-  weightedMatrix[constant1, constant1] <- 0
+  weightedMatrix <- getWeightedMatrix(radius = radius)
 
   # Apply filters
   finalData <- convolutionQuantile(dataMatrix = matrixData, kernel = weightedMatrix,
@@ -44,14 +32,14 @@
 
 # Function that applies a combination of filters (with different parameters) and
 # get a better matrix to calculate limits of oxycline
-.getFilteredEchogram <- function(fluidMatrix, filterSettings, stepBYstep){
+.getFilteredEchogram <- function(fluidMatrix, filterSettings, stepBYstep, ...){
 
   fluidNames <- dimnames(fluidMatrix$echogram)
   fluidMatrix <- fluidMatrix$echogram
 
-  diffLag <- 5
+  diffLag <- ifelse(is.null(list(...)$diffLag), 7, list(...)$diffLag)
   diffValues <- apply(fluidMatrix, 2, diff, lag = diffLag)
-  diffValues <- abs(apply(diffValues, 2, which.max)) + diffLag*10
+  diffValues <- abs(apply(diffValues, 2, which.max)) + diffLag*2
 
   tempOutput <- sapply(diffValues, function(x, limit) c(rep(1, x), rep(NaN, limit - x)), limit = nrow(fluidMatrix))
   tempOutput <- fluidMatrix*tempOutput
@@ -62,7 +50,7 @@
     tempFunction <- match.fun(filterSettings[i, "type"])
 
     tempOutput <- switch(filterSettings[i, "type"],
-                         .noiselessFilter = tempFunction(tempOutput,
+                         .noiselessFilter = tempFunction(matrixData = tempOutput,
                                                          radius = filterSettings[i, "radius"],
                                                          times = filterSettings[i, "times"],
                                                          tolerance = filterSettings[i, "tolerance"]),

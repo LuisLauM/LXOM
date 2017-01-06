@@ -104,8 +104,8 @@ getOxyrange <- function(fluidMatrix, filterSettings = NULL, stepBYstep = FALSE, 
   # Fill outputs' matrix
   oxyclineData <- list()
   for(i in seq_along(fluidMatrix)){
-    oxyclineData[[i]] <- .getFilteredEchogram(fluidMatrix = fluidMatrix[[i]],
-                                              filterSettings = filterSettings, stepBYstep = stepBYstep)
+    oxyclineData[[i]] <- .getFilteredEchogram(fluidMatrix = fluidMatrix[[i]], filterSettings = filterSettings,
+                                              stepBYstep = stepBYstep, ...)
   }
   names(oxyclineData) <- paste0("matrix_", seq_along(fluidMatrix))
 

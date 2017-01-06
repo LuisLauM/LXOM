@@ -158,3 +158,18 @@ getStartFinish <- function(x, values){
 
   return(output)
 }
+
+
+getWeightedMatrix <- function(radius){
+  constant1 <- ceiling(radius/2)
+  weightedMatrix <- matrix(data = 1, nrow = radius, ncol = radius)
+
+  for(i in 1:constant1){
+    index <- seq(i, radius - (i - 1))
+    weightedMatrix[i, index] <- 2
+  }
+
+  # weightedMatrix[,constant1] <- 2
+
+  return(weightedMatrix)
+}
