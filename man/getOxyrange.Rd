@@ -34,4 +34,3 @@ echoData <- readEchograms(fileMode = fileMode)
 oxyLimits <- getOxyrange(fluidMatrix = echoData)
 
 }
-

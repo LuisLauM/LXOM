@@ -13,7 +13,7 @@
 
   # Check variables of fileter settings object
   # Chaeck name
-  if(!all(is.element(sort(unique(output$type)), c(".definerFilter", ".noiselessFilter"))))
+  if(!all(is.element(sort(unique(output$type)), c("definerFilter", "noiselessFilter"))))
     stop("Problem with 'filterSettings'. There is, at least, one wrong value on 'type' column.")
 
   # Check radius

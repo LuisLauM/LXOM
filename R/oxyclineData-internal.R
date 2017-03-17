@@ -1,5 +1,5 @@
 # Filter that removes (converts to NaN) isolated pixels
-.noiselessFilter <- function(matrixData, radius, times, tolerance){
+noiselessFilter <- function(matrixData, radius, times, tolerance){
   radius <- .an(radius)
   times <- .an(times)
   tolerance <- .an(tolerance)
@@ -15,7 +15,7 @@
 }
 
 # Filter that takes isolated pixels and reforce its closest environment
-.definerFilter <- function(matrixData, radius, times){
+definerFilter <- function(matrixData, radius, times){
   radius <- .an(radius)
   times <- .an(times)
   tolerance <- 0.1
@@ -32,14 +32,14 @@
 
 # Function that applies a combination of filters (with different parameters) and
 # get a better matrix to calculate limits of oxycline
-.getFilteredEchogram <- function(fluidMatrix, filterSettings, stepBYstep, ...){
+getFilteredEchogram <- function(fluidMatrix, filterSettings, stepBYstep, ...){
 
   fluidNames <- dimnames(fluidMatrix$echogram)
   fluidMatrix <- fluidMatrix$echogram
 
   diffLag <- ifelse(is.null(list(...)$diffLag), 7, list(...)$diffLag)
   diffValues <- apply(fluidMatrix, 2, diff, lag = diffLag)
-  diffValues <- abs(apply(diffValues, 2, which.max)) + diffLag*2
+  diffValues <- abs(unlist(sapply(apply(diffValues, 2, which.max), function(x) if(length(x) < 1) 0 else as.numeric(x)))) #+ diffLag*2
 
   tempOutput <- sapply(diffValues, function(x, limit) c(rep(1, x), rep(NaN, limit - x)), limit = nrow(fluidMatrix))
   tempOutput <- fluidMatrix*tempOutput
@@ -50,11 +50,11 @@
     tempFunction <- match.fun(filterSettings[i, "type"])
 
     tempOutput <- switch(filterSettings[i, "type"],
-                         .noiselessFilter = tempFunction(matrixData = tempOutput,
+                         noiselessFilter = tempFunction(matrixData = tempOutput,
                                                          radius = filterSettings[i, "radius"],
                                                          times = filterSettings[i, "times"],
                                                          tolerance = filterSettings[i, "tolerance"]),
-                         .definerFilter = tempFunction(tempOutput,
+                         definerFilter = tempFunction(tempOutput,
                                                        radius = filterSettings[i, "radius"],
                                                        times = filterSettings[i, "times"]),
                          "Incorrect type of filter.")
@@ -69,7 +69,7 @@
   return(outputList)
 }
 
-.getOxyrange <- function(oxyclineData, oxyDims, ...){
+getOxyrange_int <- function(oxyclineData, oxyDims, ...){
 
   # Define lower and upper limits c(Upper, Lower, Limit)
   if(is.null(list(...)$lineLimits)){
@@ -125,7 +125,7 @@
 }
 
 # Get dimensions from echogram data
-.getOxyDims <- function(oxyclineData){
+getOxyDims <- function(oxyclineData){
   allDims <- list()
   for(i in seq_along(oxyclineData)){
     tempDim <- list(lon = oxyclineData[[i]]$dimnames$lon,
@@ -140,7 +140,7 @@
   return(allDims)
 }
 
-.getEchoData <- function(fileMode, directoryMode,
+getEchoData <- function(fileMode, directoryMode,
                          validFish38, validBlue38, upLimitFluid120,
                          pinInterval, date.format){
 
@@ -187,9 +187,20 @@
     index <- fluid120_matrix < -998 | fluid120_matrix > upLimitFluid120
     fluid120_matrix[index] <- NaN
 
-    # Clear main data (Fluid-like) using Fish and Blue noise data
-    allData <- fluid120_matrix*(is.na(blue38_matrix) & is.na(fish38_matrix))
-    allData[allData == 0] <- NaN
+    # # Clear main data (Fluid-like) using Fish and Blue noise data
+    # allData <- fluid120_matrix*(is.na(blue38_matrix) & is.na(fish38_matrix))
+    # allData[allData == 0] <- NaN
+
+    # Make operations between matrices
+    operationType <- 1
+    operationsInput <- list(fluid120_matrix = fluid120_matrix,
+                            blue38_matrix = blue38_matrix,
+                            fish38_matrix = fish38_matrix)
+
+    # Apply operations between matrices
+    allData <- operationsSet(operationsInput = operationsInput, type = operationType)
+
+    # Transpose matrix
     allData <- t(allData)
 
   }else{
