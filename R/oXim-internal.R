@@ -24,9 +24,9 @@ operationFunction_1 <- function(operationsInput){
   if(is.list(operationsInput) && all(is.element(neededMatrices, names(operationsInput)))){
 
     # Check classes
-    allClasses <- unique(lapply(operationsInput, class))
+    allClasses <- unique(sapply(operationsInput, class))
 
-    if(length(allClasses) || allClasses != "matrix"){
+    if(length(allClasses) > 1 || allClasses != "matrix"){
       stop("'operationsInput' must be a list of echogram matrices.")
     }
 
@@ -41,6 +41,10 @@ operationFunction_1 <- function(operationsInput){
   }
 
   # Make operations
+  for(i in seq_along(operationsInput)){
+    operationsInput[[i]][is.na(operationsInput[[i]])] <- 0
+  }
+
   output <- with(operationsInput, ((fluid120_matrix*1e3) + (blue38_matrix*1e3) + fish38_matrix)/3)
 
   return(output)
