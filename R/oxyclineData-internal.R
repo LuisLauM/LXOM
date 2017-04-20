@@ -142,7 +142,7 @@ getOxyDims <- function(oxyclineData){
 
 getEchoData <- function(fileMode, directoryMode,
                          validFish38, validBlue38, upLimitFluid120,
-                         pinInterval, date.format){
+                         pinInterval, date.format, ...){
 
   # dayHours <- c("06:30", "17:30")
   # nightHours <- c("19:30", "04:50")
@@ -192,7 +192,13 @@ getEchoData <- function(fileMode, directoryMode,
     # allData[allData == 0] <- NaN
 
     # Make operations between matrices
-    operationType <- 1
+    if(is.null(list(...)$operationType)){
+      operationType <- 1
+    }else{
+      operationType <- list(...)$operationType
+    }
+
+    # operationType <- 1
     operationsInput <- list(fluid120_matrix = fluid120_matrix,
                             blue38_matrix = blue38_matrix,
                             fish38_matrix = fish38_matrix)
@@ -248,8 +254,23 @@ getEchoData <- function(fileMode, directoryMode,
       tempData_Fluid[tempData_Fluid < -998 | tempData_Fluid > upLimitFluid120] <- NaN
 
       # Clear main data (Fluid-like) using Fish and Blue noise data
-      tempData <- tempData_Fluid*(is.na(tempData_Blue) & is.na(tempData_Fish))
-      tempData[tempData == 0] <- NaN
+      # tempData <- tempData_Fluid*(is.na(tempData_Blue) & is.na(tempData_Fish))
+      # tempData[tempData == 0] <- NaN
+
+      # Make operations between matrices
+      if(is.null(list(...)$operationType)){
+        operationType <- 1
+      }else{
+        operationType <- list(...)$operationType
+      }
+
+      # operationType <- 1
+      operationsInput <- list(fluid120_matrix = tempData_Fluid,
+                              blue38_matrix = tempData_Blue,
+                              fish38_matrix = tempData_Fish)
+
+      # Apply operations between matrices
+      tempData <- operationsSet(operationsInput = operationsInput, type = operationType)
 
       allLon <- c(allLon, tempLon)
       allLat <- c(allLat, tempLat)
