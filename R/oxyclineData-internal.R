@@ -8,8 +8,8 @@ noiselessFilter <- function(matrixData, radius, times, tolerance){
   weightedMatrix <- getWeightedMatrix(radius = radius)
 
   # Apply filters
-  finalData <- convolutionQuantile(dataMatrix = matrixData, kernel = weightedMatrix,
-                                   x = tolerance, times = times)
+  finalData <- convolutionQuantile(X = matrixData, kernel = weightedMatrix,
+                                   probs = tolerance, times = times)
 
   return(finalData)
 }
@@ -24,8 +24,8 @@ definerFilter <- function(matrixData, radius, times){
   weightedMatrix <- getWeightedMatrix(radius = radius)
 
   # Apply filters
-  finalData <- convolutionQuantile(dataMatrix = matrixData, kernel = weightedMatrix,
-                                   x = tolerance, times = times)
+  finalData <- convolutionQuantile(X = matrixData, kernel = weightedMatrix,
+                                   probs = tolerance, times = times)
 
   return(finalData)
 }
